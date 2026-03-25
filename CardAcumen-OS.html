@@ -9,4 +9,673 @@
 <title>CardAcumen OS</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-body{background:#0d0d0d;color:#c​​​​​​​​​​​​​​​​
+body{background:#0d0d0d;color:#ccd6e8;font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',sans-serif;font-size:16px}
+#apiScreen{background:#0d0d0d;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:32px 24px;padding-top:max(32px,env(safe-area-inset-top))}
+.api-box{width:100%;max-width:400px}
+.api-logo{font-size:38px;font-weight:800;letter-spacing:5px;color:#f0b429;margin-bottom:2px}
+.api-logo em{color:#444;font-style:normal;font-weight:400}
+.api-sub{font-size:11px;letter-spacing:3px;color:#445566;text-transform:uppercase;font-family:'Courier New',monospace;margin-bottom:36px}
+.api-lbl{display:block;font-size:11px;letter-spacing:2px;color:#556677;text-transform:uppercase;font-family:'Courier New',monospace;margin-bottom:8px}
+.api-input{display:block;width:100%;padding:15px 16px;background:#161b22;border:1px solid #253040;border-radius:12px;color:#eef4ff;font-size:15px;font-family:'Courier New',monospace;outline:none;margin-bottom:12px;-webkit-appearance:none}
+.api-input:focus{border-color:#f0b429}
+.api-note{background:#161b22;border:1px solid #1e2a38;border-radius:12px;padding:14px 16px;font-size:13px;color:#556677;line-height:1.6;margin-bottom:20px}
+.api-note a{color:#d49620;text-decoration:none}
+.api-btn{display:block;width:100%;padding:17px;background:#f0b429;color:#0d0d0d;border:none;border-radius:12px;font-size:18px;font-weight:700;letter-spacing:2px;cursor:pointer;-webkit-appearance:none}
+.api-btn:active{opacity:.85}
+.api-err{display:none;color:#e03a2f;font-size:13px;text-align:center;margin-top:10px;font-family:'Courier New',monospace}
+#app{display:none;background:#0d0d0d;min-height:100vh;padding-bottom:calc(68px + env(safe-area-inset-bottom))}
+.topbar{position:sticky;top:0;z-index:999;display:flex;align-items:center;justify-content:space-between;padding:0 18px;padding-top:env(safe-area-inset-top);height:calc(52px + env(safe-area-inset-top));background:#111418;border-bottom:1px solid #1e2530}
+.tb-logo{font-size:20px;font-weight:800;letter-spacing:4px;color:#f0b429}
+.tb-logo em{color:#334;font-style:normal;font-weight:400}
+.tb-r{display:flex;align-items:center;gap:12px}
+.tb-dot{width:7px;height:7px;border-radius:50%;background:#22c55e}
+.tb-clock{font-family:'Courier New',monospace;font-size:13px;color:#445566}
+.tb-key{font-family:'Courier New',monospace;font-size:10px;color:#445566;background:transparent;border:1px solid #1e2530;border-radius:6px;padding:4px 9px;cursor:pointer;-webkit-appearance:none}
+.botnav{position:fixed;bottom:0;left:0;right:0;z-index:999;display:flex;background:#111418;border-top:1px solid #1e2530;padding-bottom:env(safe-area-inset-bottom)}
+.bn{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;padding:10px 4px;background:transparent;border:none;color:#445566;cursor:pointer;-webkit-appearance:none;font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',sans-serif}
+.bn.on{color:#f0b429}
+.bn-i{font-size:21px;line-height:1}
+.bn-l{font-size:9px;font-family:'Courier New',monospace;letter-spacing:1px;text-transform:uppercase}
+.view{display:none;padding:20px 18px 32px}
+.view.on{display:block}
+.sec-lbl{font-family:'Courier New',monospace;font-size:10px;letter-spacing:3px;text-transform:uppercase;color:#445566;margin-bottom:12px}
+.ag-head{display:flex;align-items:center;justify-content:space-between;padding-bottom:14px;margin-bottom:18px;border-bottom:1px solid #1e2530}
+.ag-title{font-size:19px;font-weight:700}
+.ag-online{display:flex;align-items:center;gap:5px;font-family:'Courier New',monospace;font-size:10px;color:#22c55e}
+.ag-dot{width:5px;height:5px;border-radius:50%;background:#22c55e;display:inline-block}
+.fl{display:block;font-family:'Courier New',monospace;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:#445566;margin-bottom:7px}
+.fi{display:block;width:100%;padding:13px 15px;background:#161b22;border:1px solid #1e2530;border-radius:10px;color:#eef4ff;font-size:15px;font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',sans-serif;outline:none;-webkit-appearance:none;margin-bottom:13px}
+.fi:focus{border-color:#253a50}
+textarea.fi{resize:none;line-height:1.5}
+select.fi{cursor:pointer}
+.fr2{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:13px}
+.fr2 .fi{margin-bottom:0}
+.fg{display:flex;flex-direction:column}
+.fg .fi{margin-bottom:0}
+.pills{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:14px}
+.pill{padding:7px 13px;background:transparent;border:1px solid #1e2530;border-radius:20px;font-size:13px;color:#445566;cursor:pointer;-webkit-appearance:none;font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',sans-serif}
+.pill.on{border-color:#d49620;color:#f0b429;background:rgba(240,180,41,.07)}
+.gbtn{display:block;width:100%;padding:16px;background:#f0b429;color:#0d0d0d;border:none;border-radius:12px;font-size:17px;font-weight:700;letter-spacing:1px;cursor:pointer;margin-top:6px;-webkit-appearance:none}
+.gbtn:active{opacity:.85}
+.gbtn:disabled{opacity:.35}
+.gbtn.fire{background:#f43f5e;color:#fff}
+.gbtn.ghost{background:#161b22;color:#ccd6e8;border:1px solid #253040;font-size:15px;padding:13px;margin-top:0}
+.qi{display:flex;align-items:center;background:#161b22;border:1px solid #1e2530;border-radius:10px;padding:11px 14px;margin-bottom:7px;gap:10px}
+.qi-n{flex:1;font-size:14px;color:#ccd6e8}
+.qi-m{font-size:12px;color:#445566}
+.qi-x{background:none;border:none;color:#445566;font-size:22px;line-height:1;cursor:pointer;padding:0 2px;flex-shrink:0}
+.ldg{display:none;text-align:center;padding:60px 20px}
+.ldg.on{display:block}
+.ldg-t{font-family:'Courier New',monospace;font-size:11px;letter-spacing:3px;text-transform:uppercase;color:#445566;margin-bottom:20px}
+.ldg-bar{width:140px;height:2px;background:#1e2530;border-radius:2px;margin:0 auto;overflow:hidden}
+.ldg-fill{height:100%;width:40%;background:#f0b429;border-radius:2px;animation:lda 1s ease-in-out infinite alternate}
+@keyframes lda{from{transform:translateX(-100%)}to{transform:translateX(300%)}}
+.out{display:none}
+.out.on{display:block}
+.oc{background:#111418;border:1px solid #1e2530;border-radius:12px;margin-bottom:12px;overflow:hidden}
+.oc-h{display:flex;align-items:center;justify-content:space-between;padding:10px 15px;background:#161b22;border-bottom:1px solid #1e2530}
+.oc-l{font-family:'Courier New',monospace;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:#445566}
+.cpb{font-family:'Courier New',monospace;font-size:10px;letter-spacing:1px;color:#445566;background:transparent;border:1px solid #1e2530;border-radius:6px;padding:4px 11px;cursor:pointer;-webkit-appearance:none}
+.cpb.ok{color:#22c55e;border-color:#22c55e}
+.oc-b{padding:15px;font-size:14px;line-height:1.8;color:#ccd6e8;white-space:pre-wrap;word-break:break-word}
+.rl{display:inline-block;font-size:14px;color:#445566;cursor:pointer;margin-top:6px;padding:10px 0;background:none;border:none;-webkit-appearance:none;font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',sans-serif;text-decoration:underline}
+.sb{display:flex;align-items:center;gap:16px;background:#161b22;border:1px solid #253040;border-radius:12px;padding:16px;margin-bottom:13px}
+.sb-n{font-size:54px;font-weight:700;line-height:1;flex-shrink:0}
+.sb-v{font-size:16px;font-weight:600;color:#eef4ff;margin-bottom:4px}
+.sb-r{font-size:13px;color:#445566;line-height:1.5}
+.ab-g{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:12px}
+.ab-c{background:#161b22;border:1px solid #1e2530;border-radius:10px;padding:12px}
+.ab-l{font-family:'Courier New',monospace;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:#445566;margin-bottom:7px}
+.ab-t{font-size:13px;line-height:1.6;color:#ccd6e8;white-space:pre-wrap;word-break:break-word}
+.tb{background:#161b22;border-radius:8px;padding:10px 13px;font-family:'Courier New',monospace;font-size:13px;color:#eef4ff;word-break:break-all;line-height:1.5;margin-bottom:5px}
+.cc{font-size:12px;margin-bottom:8px}
+.hb{background:#161b22;border:1px solid #253040;border-radius:14px;padding:22px 20px;margin-bottom:22px}
+.ht{font-size:24px;font-weight:700;color:#f0b429;margin-bottom:5px}
+.hs{font-family:'Courier New',monospace;font-size:10px;letter-spacing:3px;color:#334455;text-transform:uppercase}
+.qg{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:24px}
+.qc{background:#161b22;border:1px solid #1e2530;border-radius:12px;padding:16px;cursor:pointer;text-align:left;-webkit-appearance:none;border:none;width:100%}
+.qc:active{opacity:.8}
+.qi2{font-size:26px;display:block;margin-bottom:9px}
+.qn{font-size:15px;font-weight:600;color:#eef4ff;margin-bottom:4px}
+.qd{font-size:12px;color:#445566;line-height:1.4}
+.sg{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.sc{background:#161b22;border:1px solid #1e2530;border-radius:12px;padding:14px 16px}
+.sl{font-family:'Courier New',monospace;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:#445566;margin-bottom:7px}
+.sv{font-size:28px;font-weight:700;color:#eef4ff;line-height:1}
+.ss{font-size:11px;color:#22c55e;margin-top:3px}
+@media(max-width:360px){.qg,.ab-g,.fr2{grid-template-columns:1fr}}
+
+.fi-g{display:flex;flex-direction:column;margin-bottom:12px}
+.fi-g .fi{margin-bottom:0}
+.fi{width:100%;padding:12px 14px;background:#161b22;border:1px solid #1e2530;border-radius:10px;color:#eef4ff;font-size:15px;font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',sans-serif;outline:none;-webkit-appearance:none}
+.fi:focus{border-color:#253040}
+textarea.fi{resize:none;line-height:1.5}
+select.fi{cursor:pointer}
+.fl{font-size:11px;letter-spacing:1px;text-transform:uppercase;color:#445566;font-family:'Courier New',monospace;margin-bottom:6px;display:block}
+.gb{width:100%;padding:14px;background:#f0b429;color:#0d0d0d;border:none;border-radius:10px;font-size:16px;font-weight:700;cursor:pointer;margin-top:4px;-webkit-appearance:none}
+.gb:disabled{opacity:.4}
+.ld{display:none;text-align:center;padding:60px 20px}
+.ld.on{display:block}
+.ld-t{font-family:'Courier New',monospace;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#445566;margin-bottom:16px}
+.ld-b{width:140px;height:2px;background:#1e2530;margin:0 auto;border-radius:2px;overflow:hidden}
+.ld-bf{height:100%;width:40%;background:#f0b429;border-radius:2px;animation:ld-a 1s ease-in-out infinite alternate}
+@keyframes ld-a{from{transform:translateX(-100%)}to{transform:translateX(300%)}}
+.ob{display:none}
+.ob.on{display:block}
+.rl{background:transparent;border:1px solid #1e2530;color:#445566;padding:10px 20px;border-radius:8px;font-size:13px;cursor:pointer;margin-top:4px;-webkit-appearance:none;font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',sans-serif}
+.ag-h{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;padding-bottom:14px;border-bottom:1px solid #1e2530}
+.ag-t{font-size:18px;font-weight:700}
+.ag-st{font-family:'Courier New',monospace;font-size:10px;color:#22c55e;display:flex;align-items:center;gap:5px}
+.ag-d{width:5px;height:5px;border-radius:50%;background:#22c55e;display:inline-block}
+
+</style>
+</head>
+<body>
+
+<div id="apiScreen">
+  <div class="api-box">
+    <div class="api-logo">CARD<em>ACUMEN</em></div>
+    <div class="api-sub">// AI Money Machine</div>
+    <label class="api-lbl" for="apiKey">Anthropic API Key</label>
+    <input type="password" id="apiKey" class="api-input" placeholder="sk-ant-api03-..." autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false">
+    <div class="api-note">Stored only on this device. Get your free key at <a href="https://console.anthropic.com" target="_blank">console.anthropic.com</a> → API Keys. Each session costs pennies.</div>
+    <button class="api-btn" onclick="doLaunch()">LAUNCH CARDACUMEN OS</button>
+    <div class="api-err" id="apiErr">Key must start with sk-ant-</div>
+  </div>
+</div>
+
+<div id="app">
+  <div class="topbar">
+    <div class="tb-logo">CA<em>OS</em></div>
+    <div class="tb-r">
+      <div class="tb-dot"></div>
+      <div class="tb-clock" id="clk">--:--</div>
+      <button class="tb-key" onclick="resetKey()">KEY</button>
+    </div>
+  </div>
+
+  <!-- HOME -->
+  <div class="view on" id="v-home">
+    <div class="hb"><div class="ht">Welcome back, Dave. Card Acumen is live.</div><div class="hs">// 4 Agents Online</div></div>
+    <div class="sec-lbl">Quick Launch</div>
+    <div class="qg">
+      <button class="qc" onclick="go('newsletter')"><span class="qi2">📧</span><div class="qn">Newsletter</div><div class="qd">3 picks → full issue + teasers</div></button>
+      <button class="qc" onclick="go('listings')"><span class="qi2">🃏</span><div class="qn">Listings</div><div class="qd">Queue cards → eBay-ready copy</div></button>
+      <button class="qc" onclick="go('blog')"><span class="qi2">📝</span><div class="qn">Blog</div><div class="qd">Prospect + angle → SEO article</div></button>
+      <button class="qc" onclick="go('viral')"><span class="qi2">⚡</span><div class="qn">Viral</div><div class="qd">Transcript → score + captions</div></button>
+    </div>
+    <div class="sec-lbl">Revenue Targets</div>
+    <div class="sg">
+      <div class="sc"><div class="sl">Newsletter</div><div class="sv">$6</div><div class="ss">per sub/mo</div></div>
+      <div class="sc"><div class="sl">Listings</div><div class="sv">$30</div><div class="ss">per 25 cards</div></div>
+      <div class="sc"><div class="sl">Blog CTR</div><div class="sv">5%</div><div class="ss">affiliate avg</div></div>
+      <div class="sc"><div class="sl">Time/week</div><div class="sv">~18m</div><div class="ss">all 4 agents</div></div>
+    </div>
+  </div>
+
+  <!-- NEWSLETTER -->
+  <div class="view" id="v-newsletter">
+    <div class="ag-head"><div class="ag-title" style="color:#f0b429">📧 Newsletter</div><div class="ag-online"><span class="ag-dot"></span>ONLINE</div></div>
+    <div id="nl-f">
+      <label class="fl">Buy of the week</label><input class="fi" id="nl-buy" placeholder="e.g. Jackson Holliday 2025 Bowman Auto" autocorrect="off">
+      <label class="fl">Buy reason</label><textarea class="fi" id="nl-br" style="height:68px" placeholder="Why buy? Call-up incoming, undervalued..."></textarea>
+      <label class="fl">Sell now</label><input class="fi" id="nl-sell" placeholder="e.g. Paul Skenes RC Chrome Refractor" autocorrect="off">
+      <label class="fl">Sell reason</label><textarea class="fi" id="nl-sr" style="height:68px" placeholder="Why sell? Overhyped, price ceiling..."></textarea>
+      <label class="fl">Hold &amp; watch</label><input class="fi" id="nl-hold" placeholder="e.g. Marcelo Mayer 2025 Bowman" autocorrect="off">
+      <label class="fl">Hold reason</label><textarea class="fi" id="nl-hr" style="height:68px" placeholder="Why hold? Waiting on news..."></textarea>
+      <label class="fl">Set watch (optional)</label><textarea class="fi" id="nl-set" style="height:58px" placeholder="What's moving in the market this week?"></textarea>
+      <div class="fr2">
+        <div class="fg"><label class="fl">Issue #</label><input class="fi" id="nl-iss" placeholder="Issue #1" autocorrect="off"></div>
+        <div class="fg"><label class="fl">Name</label><input class="fi" id="nl-nm" placeholder="Card Acumen" autocorrect="off"></div>
+      </div>
+      <button class="gbtn" onclick="runNL()">⚡ GENERATE NEWSLETTER</button>
+    </div>
+    <div class="ldg" id="nl-l"><div class="ldg-t" id="nl-lt">Writing your issue...</div><div class="ldg-bar"><div class="ldg-fill"></div></div></div>
+    <div class="out" id="nl-o">
+      <div class="oc"><div class="oc-h"><span class="oc-l">Subject + Preview</span><button class="cpb" onclick="cp('nl-s',this)">COPY</button></div><div class="oc-b" id="nl-s"></div></div>
+      <div class="oc"><div class="oc-h"><span class="oc-l">Full Newsletter</span><button class="cpb" onclick="cp('nl-b',this)">COPY</button></div><div class="oc-b" id="nl-b"></div></div>
+      <div class="oc"><div class="oc-h"><span class="oc-l">Social Teasers</span><button class="cpb" onclick="cp('nl-t',this)">COPY</button></div><div class="oc-b" id="nl-t"></div></div>
+      <button class="rl" onclick="rst('nl')">← New issue</button>
+    </div>
+  </div>
+
+  <!-- LISTINGS -->
+  <div class="view" id="v-listings">
+    <div class="ag-head"><div class="ag-title" style="color:#e03a2f">🃏 Listings</div><div class="ag-online"><span class="ag-dot"></span>ONLINE</div></div>
+    <div id="ls-f">
+      <label class="fl">Player Name</label><input class="fi" id="ls-p" placeholder="Jackson Holliday" autocorrect="off">
+      <div class="fr2">
+        <div class="fg"><label class="fl">Year</label><input class="fi" id="ls-y" placeholder="2025" autocorrect="off"></div>
+        <div class="fg"><label class="fl">Brand / Set</label><input class="fi" id="ls-b" placeholder="Bowman Chrome" autocorrect="off"></div>
+      </div>
+      <label class="fl">Card Type</label>
+      <select class="fi" id="ls-t"><option>Auto</option><option>1st Bowman Auto</option><option>Prospect Auto</option><option>Refractor</option><option>Base</option><option>RC</option><option>Insert</option></select>
+      <div class="fr2">
+        <div class="fg"><label class="fl">Parallel</label><input class="fi" id="ls-par" placeholder="Blue /99" autocorrect="off"></div>
+        <div class="fg"><label class="fl">Grade</label><select class="fi" id="ls-g"><option>Raw</option><option>PSA 10</option><option>PSA 9</option><option>BGS 9.5</option><option>BGS 10</option><option>CGC 10</option></select></div>
+      </div>
+      <label class="fl">Price ($)</label><input class="fi" id="ls-pr" placeholder="49.99" type="number" inputmode="decimal">
+      <button class="gbtn ghost" onclick="addCard()">+ Add Card to Queue</button>
+      <div id="ls-q" style="margin-top:10px;margin-bottom:10px"></div>
+      <button class="gbtn" id="ls-gb" onclick="runLS()" disabled>⚡ GENERATE LISTINGS</button>
+    </div>
+    <div class="ldg" id="ls-l"><div class="ldg-t" id="ls-lt">Writing listings...</div><div class="ldg-bar"><div class="ldg-fill"></div></div></div>
+    <div class="out" id="ls-o"></div>
+  </div>
+
+  <!-- BLOG -->
+  <div class="view" id="v-blog">
+    <div class="ag-head"><div class="ag-title" style="color:#3b82f6">📝 Blog</div><div class="ag-online"><span class="ag-dot"></span>ONLINE</div></div>
+    <div id="bl-f">
+      <div class="sec-lbl" style="margin-bottom:9px">Article Type</div>
+      <div class="pills" id="bl-tp">
+        <button class="pill on" data-v="Is [player] worth buying — prospect value analysis">Worth buying?</button>
+        <button class="pill" data-v="Best parallels under $X — value guide">Best parallels</button>
+        <button class="pill" data-v="Buy sell or hold — investment call">Buy/Sell/Hold</button>
+        <button class="pill" data-v="Full set breakdown and analysis">Set breakdown</button>
+        <button class="pill" data-v="How-to guide — educational">How-to guide</button>
+      </div>
+      <label class="fl">Subject</label><input class="fi" id="bl-sub" placeholder="e.g. Jackson Holliday, 2025 Bowman Chrome" autocorrect="off">
+      <label class="fl">Your Angle</label><input class="fi" id="bl-ang" placeholder="e.g. buy now before call-up" autocorrect="off">
+      <label class="fl">Target Keyword</label><input class="fi" id="bl-kw" placeholder="e.g. Jackson Holliday card value 2025" autocorrect="off">
+      <label class="fl">Word Count</label>
+      <select class="fi" id="bl-wc"><option value="600">~600 words</option><option value="800" selected>~800 words</option><option value="1000">~1000 words</option></select>
+      <label class="fl">Extra Details (optional)</label><textarea class="fi" id="bl-det" style="height:68px" placeholder="Any comps, news, price data, talking points..."></textarea>
+      <button class="gbtn" onclick="runBL()">⚡ GENERATE ARTICLE</button>
+    </div>
+    <div class="ldg" id="bl-l"><div class="ldg-t">Writing your article...</div><div class="ldg-bar"><div class="ldg-fill"></div></div></div>
+    <div class="out" id="bl-o">
+      <div class="oc"><div class="oc-h"><span class="oc-l">Full Article</span><button class="cpb" onclick="cp('bl-a',this)">COPY</button></div><div class="oc-b" id="bl-a"></div></div>
+      <div class="oc"><div class="oc-h"><span class="oc-l">SEO Metadata</span><button class="cpb" onclick="cp('bl-s',this)">COPY</button></div><div class="oc-b" id="bl-s"></div></div>
+      <div class="oc"><div class="oc-h"><span class="oc-l">Promo Posts</span><button class="cpb" onclick="cp('bl-p',this)">COPY</button></div><div class="oc-b" id="bl-p"></div></div>
+      <button class="rl" onclick="rst('bl')">← New article</button>
+    </div>
+  </div>
+
+  <!-- VIRAL -->
+  <div class="view" id="v-viral">
+    <div class="ag-head"><div class="ag-title" style="color:#f43f5e">⚡ Viral</div><div class="ag-online"><span class="ag-dot"></span>ONLINE</div></div>
+    <div id="vr-f">
+      <div class="sec-lbl" style="margin-bottom:9px">Niche</div>
+      <div class="pills" id="vr-np">
+        <button class="pill on" data-v="sports cards">⚾ Cards</button>
+        <button class="pill" data-v="MLB prospects">🔮 Prospects</button>
+        <button class="pill" data-v="card breaks">📦 Breaks</button>
+        <button class="pill" data-v="card investing">💰 Investing</button>
+        <button class="pill" data-v="ancient history">🏛 History</button>
+        <button class="pill" data-v="AI tools">🤖 AI Tools</button>
+        <button class="pill" data-v="shift work">⚙️ Shift Work</button>
+      </div>
+      <div class="sec-lbl" style="margin-bottom:9px">Platform</div>
+      <div class="pills" id="vr-pp">
+        <button class="pill on" data-v="Instagram">Instagram</button>
+        <button class="pill" data-v="TikTok">TikTok</button>
+        <button class="pill" data-v="YouTube Shorts">YT Shorts</button>
+        <button class="pill" data-v="X/Twitter">X / Twitter</button>
+        <button class="pill" data-v="Facebook">Facebook</button>
+      </div>
+      <div class="sec-lbl" style="margin-bottom:9px">Optimize For</div>
+      <div class="pills" id="vr-fp">
+        <button class="pill on" data-v="saves">Saves</button>
+        <button class="pill" data-v="comments">Comments</button>
+        <button class="pill" data-v="shares">Shares</button>
+        <button class="pill" data-v="follows">Follows</button>
+      </div>
+      <label class="fl">Transcript or Description</label>
+      <textarea class="fi" id="vr-tr" style="height:110px" placeholder="Paste transcript or describe the clip...&#10;&#10;e.g. '2025 Bowman Chrome break, last pack pulls Jackson Holliday superfractor /25. Puller drops the box...'"></textarea>
+      <label class="fl">Context (optional)</label>
+      <textarea class="fi" id="vr-ctx" style="height:62px" placeholder="What makes this special? Numbers, reactions..."></textarea>
+      <button class="gbtn fire" onclick="runVR()">⚡ IGNITE VIRAL ENGINE</button>
+    </div>
+    <div class="ldg" id="vr-l"><div class="ldg-t">Scoring virality &amp; writing captions...</div><div class="ldg-bar"><div class="ldg-fill"></div></div></div>
+    <div class="out" id="vr-o">
+      <div class="sb"><div class="sb-n" id="vr-sc">--</div><div><div class="sb-v" id="vr-vd"></div><div class="sb-r" id="vr-rs"></div></div></div>
+      <div class="oc"><div class="oc-h"><span class="oc-l">Opening Hook</span><button class="cpb" onclick="cp('vr-hk',this)">COPY</button></div><div class="oc-b" id="vr-hk"></div></div>
+      <div class="oc"><div class="oc-h"><span class="oc-l">Full Caption</span><button class="cpb" onclick="cp('vr-cp',this)">COPY</button></div><div class="oc-b" id="vr-cp"></div></div>
+      <div class="oc"><div class="oc-h"><span class="oc-l">Hashtags</span><button class="cpb" onclick="cp('vr-ht',this)">COPY</button></div><div class="oc-b" id="vr-ht" style="font-family:'Courier New',monospace;font-size:13px;color:#3b82f6"></div></div>
+      <div class="oc">
+        <div class="oc-h"><span class="oc-l">A/B Variants</span><button class="cpb" onclick="cpAB()">COPY BOTH</button></div>
+        <div class="ab-g">
+          <div class="ab-c"><div class="ab-l">Variant A — Curiosity</div><div class="ab-t" id="vr-va"></div></div>
+          <div class="ab-c"><div class="ab-l">Variant B — Value</div><div class="ab-t" id="vr-vb"></div></div>
+        </div>
+      </div>
+      <div class="oc"><div class="oc-h"><span class="oc-l">Post Strategy</span><button class="cpb" onclick="cp('vr-st',this)">COPY</button></div><div class="oc-b" id="vr-st"></div></div>
+      <button class="rl" onclick="rst('vr')">← New clip</button>
+    </div>
+  </div>
+
+
+  <!-- ── SEO CLUSTER VIEW ── -->
+  <div class="view" id="v-cluster">
+    <div class="ag-h"><div class="ag-t" style="color:#a78bfa">🗺️ SEO Cluster Agent</div><div class="ag-st"><span class="ag-d"></span>ONLINE</div></div>
+    <div id="cluster-f">
+      <div class="fi-g"><label class="fl">Hub topic</label><input class="fi" id="cl-topic" placeholder="e.g. 2025 Bowman Chrome, Jackson Holliday, PSA grading" autocorrect="off"></div>
+      <div class="fi-g"><label class="fl">Your niche / site focus</label><input class="fi" id="cl-niche" placeholder="e.g. baseball card investing, sports card collectors" autocorrect="off"></div>
+      <div class="fi-g"><label class="fl">Spoke article count</label>
+        <select class="fi" id="cl-count">
+          <option value="6">6 spoke articles</option>
+          <option value="8" selected>8 spoke articles</option>
+          <option value="10">10 spoke articles</option>
+        </select>
+      </div>
+      <div class="fi-g"><label class="fl">Audience level</label>
+        <select class="fi" id="cl-aud">
+          <option value="beginner collectors">Beginner collectors</option>
+          <option value="intermediate hobbyists" selected>Intermediate hobbyists</option>
+          <option value="serious card investors">Serious card investors</option>
+        </select>
+      </div>
+      <button class="gb" onclick="runCluster()">⚡ BUILD CONTENT CLUSTER</button>
+    </div>
+    <div class="ld" id="cluster-l"><div class="ld-t" id="cluster-lt">Building your cluster map...</div><div class="ld-b"><div class="ld-bf"></div></div></div>
+    <div class="ob" id="cluster-o">
+      <div class="oc"><div class="oc-h"><span class="oc-l">Hub article</span><button class="cpb" onclick="cp('cl-hub',this)">COPY</button></div><div class="oc-b" id="cl-hub"></div></div>
+      <div class="oc"><div class="oc-h"><span class="oc-l">Spoke articles (titles + keywords)</span><button class="cpb" onclick="cp('cl-spokes',this)">COPY</button></div><div class="oc-b" id="cl-spokes"></div></div>
+      <div class="oc"><div class="oc-h"><span class="oc-l">Internal linking map</span><button class="cpb" onclick="cp('cl-links',this)">COPY</button></div><div class="oc-b" id="cl-links"></div></div>
+      <div class="oc"><div class="oc-h"><span class="oc-l">Schema markup (JSON-LD)</span><button class="cpb" onclick="cp('cl-schema',this)">COPY</button></div><div class="oc-b" id="cl-schema" style="font-family:Courier New,monospace;font-size:12px"></div></div>
+      <div class="oc"><div class="oc-h"><span class="oc-l">Publishing calendar</span><button class="cpb" onclick="cp('cl-cal',this)">COPY</button></div><div class="oc-b" id="cl-cal"></div></div>
+      <button class="rl" onclick="rst('cluster')">← New cluster</button>
+    </div>
+  </div>
+
+  <!-- ── KEYWORD INTEL VIEW ── -->
+  <div class="view" id="v-keyword">
+    <div class="ag-h"><div class="ag-t" style="color:#34d399">🔍 Keyword Intel Agent</div><div class="ag-st"><span class="ag-d"></span>ONLINE</div></div>
+    <div id="keyword-f">
+      <div class="fi-g"><label class="fl">Seed topic or player name</label><input class="fi" id="kw-seed" placeholder="e.g. Jackson Holliday, 2025 Bowman Chrome, PSA grading" autocorrect="off"></div>
+      <div class="fi-g"><label class="fl">Content goal</label>
+        <select class="fi" id="kw-goal">
+          <option value="affiliate revenue from eBay and card pricing tools">Affiliate revenue</option>
+          <option value="newsletter signups from organic search">Newsletter signups</option>
+          <option value="establishing topical authority in the sports card niche">Topical authority</option>
+          <option value="ranking for buyer-intent keywords to drive card sales">Drive card sales</option>
+        </select>
+      </div>
+      <div class="fi-g"><label class="fl">Competition level you can beat</label>
+        <select class="fi" id="kw-comp">
+          <option value="very low competition only — brand new site">Very low only (new site)</option>
+          <option value="low to medium competition" selected>Low to medium</option>
+          <option value="any competition level — established site">Any level (established)</option>
+        </select>
+      </div>
+      <div class="fi-g"><label class="fl">How many keywords</label>
+        <select class="fi" id="kw-cnt">
+          <option value="15">15 keywords</option>
+          <option value="25" selected>25 keywords</option>
+          <option value="40">40 keywords</option>
+        </select>
+      </div>
+      <button class="gb" onclick="runKeyword()">⚡ GENERATE KEYWORD INTEL</button>
+    </div>
+    <div class="ld" id="keyword-l"><div class="ld-t">Researching keyword opportunities...</div><div class="ld-b"><div class="ld-bf"></div></div></div>
+    <div class="ob" id="keyword-o">
+      <div class="oc"><div class="oc-h"><span class="oc-l">Top keyword opportunities</span><button class="cpb" onclick="cp('kw-top',this)">COPY</button></div><div class="oc-b" id="kw-top"></div></div>
+      <div class="oc"><div class="oc-h"><span class="oc-l">Quick win keywords (write this week)</span><button class="cpb" onclick="cp('kw-quick',this)">COPY</button></div><div class="oc-b" id="kw-quick"></div></div>
+      <div class="oc"><div class="oc-h"><span class="oc-l">Long-term authority keywords</span><button class="cpb" onclick="cp('kw-long',this)">COPY</button></div><div class="oc-b" id="kw-long"></div></div>
+      <div class="oc"><div class="oc-h"><span class="oc-l">Content gap analysis</span><button class="cpb" onclick="cp('kw-gaps',this)">COPY</button></div><div class="oc-b" id="kw-gaps"></div></div>
+      <button class="rl" onclick="rst('keyword')">← New research</button>
+    </div>
+  </div>
+
+  <!-- ── REPURPOSE VIEW ── -->
+  <div class="view" id="v-repurpose">
+    <div class="ag-h"><div class="ag-t" style="color:#fb923c">♻️ Content Repurpose</div><div class="ag-st"><span class="ag-d"></span>ONLINE</div></div>
+    <div id="repurpose-f">
+      <div class="fi-g"><label class="fl">Source content type</label>
+        <select class="fi" id="rp-type">
+          <option value="YouTube video script">YouTube script</option>
+          <option value="blog article">Blog article</option>
+          <option value="newsletter issue">Newsletter issue</option>
+          <option value="social media post or thread">Social post/thread</option>
+        </select>
+      </div>
+      <div class="fi-g"><label class="fl">Paste your content here</label><textarea class="fi" id="rp-content" style="height:140px" placeholder="Paste your YouTube script, blog article, newsletter, or social post here..."></textarea></div>
+      <div class="fi-g"><label class="fl">Core topic / subject</label><input class="fi" id="rp-topic" placeholder="e.g. Why Jackson Holliday is a buy right now" autocorrect="off"></div>
+      <div class="fi-g"><label class="fl">Target audience</label><input class="fi" id="rp-aud" placeholder="e.g. sports card collectors and investors" autocorrect="off"></div>
+      <button class="gb" onclick="runRepurpose()">⚡ REPURPOSE INTO 7 FORMATS</button>
+    </div>
+    <div class="ld" id="repurpose-l"><div class="ld-t">Repurposing your content...</div><div class="ld-b"><div class="ld-bf"></div></div></div>
+    <div class="ob" id="repurpose-o">
+      <div class="oc"><div class="oc-h"><span class="oc-l">Blog post version</span><button class="cpb" onclick="cp('rp-blog',this)">COPY</button></div><div class="oc-b" id="rp-blog"></div></div>
+      <div class="oc"><div class="oc-h"><span class="oc-l">Newsletter section</span><button class="cpb" onclick="cp('rp-nl',this)">COPY</button></div><div class="oc-b" id="rp-nl"></div></div>
+      <div class="oc"><div class="oc-h"><span class="oc-l">5 social media posts</span><button class="cpb" onclick="cp('rp-social',this)">COPY</button></div><div class="oc-b" id="rp-social"></div></div>
+      <div class="oc"><div class="oc-h"><span class="oc-l">Reddit thread post</span><button class="cpb" onclick="cp('rp-reddit',this)">COPY</button></div><div class="oc-b" id="rp-reddit"></div></div>
+      <div class="oc"><div class="oc-h"><span class="oc-l">YouTube Short script</span><button class="cpb" onclick="cp('rp-yt',this)">COPY</button></div><div class="oc-b" id="rp-yt"></div></div>
+      <div class="oc"><div class="oc-h"><span class="oc-l">Email subject line + teaser</span><button class="cpb" onclick="cp('rp-email',this)">COPY</button></div><div class="oc-b" id="rp-email"></div></div>
+      <div class="oc"><div class="oc-h"><span class="oc-l">SEO meta + internal link suggestions</span><button class="cpb" onclick="cp('rp-seo',this)">COPY</button></div><div class="oc-b" id="rp-seo"></div></div>
+      <button class="rl" onclick="rst('repurpose')">← Repurpose new content</button>
+    </div>
+  </div>
+
+  <nav class="botnav">
+    <button class="bn on" id="bn-home" onclick="go('home')"><span class="bn-i">🏠</span><span class="bn-l">Home</span></button>
+    <button class="bn" id="bn-newsletter" onclick="go('newsletter')"><span class="bn-i">📧</span><span class="bn-l">News</span></button>
+    <button class="bn" id="bn-listings" onclick="go('listings')"><span class="bn-i">🃏</span><span class="bn-l">List</span></button>
+    <button class="bn" id="bn-blog" onclick="go('blog')"><span class="bn-i">📝</span><span class="bn-l">Blog</span></button>
+    <button class="bn" id="bn-viral" onclick="go('viral')"><span class="bn-i">⚡</span><span class="bn-l">Viral</span></button>
+    <button class="bn" id="bn-more" onclick="toggleMore()"><span class="bn-i">🔥</span><span class="bn-l">SEO</span></button>
+  </nav>
+  <!-- SEO submenu -->
+  <div id="more-menu" style="display:none;position:fixed;bottom:calc(60px + env(safe-area-inset-bottom));left:0;right:0;background:#111418;border-top:1px solid #1e2530;z-index:998;padding:12px 16px;">
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;">
+      <button class="bn" id="bn-cluster" onclick="go('cluster');toggleMore(true)" style="flex-direction:column;padding:12px 8px;background:#161b22;border:1px solid #1e2530;border-radius:10px;"><span class="bn-i">🗺️</span><span class="bn-l">Cluster</span></button>
+      <button class="bn" id="bn-keyword" onclick="go('keyword');toggleMore(true)" style="flex-direction:column;padding:12px 8px;background:#161b22;border:1px solid #1e2530;border-radius:10px;"><span class="bn-i">🔍</span><span class="bn-l">Keywords</span></button>
+      <button class="bn" id="bn-repurpose" onclick="go('repurpose');toggleMore(true)" style="flex-direction:column;padding:12px 8px;background:#161b22;border:1px solid #1e2530;border-radius:10px;"><span class="bn-i">♻️</span><span class="bn-l">Repurpose</span></button>
+    </div>
+  </div>
+</div>
+
+<script>
+var KEY='',QUE=[];
+var VS=['home','newsletter','listings','blog','viral','cluster','keyword','repurpose'];
+
+document.addEventListener('DOMContentLoaded',function(){
+  var k=localStorage.getItem('ca_k');
+  if(k&&k.indexOf('sk-ant-')===0){KEY=k;boot();}
+  document.getElementById('apiKey').addEventListener('keydown',function(e){if(e.key==='Enter')doLaunch();});
+  initP();tick();setInterval(tick,1000);
+});
+
+function doLaunch(){
+  var k=document.getElementById('apiKey').value.trim();
+  if(k.indexOf('sk-ant-')!==0){document.getElementById('apiErr').style.display='block';return;}
+  KEY=k;localStorage.setItem('ca_k',k);boot();
+}
+
+function boot(){
+  document.getElementById('apiScreen').style.display='none';
+  document.getElementById('app').style.display='block';
+}
+
+function resetKey(){
+  if(!confirm('Reset API key?'))return;
+  localStorage.removeItem('ca_k');KEY='';
+  document.getElementById('apiKey').value='';
+  document.getElementById('apiErr').style.display='none';
+  document.getElementById('app').style.display='none';
+  document.getElementById('apiScreen').style.display='flex';
+}
+
+function tick(){var n=new Date();document.getElementById('clk').textContent=String(n.getHours()).padStart(2,'0')+':'+String(n.getMinutes()).padStart(2,'0');}
+
+function go(name){
+  VS.forEach(function(v){
+    var vw=document.getElementById('v-'+v);var bn=document.getElementById('bn-'+v);
+    if(vw)vw.classList.toggle('on',v===name);
+    if(bn)bn.classList.toggle('on',v===name);
+  });
+  window.scrollTo(0,0);
+}
+
+function initP(){
+  ['bl-tp','vr-np','vr-pp','vr-fp'].forEach(function(gid){
+    var g=document.getElementById(gid);if(!g)return;
+    var ps=g.querySelectorAll('.pill');
+    ps.forEach(function(p){p.addEventListener('click',function(){ps.forEach(function(x){x.classList.remove('on');});p.classList.add('on');});});
+  });
+}
+
+function gp(gid){var g=document.getElementById(gid);if(!g)return'';var a=g.querySelector('.pill.on');return a?(a.getAttribute('data-v')||a.textContent.trim()):''}
+function gv(id){var e=document.getElementById(id);return e?e.value.trim():'';}
+function st(id,v){var e=document.getElementById(id);if(e)e.textContent=v;}
+
+function sL(px,msg){
+  var f=document.getElementById(px+'-f'),l=document.getElementById(px+'-l'),o=document.getElementById(px+'-o');
+  if(f)f.style.display='none';
+  if(o){o.style.display='none';o.classList.remove('on');}
+  if(l){l.style.display='block';l.classList.add('on');}
+  if(msg){var t=document.getElementById(px+'-lt');if(t)t.textContent=msg;}
+}
+
+function sO(px){
+  var l=document.getElementById(px+'-l'),o=document.getElementById(px+'-o');
+  if(l){l.style.display='none';l.classList.remove('on');}
+  if(o){o.style.display='block';o.classList.add('on');}
+}
+
+function rst(px){
+  var f=document.getElementById(px+'-f'),l=document.getElementById(px+'-l'),o=document.getElementById(px+'-o');
+  if(f)f.style.display='block';
+  if(l){l.style.display='none';l.classList.remove('on');}
+  if(o){o.style.display='none';o.classList.remove('on');}
+}
+
+function cp(id,btn){
+  var e=document.getElementById(id);if(!e)return;
+  navigator.clipboard.writeText(e.textContent).then(function(){
+    var o=btn.textContent;btn.textContent='COPIED';btn.classList.add('ok');
+    setTimeout(function(){btn.textContent=o;btn.classList.remove('ok');},1800);
+  }).catch(function(){alert('Long-press the text to copy manually.');});
+}
+
+function cpAB(){
+  var a=document.getElementById('vr-va'),b=document.getElementById('vr-vb');
+  if(a&&b)navigator.clipboard.writeText('VARIANT A:\n'+a.textContent+'\n\nVARIANT B:\n'+b.textContent);
+}
+
+function ex(txt,h1,h2){
+  var m=txt.match(new RegExp('---'+h1+'---([\\s\\S]*?)(?=---'+h2+'---|$)'));
+  return m?m[1].trim():'';
+}
+
+async function callAPI(prompt){
+  var r=await fetch('https://api.anthropic.com/v1/messages',{
+    method:'POST',
+    headers:{'Content-Type':'application/json','x-api-key':KEY,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
+    body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1500,messages:[{role:'user',content:prompt}]})
+  });
+  if(!r.ok){var e=await r.json().catch(function(){return{};});throw new Error((e.error&&e.error.message)||'API error '+r.status);}
+  var d=await r.json();return d.content.map(function(b){return b.text||'';}).join('');
+}
+
+async function runNL(){
+  var buy=gv('nl-buy'),sell=gv('nl-sell'),hold=gv('nl-hold');
+  if(!buy||!sell||!hold){alert('Fill in Buy, Sell, and Hold cards.');return;}
+  sL('nl','Writing your issue...');
+  var p='You are a sharp sports card market analyst writing a weekly newsletter.\nReturn THREE sections with EXACT headers:\n---SUBJECT---\n---BODY---\n---SOCIAL---\n\nNEWSLETTER: "'+(gv('nl-nm')||'Card Acumen')+'" — '+(gv('nl-iss')||'Issue #1')+'\nBUY: '+buy+' | '+(gv('nl-br')||'strong value')+'\nSELL: '+sell+' | '+(gv('nl-sr')||'take profits')+'\nHOLD: '+hold+' | '+(gv('nl-hr')||'watch for news')+'\nSET: '+(gv('nl-set')||'general market')+'\n\n---SUBJECT---: Subject line under 50 chars. Then preview text under 90 chars on next line.\n---BODY---: Full newsletter. Opening hook 2-3 sentences. BUY/SELL/HOLD sections 3-4 sentences each. Hobby terms: autos, refractors, chrome, parallels, PSA, eBay comps. Confident insider voice.\n---SOCIAL---: POST 1 (Instagram under 150 chars 2-3 hashtags). POST 2 (Reddit conversational 2-3 sentences no hashtags). POST 3 (Story text under 80 chars).';
+  try{var t=await callAPI(p);st('nl-s',ex(t,'SUBJECT','BODY'));st('nl-b',ex(t,'BODY','SOCIAL'));st('nl-t',ex(t,'SOCIAL','XXXXEND'));sO('nl');}
+  catch(e){rst('nl');alert('Error: '+e.message);}
+}
+
+function addCard(){
+  var p=gv('ls-p'),y=gv('ls-y'),b=gv('ls-b');
+  if(!p||!y||!b){alert('Player, year, and brand required.');return;}
+  QUE.push({p:p,y:y,b:b,t:document.getElementById('ls-t').value,g:document.getElementById('ls-g').value,par:gv('ls-par'),pr:gv('ls-pr'),id:Date.now()});
+  renderQ();
+  ['ls-p','ls-y','ls-b','ls-par','ls-pr'].forEach(function(id){var e=document.getElementById(id);if(e)e.value='';});
+}
+
+function renderQ(){
+  var c=document.getElementById('ls-q'),btn=document.getElementById('ls-gb');
+  if(QUE.length===0){c.innerHTML='';btn.disabled=true;return;}
+  btn.disabled=false;
+  c.innerHTML=QUE.map(function(card){return'<div class="qi"><div class="qi-n">'+card.y+' '+card.b+' '+card.t+' — '+card.p+'</div><div class="qi-m">'+(card.par||'base')+' | '+card.g+(card.pr?' | $'+card.pr:'')+'</div><button class="qi-x" onclick="rmCard('+card.id+')">×</button></div>';}).join('');
+}
+
+function rmCard(id){QUE=QUE.filter(function(c){return c.id!==id;});renderQ();}
+
+async function runLS(){
+  if(!QUE.length)return;
+  sL('ls','Writing listing 1 of '+QUE.length+'...');
+  var res=[];
+  for(var i=0;i<QUE.length;i++){
+    var c=QUE[i];
+    var lt=document.getElementById('ls-lt');if(lt)lt.textContent='Writing '+(i+1)+' of '+QUE.length+': '+c.p+'...';
+    var p='You are an expert eBay sports card seller.\nCARD: '+c.y+' '+c.b+' '+c.t+' — '+c.p+' | Parallel: '+(c.par||'standard')+' | Grade: '+c.g+(c.pr?' | Price: $'+c.pr:'')+'\n\nReturn with EXACT headers:\nTITLE:\n[80-char max eBay title. Pack with player name, year, brand, card type, parallel, grade. No filler.]\nDESCRIPTION:\n[4 paragraphs: (1) card significance and player prospect story (2) condition/grade details (3) buy thesis and comp context (4) Ships in toploader and team bag in bubble mailer within 1 business day. Combined shipping available. All major payments accepted.]\nKEYWORDS:\n[10 comma-separated eBay search tags]\nSELLER TIP:\n[1 pricing or timing tip for this card right now]';
+    try{var r=await callAPI(p);res.push({c:c,t:r});}catch(e){res.push({c:c,t:'ERROR: '+e.message});}
+  }
+  var out=document.getElementById('ls-o');
+  out.innerHTML=res.map(function(r,i){
+    var tm=r.t.match(/TITLE:\s*([\s\S]*?)(?=\nDESCRIPTION:|$)/i);
+    var dm=r.t.match(/DESCRIPTION:\s*([\s\S]*?)(?=\nKEYWORDS:|$)/i);
+    var km=r.t.match(/KEYWORDS:\s*([\s\S]*?)(?=\nSELLER TIP:|$)/i);
+    var sm=r.t.match(/SELLER TIP:\s*([\s\S]*?)$/i);
+    var ti=tm?tm[1].trim():'',de=dm?dm[1].trim():r.t,kw=km?km[1].trim():'',tp=sm?sm[1].trim():'';
+    var cc=ti.length;window['_l'+i]=('TITLE:\n'+ti+'\n\nDESCRIPTION:\n'+de+'\n\nKEYWORDS:\n'+kw+'\n\nSELLER TIP:\n'+tp);
+    return'<div class="oc"><div class="oc-h"><span class="oc-l">Listing '+(i+1)+' — '+r.c.p.toUpperCase()+'</span><button class="cpb" onclick="navigator.clipboard.writeText(window[\'_l'+i+'\']);this.textContent=\'COPIED\';this.classList.add(\'ok\');setTimeout(function(){this.textContent=\'COPY ALL\';this.classList.remove(\'ok\');}.bind(this),1800)">COPY ALL</button></div>'+(ti?'<div style="padding:12px 15px;border-bottom:1px solid #1e2530"><div class="tb">'+ti+'</div><div class="cc" style="color:'+(cc<=80?'#22c55e':'#e03a2f')+'">'+cc+'/80 '+(cc<=80?'✓':'⚠ trim')+'</div></div>':'')+(de?'<div class="oc-b">'+de+'</div>':'')+(kw?'<div style="padding:9px 15px;border-top:1px solid #1e2530;font-family:Courier New,monospace;font-size:12px;color:#445566">'+kw+'</div>':'')+(tp?'<div style="padding:9px 15px;border-top:1px solid #1e2530;font-size:13px;font-style:italic;color:#445566">💡 '+tp+'</div>':'')+'</div>';
+  }).join('')+'<button class="rl" onclick="QUE=[];renderQ();rst(\'ls\')">← New batch</button>';
+  sO('ls');
+}
+
+async function runBL(){
+  var sub=gv('bl-sub');if(!sub){alert('Enter a subject.');return;}
+  sL('bl','Writing your article...');
+  var p='You are a sports card market analyst and SEO writer.\nTYPE: '+gp('bl-tp')+'\nSUBJECT: '+sub+'\nANGLE: '+(gv('bl-ang')||'balanced perspective')+'\nKEYWORD: '+(gv('bl-kw')||sub+' card value')+'\nWORDS: ~'+document.getElementById('bl-wc').value+'\nDETAILS: '+(gv('bl-det')||'none')+'\n\nReturn with EXACT headers:\n---ARTICLE---\n---SEO---\n---PROMO---\n\n---ARTICLE---: Full article. H1 title with keyword. Hook intro 2-3 sentences. 3-4 H2 sections: background, market analysis, value, recommendation. Hobby terms: chrome autos, refractors, parallels, PSA pop, eBay comps, Bowman, call-up. Realistic prices. Clear buy/sell/hold conclusion. Confident insider voice.\n---SEO---:\nMETA TITLE: [under 60 chars]\nMETA DESCRIPTION: [under 155 chars with keyword]\nURL SLUG: [lowercase-hyphenated]\nTAGS: [8 comma-separated tags]\n---PROMO---:\nREDDIT POST: [r/baseballcards conversational 2-3 sentences no hashtags]\nINSTAGRAM CAPTION: [under 150 chars 3-4 hashtags CTA to link in bio]';
+  try{var t=await callAPI(p);st('bl-a',ex(t,'ARTICLE','SEO'));st('bl-s',ex(t,'SEO','PROMO'));st('bl-p',ex(t,'PROMO','XXXXEND'));sO('bl');}
+  catch(e){rst('bl');alert('Error: '+e.message);}
+}
+
+async function runVR(){
+  var tr=gv('vr-tr');if(!tr){alert('Describe or paste your clip transcript.');return;}
+  sL('vr','Scoring virality...');
+  var plat=gp('vr-pp');
+  var rules={'Instagram':'hook under 125 chars first line, 3-5 sentences, 5-10 hashtags at end, CTA for saves','TikTok':'under 150 chars, 3-5 hashtags, question to drive comments','YouTube Shorts':'title under 60 chars, 1-2 sentence description','X/Twitter':'under 280 chars, 1-2 hashtags','Facebook':'2-3 conversational sentences, drive shares'};
+  var p='You are an elite social media strategist for the '+gp('vr-np')+' niche.\nPLATFORM: '+plat+' | RULE: '+(rules[plat]||'strong hook caption')+'\nOPTIMIZE: '+gp('vr-fp')+'\nTRANSCRIPT: '+tr+'\nCONTEXT: '+(gv('vr-ctx')||'none')+'\n\nReturn with EXACT headers:\n---SCORE---\n---HOOK---\n---CAPTION---\n---HASHTAGS---\n---VARIANTA---\n---VARIANTB---\n---STRATEGY---\n\n---SCORE---: Line 1: number 1-100. Line 2: 4-6 word verdict. Line 3: 1-2 sentence explanation.\n---HOOK---: Single hook under 12 words. Open loop or shock. No explanation.\n---CAPTION---: Full caption for '+plat+'. Hook as first line. Authentic voice. CTA. No hashtags.\n---HASHTAGS---: Mix broad/mid/niche tags. One per line.\n---VARIANTA---: Curiosity angle. Under 5 sentences. No hashtags.\n---VARIANTB---: Value/number led. Under 5 sentences. No hashtags.\n---STRATEGY---: 4 bullets: best post time, which variant first and why, 30-min engagement tactic, cross-platform move.';
+  try{
+    var t=await callAPI(p);
+    var sr=ex(t,'SCORE','HOOK'),lines=sr.split('\n').filter(function(l){return l.trim();});
+    var sn=parseInt((lines[0]||'').match(/\d+/)||['0']);
+    var se=document.getElementById('vr-sc');se.textContent=sn||'?';
+    se.style.color=sn>=80?'#22c55e':sn>=60?'#f0b429':'#f43f5e';
+    st('vr-vd',(lines[1]||'').trim());st('vr-rs',lines.slice(2).join(' ').trim());
+    st('vr-hk',ex(t,'HOOK','CAPTION'));st('vr-cp',ex(t,'CAPTION','HASHTAGS'));
+    st('vr-ht',ex(t,'HASHTAGS','VARIANTA'));st('vr-va',ex(t,'VARIANTA','VARIANTB'));
+    st('vr-vb',ex(t,'VARIANTB','STRATEGY'));st('vr-st',ex(t,'STRATEGY','XXXXEND'));
+    sO('vr');
+  }catch(e){rst('vr');alert('Error: '+e.message);}
+}
+
+function toggleMore(forceClose){
+  var m=document.getElementById('more-menu');
+  var btn=document.getElementById('bn-more');
+  if(!m)return;
+  var open=m.style.display==='block';
+  if(forceClose||open){m.style.display='none';if(btn)btn.classList.remove('on');}
+  else{m.style.display='block';if(btn)btn.classList.add('on');}
+}
+
+async function runCluster(){
+  var topic=document.getElementById('cl-topic');
+  if(!topic||!topic.value.trim()){alert('Enter a hub topic.');return;}
+  var t=topic.value.trim();
+  var niche=document.getElementById('cl-niche').value.trim()||'sports card investing';
+  var count=document.getElementById('cl-count').value;
+  var aud=document.getElementById('cl-aud').value;
+  sL('cluster','Building your content cluster...');
+  var p='You are an expert SEO strategist for a sports card investing blog. Build a complete content cluster.\nHUB TOPIC: '+t+'\nNICHE: '+niche+'\nAUDIENCE: '+aud+'\nSPOKE COUNT: '+count+'\n\nReturn with EXACT headers:\n---HUB---\n---SPOKES---\n---LINKS---\n---SCHEMA---\n---CALENDAR---\n\n---HUB---: Write the complete hub article outline with: H1 title (include primary keyword), meta description under 155 chars, 5-7 H2 section headings with 2-3 bullet points each, internal link placeholders for each spoke article, word count target, primary keyword, and 3 secondary keywords.\n---SPOKES---: List all '+count+' spoke articles. For each: NUMBER. TITLE (keyword-optimized, under 60 chars) | TARGET KEYWORD | SEARCH INTENT (informational/commercial/transactional) | ESTIMATED MONTHLY SEARCHES (low/medium/high) | DIFFICULTY (low/medium/high) | AFFILIATE OPPORTUNITY (yes/no + which).\n---LINKS---: Internal linking map. Show which spoke links to hub and which spokes link to each other. Format as: SPOKE TITLE → links to → [list of articles]. Include anchor text suggestions for each link.\n---SCHEMA---: JSON-LD schema markup for the hub article. Use Article schema with full properties: headline, description, author, datePublished, keywords, about. Make it copy-paste ready.\n---CALENDAR---: 10-week publishing schedule. Week 1: Hub article. Weeks 2-'+count+': One spoke per week. For each week: WEEK N | ARTICLE TITLE | WHY THIS ORDER | SOCIAL PROMOTION TASK | NEWSLETTER MENTION.';
+  try{
+    var res=await callAPI(p);
+    st('cl-hub',ex(res,'HUB','SPOKES'));
+    st('cl-spokes',ex(res,'SPOKES','LINKS'));
+    st('cl-links',ex(res,'LINKS','SCHEMA'));
+    st('cl-schema',ex(res,'SCHEMA','CALENDAR'));
+    st('cl-cal',ex(res,'CALENDAR','XXXXEND'));
+    sO('cluster');
+  }catch(e){rst('cluster');alert('Error: '+e.message);}
+}
+
+async function runKeyword(){
+  var seed=document.getElementById('kw-seed');
+  if(!seed||!seed.value.trim()){alert('Enter a seed topic.');return;}
+  var s=seed.value.trim();
+  var goal=document.getElementById('kw-goal').value;
+  var comp=document.getElementById('kw-comp').value;
+  var cnt=document.getElementById('kw-cnt').value;
+  sL('keyword','Researching keyword opportunities...');
+  var p='You are an expert SEO keyword researcher for a sports card investing blog. Generate comprehensive keyword research.\nSEED TOPIC: '+s+'\nCONTENT GOAL: '+goal+'\nCOMPETITION TARGET: '+comp+'\nKEYWORD COUNT: '+cnt+'\n\nReturn with EXACT headers:\n---TOP---\n---QUICK---\n---LONG---\n---GAPS---\n\n---TOP---: The top '+cnt+' keyword opportunities ranked by opportunity score. For each keyword: KEYWORD | MONTHLY SEARCHES (estimate low/med/high) | COMPETITION (low/med/high) | SEARCH INTENT | CONTENT TYPE TO RANK | AFFILIATE ANGLE. Format as a numbered list. Focus on long-tail keywords 3-6 words that a hobby blog can realistically rank for.\n---QUICK---: Top 8 quick win keywords to write about THIS WEEK. These should be very low competition, high buyer intent, and directly tied to '+s+'. For each: KEYWORD | WHY IT WINS NOW | ARTICLE TITLE TO USE | CTA TO INCLUDE.\n---LONG---: Top 8 long-term authority keywords. These may be harder to rank for now but build domain authority over 6-12 months. For each: KEYWORD | WHY IT MATTERS LONG TERM | CONTENT STRATEGY | HOW IT FEEDS OTHER KEYWORDS.\n---GAPS---: Content gap analysis. What 5 keyword opportunities exist in the '+s+' niche that almost NO hobby blogs are covering right now? For each gap: GAP TOPIC | WHY IT\'S UNDERSERVED | ARTICLE ANGLE | ESTIMATED TRAFFIC POTENTIAL | MONETIZATION PATH.';
+  try{
+    var res=await callAPI(p);
+    st('kw-top',ex(res,'TOP','QUICK'));
+    st('kw-quick',ex(res,'QUICK','LONG'));
+    st('kw-long',ex(res,'LONG','GAPS'));
+    st('kw-gaps',ex(res,'GAPS','XXXXEND'));
+    sO('keyword');
+  }catch(e){rst('keyword');alert('Error: '+e.message);}
+}
+
+async function runRepurpose(){
+  var content=document.getElementById('rp-content');
+  if(!content||!content.value.trim()){alert('Paste your source content.');return;}
+  var c=content.value.trim();
+  var type=document.getElementById('rp-type').value;
+  var topic=document.getElementById('rp-topic').value.trim()||'sports card investing';
+  var aud=document.getElementById('rp-aud').value.trim()||'sports card collectors';
+  sL('repurpose','Repurposing into 7 formats...');
+  var p='You are a content repurposing expert for a sports card investing brand. Take this '+type+' and repurpose it into 7 distinct formats.\nSOURCE CONTENT:\n'+c+'\nTOPIC: '+topic+'\nAUDIENCE: '+aud+'\n\nReturn with EXACT headers:\n---BLOG---\n---NEWSLETTER---\n---SOCIAL---\n---REDDIT---\n---YTSHORT---\n---EMAIL---\n---SEO---\n\n---BLOG---: Full SEO blog post version (400-600 words). H1 title, 3 H2 sections, conclusion with CTA. Use hobby terminology. Include [EBAY_AFFILIATE_LINK] and [CARDLADDER_LINK] placeholders naturally.\n---NEWSLETTER---: Newsletter section (150-200 words). Punchy opening, key insight from the content, specific actionable takeaway, CTA to view listings or subscribe.\n---SOCIAL---: 5 social posts labeled POST 1-5. POST 1: Instagram caption with 5 hashtags. POST 2: Twitter/X under 280 chars. POST 3: Facebook conversational. POST 4: Instagram Story text (under 80 chars, punchy). POST 5: LinkedIn if relevant to hobby business angle.\n---REDDIT---: Reddit post for r/baseballcards or r/sportscards. Conversational, genuine, adds value, no obvious self-promotion. 3-4 sentences. Include a question to drive comments.\n---YTSHORT---: YouTube Shorts script (45-60 seconds). Hook line (under 5 words). 3 punchy points. CTA. Include [VISUAL: description] cues.\n---EMAIL---: Email subject line (under 50 chars) + preview text (under 90 chars) + 2-sentence teaser that drives clicks.\n---SEO---: META TITLE (under 60 chars) | META DESCRIPTION (under 155 chars) | URL SLUG | 5 INTERNAL LINK SUGGESTIONS (articles this content should link to or from) | 3 BACKLINK OUTREACH TARGETS (types of sites that would link to this).';
+  try{
+    var res=await callAPI(p);
+    st('rp-blog',ex(res,'BLOG','NEWSLETTER'));
+    st('rp-nl',ex(res,'NEWSLETTER','SOCIAL'));
+    st('rp-social',ex(res,'SOCIAL','REDDIT'));
+    st('rp-reddit',ex(res,'REDDIT','YTSHORT'));
+    st('rp-yt',ex(res,'YTSHORT','EMAIL'));
+    st('rp-email',ex(res,'EMAIL','SEO'));
+    st('rp-seo',ex(res,'SEO','XXXXEND'));
+    sO('repurpose');
+  }catch(e){rst('repurpose');alert('Error: '+e.message);}
+}
+
+</script>
+</body>
+</html>
