@@ -716,6 +716,8 @@ select.fi{cursor:pointer}
 /* Output blocks */
 .out{display:none}
 .out.on{display:block}
+.ob{display:none}
+.ob.on{display:block}
 
 .oc{
   background:var(--s1);
@@ -875,8 +877,8 @@ select.fi{cursor:pointer}
       <div class="api-note">
         Get your free key at <a href="https://console.anthropic.com" target="_blank">console.anthropic.com</a> → API Keys. Stored only on this device. Each run costs pennies.
       </div>
-      <button class="api-btn" onclick="doLaunch()">LAUNCH OS</button>
-      <div class="api-err" id="apiErr">// Key must start with sk-ant-</div>
+      <button class="api-btn" id="launchBtn" onclick="doLaunch()">LAUNCH OS</button>
+      <div class="api-err" id="apiErr">// Key must start with sk-</div>
     </div>
   </div>
 </div>
@@ -1421,25 +1423,32 @@ var VS=['home','newsletter','listings','blog','viral','cluster','keyword','repur
 
 document.addEventListener('DOMContentLoaded',function(){
   var k=localStorage.getItem('ca_k');
-  if(k&&k.indexOf('sk-ant-')===0){KEY=k;boot();}
+  if(k&&k.indexOf('sk-')===0&&k.length>=20){KEY=k;boot();}
   document.getElementById('apiKey').addEventListener('keydown',function(e){if(e.key==='Enter')doLaunch();});
   initP();tick();setInterval(tick,1000);
 });
 
 function doLaunch(){
   var k=document.getElementById('apiKey').value.trim();
-  if(k.indexOf('sk-ant-')!==0){document.getElementById('apiErr').style.display='block';return;}
-  KEY=k;localStorage.setItem('ca_k',k);boot();
+  var err=document.getElementById('apiErr');
+  if(!k){err.textContent='// Please enter your API key';err.style.display='block';return;}
+  if(k.length < 20){err.textContent='// Key is too short — check and try again';err.style.display='block';return;}
+  err.style.display='none';
+  KEY=k;
+  try{localStorage.setItem('ca_k',k);}catch(e){}
+  boot();
 }
 
 function boot(){
-  document.getElementById('apiScreen').style.display='none';
-  document.getElementById('app').style.display='block';
+  var api=document.getElementById('apiScreen');
+  var app=document.getElementById('app');
+  if(api)api.style.display='none';
+  if(app){app.style.display='block';app.style.visibility='visible';}
 }
 
 function resetKey(){
   if(!confirm('Reset API key?'))return;
-  localStorage.removeItem('ca_k');KEY='';
+  try{localStorage.removeItem('ca_k');}catch(e){}KEY='';
   document.getElementById('apiKey').value='';
   document.getElementById('apiErr').style.display='none';
   document.getElementById('app').style.display='none';
@@ -1470,7 +1479,9 @@ function gv(id){var e=document.getElementById(id);return e?e.value.trim():'';}
 function st(id,v){var e=document.getElementById(id);if(e)e.textContent=v;}
 
 function sL(px,msg){
-  var f=document.getElementById(px+'-f'),l=document.getElementById(px+'-l'),o=document.getElementById(px+'-o')||document.getElementById(px+'-o');
+  var f=document.getElementById(px+'-f');
+  var l=document.getElementById(px+'-l');
+  var o=document.getElementById(px+'-o');
   if(f)f.style.display='none';
   if(o){o.style.display='none';o.classList.remove('on');}
   if(l){l.style.display='block';l.classList.add('on');}
@@ -1478,12 +1489,13 @@ function sL(px,msg){
 }
 
 function sO(px){
-  var l=document.getElementById(px+'-l'),o=document.getElementById(px+'-o');
+  var l=document.getElementById(px+'-l');
+  var o=document.getElementById(px+'-o');
   if(l){l.style.display='none';l.classList.remove('on');}
-  if(o){o.style.display='block';o.classList.add('on');}
-  // For cluster/keyword/repurpose which use ob class
-  var ob=document.getElementById(px+'-o');
-  if(ob&&ob.classList.contains('ob')){ob.classList.add('on');}
+  if(o){
+    o.style.display='block';
+    o.classList.add('on');
+  }
 }
 
 function rst(px){
@@ -1622,10 +1634,7 @@ async function runCluster(){
     st('cl-spokes',ex(res,'SPOKES','LINKS'));
     st('cl-links',ex(res,'LINKS','SCHEMA'));
     st('cl-schema',ex(res,'SCHEMA','CALENDAR'));
-    st('cl-cal',ex(res,'CALENDAR','XXXXEND')+'
-
----
-DISCLAIMER: Card Acumen is for informational and entertainment purposes only. Nothing published constitutes financial, investment, legal, or professional advice. Sports card values can decrease as well as increase. Always conduct your own research before making any purchase or sale decision. Card Acumen is not a registered investment advisor. The author may hold positions in cards mentioned. | cardacumen.com');
+    st('cl-cal',ex(res,'CALENDAR','XXXXEND'));
     sO('cluster');
   }catch(e){rst('cluster');alert('Error: '+e.message);}
 }
@@ -1660,14 +1669,8 @@ async function runRepurpose(){
   var p='You are a content repurposing expert for a sports card investing brand. Take this '+type+' and repurpose it into 7 distinct formats.\nSOURCE CONTENT:\n'+c+'\nTOPIC: '+topic+'\nAUDIENCE: '+aud+'\n\nReturn with EXACT headers:\n---BLOG---\n---NEWSLETTER---\n---SOCIAL---\n---REDDIT---\n---YTSHORT---\n---EMAIL---\n---SEO---\n\n---BLOG---: Full SEO blog post version (400-600 words). H1 title, 3 H2 sections, conclusion with CTA. Use hobby terminology. Include [EBAY_AFFILIATE_LINK] and [CARDLADDER_LINK] placeholders naturally.\n---NEWSLETTER---: Newsletter section (150-200 words). Punchy opening, key insight from the content, specific actionable takeaway, CTA to view listings or subscribe.\n---SOCIAL---: 5 social posts labeled POST 1-5. POST 1: Instagram caption with 5 hashtags. POST 2: Twitter/X under 280 chars. POST 3: Facebook conversational. POST 4: Instagram Story text (under 80 chars, punchy). POST 5: LinkedIn if relevant to hobby business angle.\n---REDDIT---: Reddit post for r/baseballcards or r/sportscards. Conversational, genuine, adds value, no obvious self-promotion. 3-4 sentences. Include a question to drive comments.\n---YTSHORT---: YouTube Shorts script (45-60 seconds). Hook line (under 5 words). 3 punchy points. CTA. Include [VISUAL: description] cues.\n---EMAIL---: Email subject line (under 50 chars) + preview text (under 90 chars) + 2-sentence teaser that drives clicks.\n---SEO---: META TITLE (under 60 chars) | META DESCRIPTION (under 155 chars) | URL SLUG | 5 INTERNAL LINK SUGGESTIONS (articles this content should link to or from) | 3 BACKLINK OUTREACH TARGETS (types of sites that would link to this).';
   try{
     var res=await callAPI(p);
-    st('rp-blog',ex(res,'BLOG','NEWSLETTER')+'
-
----
-DISCLAIMER: Card Acumen is for informational and entertainment purposes only. Nothing published constitutes financial, investment, legal, or professional advice. Sports card values can decrease as well as increase. Always conduct your own research before making any purchase or sale decision. Card Acumen is not a registered investment advisor. The author may hold positions in cards mentioned. | cardacumen.com');
-    st('rp-nl',ex(res,'NEWSLETTER','SOCIAL')+'
-
----
-DISCLAIMER: Card Acumen is for informational and entertainment purposes only. Nothing published constitutes financial, investment, legal, or professional advice. Sports card values can decrease as well as increase. Always conduct your own research before making any purchase or sale decision. Card Acumen is not a registered investment advisor. The author may hold positions in cards mentioned. | cardacumen.com');
+    st('rp-blog',ex(res,'BLOG','NEWSLETTER'));
+    st('rp-nl',ex(res,'NEWSLETTER','SOCIAL'));
     st('rp-social',ex(res,'SOCIAL','REDDIT'));
     st('rp-reddit',ex(res,'REDDIT','YTSHORT'));
     st('rp-yt',ex(res,'YTSHORT','EMAIL'));
