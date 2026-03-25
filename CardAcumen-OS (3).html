@@ -1,0 +1,1693 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="apple-mobile-web-app-title" content="CardAcumen">
+<title>CardAcumen OS</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@300;400;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<style>
+/* ── RESET ── */
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+
+/* ── VARIABLES ── */
+:root{
+  --gold:#F5B800;
+  --gold2:#C89000;
+  --gold3:#A87000;
+  --dark:#060810;
+  --s1:#0D1420;
+  --s2:#111C2C;
+  --s3:#162438;
+  --border:#1A2A3A;
+  --border2:#243444;
+  --text:#C8D8E8;
+  --muted:#4A6070;
+  --bright:#EEF4FF;
+  --green:#22C55E;
+  --red:#E03A2F;
+  --blue:#3B82F6;
+  --purple:#A78BFA;
+  --pink:#F43F5E;
+  --orange:#FB923C;
+}
+
+body{
+  background:var(--dark);
+  color:var(--text);
+  font-family:'Barlow',sans-serif;
+  font-size:16px;
+  overflow-x:hidden;
+}
+
+/* ── BACKGROUND GRID ── */
+body::before{
+  content:'';
+  position:fixed;
+  inset:0;
+  background-image:linear-gradient(rgba(245,184,0,0.02) 1px,transparent 1px),linear-gradient(90deg,rgba(245,184,0,0.02) 1px,transparent 1px);
+  background-size:40px 40px;
+  pointer-events:none;
+  z-index:0;
+}
+
+/* ══════════════════════════════════════ */
+/* API KEY SCREEN                        */
+/* ══════════════════════════════════════ */
+#apiScreen{
+  position:relative;
+  z-index:10;
+  background:var(--dark);
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:32px 24px;
+  padding-top:max(32px,env(safe-area-inset-top));
+}
+
+.api-box{width:100%;max-width:400px;text-align:center}
+
+/* Diamond logo on API screen */
+.api-diamond{
+  width:64px;height:64px;
+  position:relative;
+  margin:0 auto 24px;
+}
+.api-diamond .d-out{
+  width:48px;height:48px;
+  border:2px solid var(--gold);
+  transform:rotate(45deg);
+  position:absolute;top:8px;left:8px;
+  box-shadow:0 0 20px rgba(245,184,0,0.2);
+}
+.api-diamond .d-in{
+  width:18px;height:18px;
+  background:var(--gold);
+  transform:rotate(45deg);
+  position:absolute;top:23px;left:23px;
+}
+
+.api-logo{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:44px;
+  letter-spacing:6px;
+  color:var(--bright);
+  margin-bottom:2px;
+  line-height:1;
+}
+.api-logo em{color:var(--gold);font-style:normal}
+
+.api-sub{
+  font-family:'Share Tech Mono',monospace;
+  font-size:11px;
+  letter-spacing:3px;
+  color:#6A8898;
+  text-transform:uppercase;
+  margin-bottom:40px;
+}
+
+.api-card{
+  background:var(--s2);
+  border:1px solid var(--border2);
+  border-radius:16px;
+  padding:28px;
+  text-align:left;
+  margin-bottom:0;
+}
+
+.api-lbl{
+  display:block;
+  font-family:'Share Tech Mono',monospace;
+  font-size:11px;
+  letter-spacing:2px;
+  color:#7A9AAA;
+  text-transform:uppercase;
+  margin-bottom:8px;
+}
+
+.api-input{
+  display:block;
+  width:100%;
+  padding:14px 16px;
+  background:var(--s1);
+  border:1px solid var(--border2);
+  border-radius:10px;
+  color:var(--bright);
+  font-size:15px;
+  font-family:'Share Tech Mono',monospace;
+  outline:none;
+  margin-bottom:14px;
+  -webkit-appearance:none;
+  transition:border-color 0.2s;
+}
+.api-input:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(245,184,0,0.08)}
+.api-input::placeholder{color:var(--muted)}
+
+.api-note{
+  background:rgba(245,184,0,0.05);
+  border:1px solid rgba(245,184,0,0.15);
+  border-radius:10px;
+  padding:14px 16px;
+  font-size:14px;
+  color:#7A9AAA;
+  line-height:1.7;
+  margin-bottom:20px;
+}
+.api-note a{color:var(--gold2);text-decoration:none}
+
+.api-btn{
+  display:block;
+  width:100%;
+  padding:16px;
+  background:var(--gold);
+  color:#060810;
+  border:none;
+  border-radius:10px;
+  font-family:'Bebas Neue',sans-serif;
+  font-size:20px;
+  letter-spacing:3px;
+  cursor:pointer;
+  -webkit-appearance:none;
+  transition:all 0.15s;
+}
+.api-btn:active{opacity:.85}
+.api-btn:hover{background:#FFD040}
+
+.api-err{
+  display:none;
+  color:#FF6B6B;
+  font-size:13px;
+  text-align:center;
+  margin-top:12px;
+  font-family:'Share Tech Mono',monospace;
+  letter-spacing:1px;
+}
+
+/* ══════════════════════════════════════ */
+/* MAIN APP                              */
+/* ══════════════════════════════════════ */
+#app{
+  display:none;
+  background:var(--dark);
+  min-height:100vh;
+  padding-bottom:calc(72px + env(safe-area-inset-bottom));
+  position:relative;
+  z-index:1;
+}
+
+/* ── TOPBAR ── */
+.topbar{
+  position:sticky;
+  top:0;
+  z-index:999;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:0 18px;
+  padding-top:env(safe-area-inset-top);
+  height:calc(56px + env(safe-area-inset-top));
+  background:rgba(6,8,16,0.95);
+  backdrop-filter:blur(12px);
+  -webkit-backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--border);
+}
+
+.tb-brand{display:flex;align-items:center;gap:10px}
+
+.tb-diamond{
+  width:24px;height:24px;
+  position:relative;
+}
+.tb-diamond .d-out{
+  width:18px;height:18px;
+  border:1.5px solid var(--gold);
+  transform:rotate(45deg);
+  position:absolute;top:3px;left:3px;
+}
+.tb-diamond .d-in{
+  width:7px;height:7px;
+  background:var(--gold);
+  transform:rotate(45deg);
+  position:absolute;top:8.5px;left:8.5px;
+}
+
+.tb-logo{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:20px;
+  letter-spacing:4px;
+  color:var(--bright);
+  line-height:1;
+}
+.tb-logo em{color:var(--gold);font-style:normal}
+
+.tb-right{display:flex;align-items:center;gap:10px}
+
+.tb-status{
+  display:flex;
+  align-items:center;
+  gap:5px;
+  font-family:'Share Tech Mono',monospace;
+  font-size:9px;
+  letter-spacing:1.5px;
+  color:var(--green);
+  text-transform:uppercase;
+}
+.tb-dot{
+  width:6px;height:6px;
+  border-radius:50%;
+  background:var(--green);
+  box-shadow:0 0 6px var(--green);
+}
+
+.tb-clock{
+  font-family:'Share Tech Mono',monospace;
+  font-size:13px;
+  color:var(--muted);
+}
+
+.tb-key{
+  font-family:'Share Tech Mono',monospace;
+  font-size:9px;
+  color:var(--muted);
+  background:transparent;
+  border:1px solid var(--border);
+  border-radius:5px;
+  padding:4px 10px;
+  cursor:pointer;
+  -webkit-appearance:none;
+  letter-spacing:1px;
+  text-transform:uppercase;
+  transition:border-color 0.15s;
+}
+.tb-key:hover{border-color:var(--border2);color:var(--text)}
+
+/* ── BOTTOM NAV ── */
+.botnav{
+  position:fixed;
+  bottom:0;left:0;right:0;
+  z-index:999;
+  display:flex;
+  background:rgba(6,8,16,0.97);
+  backdrop-filter:blur(12px);
+  border-top:1px solid var(--border);
+  padding-bottom:env(safe-area-inset-bottom);
+}
+
+.bn{
+  flex:1;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:3px;
+  padding:10px 4px 8px;
+  background:transparent;
+  border:none;
+  color:var(--muted);
+  cursor:pointer;
+  -webkit-appearance:none;
+  font-family:'Barlow',sans-serif;
+  transition:color 0.15s;
+}
+.bn.on{color:var(--gold)}
+.bn.on .bn-pip{background:var(--gold)}
+.bn-i{font-size:20px;line-height:1}
+.bn-l{
+  font-family:'Share Tech Mono',monospace;
+  font-size:8px;
+  letter-spacing:1px;
+  text-transform:uppercase;
+}
+.bn-pip{
+  width:3px;height:3px;
+  border-radius:50%;
+  background:transparent;
+  margin-top:1px;
+}
+
+/* SEO submenu */
+.seo-menu{
+  display:none;
+  position:fixed;
+  bottom:calc(56px + env(safe-area-inset-bottom));
+  left:0;right:0;
+  background:rgba(6,8,16,0.98);
+  border-top:1px solid var(--border);
+  z-index:998;
+  padding:16px;
+}
+.seo-menu.open{display:block}
+.seo-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr 1fr;
+  gap:10px;
+}
+.seo-btn{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:6px;
+  padding:14px 8px;
+  background:var(--s1);
+  border:1px solid var(--border);
+  border-radius:10px;
+  cursor:pointer;
+  -webkit-appearance:none;
+  color:var(--muted);
+  font-family:'Barlow',sans-serif;
+  transition:all 0.15s;
+}
+.seo-btn:hover{border-color:var(--border2);color:var(--text)}
+.seo-btn-i{font-size:22px}
+.seo-btn-l{
+  font-family:'Share Tech Mono',monospace;
+  font-size:9px;
+  letter-spacing:1px;
+  text-transform:uppercase;
+}
+
+/* ── VIEWS ── */
+.view{display:none;padding:20px 18px 32px}
+.view.on{display:block}
+
+/* ── HOME VIEW ── */
+.home-header{
+  background:linear-gradient(135deg,var(--s2) 0%,var(--s1) 100%);
+  border:1px solid var(--border2);
+  border-radius:16px;
+  padding:24px 22px;
+  margin-bottom:24px;
+  position:relative;
+  overflow:hidden;
+}
+.home-header::before{
+  content:'◇';
+  position:absolute;
+  right:-10px;top:-20px;
+  font-size:120px;
+  color:rgba(245,184,0,0.04);
+  line-height:1;
+  pointer-events:none;
+}
+.home-greeting{
+  font-family:'Share Tech Mono',monospace;
+  font-size:10px;
+  letter-spacing:3px;
+  color:var(--muted);
+  text-transform:uppercase;
+  margin-bottom:6px;
+}
+.home-title{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:28px;
+  letter-spacing:3px;
+  color:var(--gold);
+  line-height:1;
+  margin-bottom:4px;
+}
+.home-sub{
+  font-family:'Share Tech Mono',monospace;
+  font-size:10px;
+  letter-spacing:2px;
+  color:var(--muted);
+  text-transform:uppercase;
+}
+
+.sec-lbl{
+  font-family:'Share Tech Mono',monospace;
+  font-size:10px;
+  letter-spacing:3px;
+  text-transform:uppercase;
+  color:var(--muted);
+  margin-bottom:12px;
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+.sec-lbl::after{
+  content:'';
+  flex:1;
+  height:1px;
+  background:var(--border);
+}
+
+.qg{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+  margin-bottom:28px;
+}
+
+.qc{
+  background:var(--s1);
+  border:1px solid var(--border);
+  border-radius:14px;
+  padding:18px 16px;
+  cursor:pointer;
+  text-align:left;
+  -webkit-appearance:none;
+  width:100%;
+  transition:all 0.15s;
+  position:relative;
+  overflow:hidden;
+}
+.qc::before{
+  content:'';
+  position:absolute;
+  top:0;left:0;right:0;
+  height:2px;
+  background:var(--agent-color,var(--gold));
+  opacity:0.6;
+}
+.qc:active{opacity:.8}
+.qc:hover{border-color:var(--border2)}
+
+.qi2{font-size:28px;display:block;margin-bottom:10px;line-height:1}
+.qn{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:18px;
+  letter-spacing:2px;
+  color:var(--bright);
+  margin-bottom:4px;
+}
+.qd{font-size:12px;color:var(--muted);line-height:1.4}
+
+.rev-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+}
+.rev-card{
+  background:var(--s1);
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:16px;
+}
+.rev-lbl{
+  font-family:'Share Tech Mono',monospace;
+  font-size:9px;
+  letter-spacing:2px;
+  text-transform:uppercase;
+  color:var(--muted);
+  margin-bottom:6px;
+}
+.rev-val{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:32px;
+  letter-spacing:2px;
+  color:var(--bright);
+  line-height:1;
+  margin-bottom:2px;
+}
+.rev-sub{font-size:11px;color:var(--green)}
+
+/* ── AGENT VIEWS ── */
+.ag-header{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  margin-bottom:22px;
+  padding-bottom:16px;
+  border-bottom:1px solid var(--border);
+}
+.ag-title-wrap{display:flex;align-items:center;gap:12px}
+.ag-icon-wrap{
+  width:42px;height:42px;
+  border-radius:10px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:22px;
+  flex-shrink:0;
+}
+.ag-title{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:22px;
+  letter-spacing:2px;
+  color:var(--bright);
+  line-height:1;
+}
+.ag-desc{
+  font-family:'Share Tech Mono',monospace;
+  font-size:9px;
+  letter-spacing:1.5px;
+  color:var(--muted);
+  text-transform:uppercase;
+}
+.ag-status{
+  display:flex;
+  align-items:center;
+  gap:5px;
+  font-family:'Share Tech Mono',monospace;
+  font-size:9px;
+  color:var(--green);
+  letter-spacing:1.5px;
+  text-transform:uppercase;
+  background:rgba(34,197,94,0.08);
+  border:1px solid rgba(34,197,94,0.2);
+  border-radius:20px;
+  padding:4px 10px;
+}
+.ag-status-dot{
+  width:5px;height:5px;
+  border-radius:50%;
+  background:var(--green);
+  box-shadow:0 0 5px var(--green);
+}
+
+/* ── FORM ELEMENTS ── */
+.fl{
+  display:block;
+  font-family:'Share Tech Mono',monospace;
+  font-size:10px;
+  letter-spacing:2px;
+  text-transform:uppercase;
+  color:var(--muted);
+  margin-bottom:7px;
+}
+.fi{
+  display:block;
+  width:100%;
+  padding:13px 15px;
+  background:var(--s1);
+  border:1px solid var(--border);
+  border-radius:10px;
+  color:var(--bright);
+  font-size:15px;
+  font-family:'Barlow',sans-serif;
+  outline:none;
+  -webkit-appearance:none;
+  margin-bottom:14px;
+  transition:border-color 0.15s;
+}
+.fi:focus{border-color:var(--border2)}
+.fi::placeholder{color:var(--muted)}
+textarea.fi{resize:none;line-height:1.5}
+select.fi{cursor:pointer}
+
+.fr2{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+.fr2 .fi{margin-bottom:0}
+.fg{display:flex;flex-direction:column}
+.fg .fi{margin-bottom:0}
+.fi-g{display:flex;flex-direction:column;margin-bottom:14px}
+.fi-g .fi{margin-bottom:0}
+
+/* Pills */
+.pill-group{margin-bottom:16px}
+.pill-lbl{
+  font-family:'Share Tech Mono',monospace;
+  font-size:9px;
+  letter-spacing:2.5px;
+  text-transform:uppercase;
+  color:var(--muted);
+  margin-bottom:8px;
+  display:block;
+}
+.pills{display:flex;flex-wrap:wrap;gap:7px}
+.pill{
+  padding:6px 14px;
+  background:transparent;
+  border:1px solid var(--border);
+  border-radius:20px;
+  font-size:12px;
+  color:var(--muted);
+  cursor:pointer;
+  -webkit-appearance:none;
+  font-family:'Barlow',sans-serif;
+  transition:all 0.15s;
+}
+.pill.on{
+  border-color:rgba(245,184,0,0.4);
+  color:var(--gold);
+  background:rgba(245,184,0,0.07);
+}
+
+/* Buttons */
+.gbtn{
+  display:block;
+  width:100%;
+  padding:16px;
+  background:var(--gold);
+  color:#060810;
+  border:none;
+  border-radius:12px;
+  font-family:'Bebas Neue',sans-serif;
+  font-size:20px;
+  letter-spacing:2px;
+  cursor:pointer;
+  margin-top:8px;
+  -webkit-appearance:none;
+  transition:all 0.15s;
+}
+.gbtn:active{opacity:.85}
+.gbtn:hover{background:#FFD040}
+.gbtn:disabled{opacity:.3;pointer-events:none}
+.gbtn.fire{background:var(--red);color:#fff}
+.gbtn.fire:hover{background:#FF4A3F}
+.gbtn.ghost{
+  background:var(--s1);
+  color:var(--text);
+  border:1px solid var(--border2);
+  font-family:'Share Tech Mono',monospace;
+  font-size:13px;
+  letter-spacing:1px;
+  padding:13px;
+  margin-top:0;
+}
+
+/* Queue items */
+.qi{
+  display:flex;
+  align-items:center;
+  background:var(--s2);
+  border:1px solid var(--border);
+  border-radius:10px;
+  padding:12px 14px;
+  margin-bottom:8px;
+  gap:10px;
+}
+.qi-n{flex:1;font-size:14px;color:var(--bright);font-weight:600}
+.qi-m{font-size:12px;color:var(--muted)}
+.qi-x{
+  background:none;
+  border:none;
+  color:var(--muted);
+  font-size:20px;
+  line-height:1;
+  cursor:pointer;
+  padding:0 2px;
+  flex-shrink:0;
+}
+
+/* Loading */
+.ldg{display:none;text-align:center;padding:60px 20px}
+.ldg.on{display:block}
+.ldg-icon{font-size:36px;margin-bottom:16px;animation:pulse 1.5s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:0.4;transform:scale(0.95)}50%{opacity:1;transform:scale(1)}}
+.ldg-t{
+  font-family:'Share Tech Mono',monospace;
+  font-size:11px;
+  letter-spacing:3px;
+  text-transform:uppercase;
+  color:var(--muted);
+  margin-bottom:20px;
+}
+.ldg-bar{
+  width:160px;
+  height:2px;
+  background:var(--border);
+  border-radius:2px;
+  margin:0 auto;
+  overflow:hidden;
+}
+.ldg-fill{
+  height:100%;
+  width:40%;
+  background:linear-gradient(90deg,transparent,var(--gold),transparent);
+  border-radius:2px;
+  animation:sweep 1.2s ease-in-out infinite;
+}
+@keyframes sweep{from{transform:translateX(-200%)}to{transform:translateX(500%)}}
+
+/* Output blocks */
+.out{display:none}
+.out.on{display:block}
+.ob{display:none}
+.ob.on{display:block}
+
+.oc{
+  background:var(--s1);
+  border:1px solid var(--border);
+  border-radius:12px;
+  margin-bottom:12px;
+  overflow:hidden;
+}
+.oc-h{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:10px 16px;
+  background:var(--s2);
+  border-bottom:1px solid var(--border);
+}
+.oc-l{
+  font-family:'Share Tech Mono',monospace;
+  font-size:9px;
+  letter-spacing:2px;
+  text-transform:uppercase;
+  color:var(--muted);
+}
+.cpb{
+  font-family:'Share Tech Mono',monospace;
+  font-size:9px;
+  letter-spacing:1.5px;
+  color:var(--muted);
+  background:transparent;
+  border:1px solid var(--border2);
+  border-radius:5px;
+  padding:4px 12px;
+  cursor:pointer;
+  -webkit-appearance:none;
+  text-transform:uppercase;
+  transition:all 0.15s;
+}
+.cpb.ok{color:var(--green);border-color:rgba(34,197,94,0.4)}
+.cpb:hover{color:var(--text);border-color:var(--border2)}
+.oc-b{
+  padding:16px;
+  font-size:14px;
+  line-height:1.8;
+  color:var(--text);
+  white-space:pre-wrap;
+  word-break:break-word;
+}
+.rl{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  font-family:'Share Tech Mono',monospace;
+  font-size:11px;
+  color:var(--muted);
+  cursor:pointer;
+  margin-top:8px;
+  padding:10px 0;
+  background:none;
+  border:none;
+  -webkit-appearance:none;
+  letter-spacing:1px;
+  text-transform:uppercase;
+  text-decoration:none;
+  transition:color 0.15s;
+}
+.rl:hover{color:var(--text)}
+
+/* Score badge */
+.score-badge{
+  display:flex;
+  align-items:center;
+  gap:16px;
+  background:var(--s2);
+  border:1px solid var(--border2);
+  border-radius:14px;
+  padding:18px;
+  margin-bottom:14px;
+}
+.score-num{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:56px;
+  line-height:1;
+  flex-shrink:0;
+}
+.score-verdict{font-size:16px;font-weight:700;color:var(--bright);margin-bottom:4px}
+.score-reason{font-size:13px;color:var(--muted);line-height:1.5}
+
+/* AB variants */
+.ab-g{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:14px}
+.ab-c{
+  background:var(--s2);
+  border:1px solid var(--border);
+  border-radius:10px;
+  padding:14px;
+}
+.ab-l{
+  font-family:'Share Tech Mono',monospace;
+  font-size:9px;
+  letter-spacing:2px;
+  text-transform:uppercase;
+  color:var(--muted);
+  margin-bottom:8px;
+}
+.ab-t{font-size:13px;line-height:1.6;color:var(--text);white-space:pre-wrap;word-break:break-word}
+
+/* Listing title block */
+.listing-title-block{
+  padding:14px 16px;
+  border-bottom:1px solid var(--border);
+}
+.listing-title-text{
+  font-family:'Share Tech Mono',monospace;
+  font-size:13px;
+  color:var(--bright);
+  line-height:1.5;
+  margin-bottom:6px;
+  word-break:break-all;
+}
+.char-count{font-size:12px;font-family:'Share Tech Mono',monospace}
+
+/* Footer disclaimer */
+.os-footer{
+  padding:16px 18px;
+  border-top:1px solid rgba(26,42,58,0.5);
+  margin-top:8px;
+}
+.os-disclaimer{
+  font-family:'Share Tech Mono',monospace;
+  font-size:9.5px;
+  color:#2E4458;
+  line-height:1.8;
+  letter-spacing:0.3px;
+}
+
+@media(max-width:360px){
+  .qg,.fr2,.ab-g{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════ -->
+<!-- API KEY SCREEN                        -->
+<!-- ══════════════════════════════════════ -->
+<div id="apiScreen">
+  <div class="api-box">
+    <div class="api-diamond">
+      <div class="d-out"></div>
+      <div class="d-in"></div>
+    </div>
+    <div class="api-logo">CARD<em>ACUMEN</em></div>
+    <div class="api-sub">// AI Command Center</div>
+
+    <div class="api-card">
+      <label class="api-lbl" for="apiKey">Anthropic API Key</label>
+      <input type="password" id="apiKey" class="api-input" placeholder="sk-ant-api03-..." autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false">
+      <div class="api-note">
+        Get your free key at <a href="https://console.anthropic.com" target="_blank">console.anthropic.com</a> → API Keys. Stored only on this device. Each run costs pennies.
+      </div>
+      <button class="api-btn" id="launchBtn" onclick="doLaunch()">LAUNCH OS</button>
+      <div class="api-err" id="apiErr">// Key must start with sk-</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════ -->
+<!-- MAIN APP                              -->
+<!-- ══════════════════════════════════════ -->
+<div id="app">
+
+  <!-- TOPBAR -->
+  <div class="topbar">
+    <div class="tb-brand">
+      <div class="tb-diamond">
+        <div class="d-out"></div>
+        <div class="d-in"></div>
+      </div>
+      <div class="tb-logo">CARD<em>ACUMEN</em></div>
+    </div>
+    <div class="tb-right">
+      <div class="tb-status"><div class="tb-dot"></div>LIVE</div>
+      <div class="tb-clock" id="clk">--:--</div>
+      <button class="tb-key" onclick="resetKey()">KEY</button>
+    </div>
+  </div>
+
+  <!-- ── HOME ── -->
+  <div class="view on" id="v-home">
+    <div class="home-header">
+      <div class="home-greeting">// Welcome back</div>
+      <div class="home-title">CARD ACUMEN OS</div>
+      <div class="home-sub">7 Agents Online · Ready to Deploy</div>
+    </div>
+
+    <div class="sec-lbl">Quick Launch</div>
+    <div class="qg">
+      <button class="qc" style="--agent-color:#F5B800" onclick="go('newsletter')">
+        <span class="qi2">📧</span>
+        <div class="qn">Newsletter</div>
+        <div class="qd">3 picks → full issue</div>
+      </button>
+      <button class="qc" style="--agent-color:#E03A2F" onclick="go('listings')">
+        <span class="qi2">🃏</span>
+        <div class="qn">Listings</div>
+        <div class="qd">Cards → eBay copy</div>
+      </button>
+      <button class="qc" style="--agent-color:#3B82F6" onclick="go('blog')">
+        <span class="qi2">📝</span>
+        <div class="qn">Blog</div>
+        <div class="qd">Prospect → SEO article</div>
+      </button>
+      <button class="qc" style="--agent-color:#F43F5E" onclick="go('viral')">
+        <span class="qi2">⚡</span>
+        <div class="qn">Viral</div>
+        <div class="qd">Clip → captions + score</div>
+      </button>
+    </div>
+
+    <div class="sec-lbl">Revenue Targets</div>
+    <div class="rev-grid">
+      <div class="rev-card">
+        <div class="rev-lbl">Newsletter</div>
+        <div class="rev-val">$6</div>
+        <div class="rev-sub">per sub / mo</div>
+      </div>
+      <div class="rev-card">
+        <div class="rev-lbl">Listings</div>
+        <div class="rev-val">$30</div>
+        <div class="rev-sub">per 25 cards</div>
+      </div>
+      <div class="rev-card">
+        <div class="rev-lbl">Blog CTR</div>
+        <div class="rev-val">5%</div>
+        <div class="rev-sub">affiliate avg</div>
+      </div>
+      <div class="rev-card">
+        <div class="rev-lbl">Time / Week</div>
+        <div class="rev-val">18m</div>
+        <div class="rev-sub">all 4 agents</div>
+      </div>
+    </div>
+
+    <div class="os-footer">
+      <div class="os-disclaimer">DISCLAIMER: Card Acumen is for informational and entertainment purposes only. Nothing published constitutes financial, investment, legal, or professional advice. Sports card values can decrease as well as increase. Always conduct your own research before making any purchase or sale decision. Card Acumen is not a registered investment advisor. The author may hold positions in cards mentioned. | cardacumen.com</div>
+    </div>
+  </div>
+
+  <!-- ── NEWSLETTER ── -->
+  <div class="view" id="v-newsletter">
+    <div class="ag-header">
+      <div class="ag-title-wrap">
+        <div class="ag-icon-wrap" style="background:rgba(245,184,0,0.1)">📧</div>
+        <div>
+          <div class="ag-title" style="color:var(--gold)">Newsletter</div>
+          <div class="ag-desc">Weekly issue generator</div>
+        </div>
+      </div>
+      <div class="ag-status"><div class="ag-status-dot"></div>Online</div>
+    </div>
+
+    <div id="nl-f">
+      <label class="fl">Buy of the week</label>
+      <input class="fi" id="nl-buy" placeholder="e.g. Jackson Holliday 2025 Bowman Auto" autocorrect="off">
+      <label class="fl">Buy reason</label>
+      <textarea class="fi" id="nl-br" style="height:68px" placeholder="Why buy? Call-up incoming, undervalued..."></textarea>
+      <label class="fl">Sell now</label>
+      <input class="fi" id="nl-sell" placeholder="e.g. Paul Skenes RC Chrome Refractor" autocorrect="off">
+      <label class="fl">Sell reason</label>
+      <textarea class="fi" id="nl-sr" style="height:68px" placeholder="Why sell? Overhyped, price ceiling..."></textarea>
+      <label class="fl">Hold &amp; watch</label>
+      <input class="fi" id="nl-hold" placeholder="e.g. Marcelo Mayer 2025 Bowman" autocorrect="off">
+      <label class="fl">Hold reason</label>
+      <textarea class="fi" id="nl-hr" style="height:68px" placeholder="Why hold? Waiting on news..."></textarea>
+      <label class="fl">Set watch (optional)</label>
+      <textarea class="fi" id="nl-set" style="height:58px" placeholder="What's moving in the market this week?"></textarea>
+      <div class="fr2">
+        <div class="fg"><label class="fl">Issue #</label><input class="fi" id="nl-iss" placeholder="Issue #1" autocorrect="off"></div>
+        <div class="fg"><label class="fl">Name</label><input class="fi" id="nl-nm" placeholder="Card Acumen" autocorrect="off"></div>
+      </div>
+      <button class="gbtn" onclick="runNL()">⚡ Generate Newsletter</button>
+    </div>
+
+    <div class="ldg" id="nl-l">
+      <div class="ldg-icon">📧</div>
+      <div class="ldg-t" id="nl-lt">Writing your issue...</div>
+      <div class="ldg-bar"><div class="ldg-fill"></div></div>
+    </div>
+
+    <div class="out" id="nl-o">
+      <div class="oc"><div class="oc-h"><span class="oc-l">Subject + Preview</span><button class="cpb" onclick="cp('nl-s',this)">Copy</button></div><div class="oc-b" id="nl-s"></div></div>
+      <div class="oc"><div class="oc-h"><span class="oc-l">Full Newsletter</span><button class="cpb" onclick="cp('nl-b',this)">Copy</button></div><div class="oc-b" id="nl-b"></div></div>
+      <div class="oc"><div class="oc-h"><span class="oc-l">Social Teasers</span><button class="cpb" onclick="cp('nl-t',this)">Copy</button></div><div class="oc-b" id="nl-t"></div></div>
+      <div class="oc"><div class="oc-h"><span class="oc-l">Legal Disclaimer</span><button class="cpb" onclick="cp('nl-disc',this)">Copy</button></div><div class="oc-b" id="nl-disc">DISCLAIMER: Card Acumen is for informational and entertainment purposes only. Nothing published constitutes financial, investment, legal, or professional advice. Sports card values can decrease as well as increase. Always conduct your own research before making any purchase or sale decision. Card Acumen is not a registered investment advisor. The author may hold positions in cards mentioned. | cardacumen.com</div></div>
+      <button class="rl" onclick="rst('nl')">← New issue</button>
+    </div>
+  </div>
+
+  <!-- ── LISTINGS ── -->
+  <div class="view" id="v-listings">
+    <div class="ag-header">
+      <div class="ag-title-wrap">
+        <div class="ag-icon-wrap" style="background:rgba(224,58,47,0.1)">🃏</div>
+        <div>
+          <div class="ag-title" style="color:var(--red)">Listings</div>
+          <div class="ag-desc">eBay listing machine</div>
+        </div>
+      </div>
+      <div class="ag-status"><div class="ag-status-dot"></div>Online</div>
+    </div>
+
+    <div id="ls-f">
+      <label class="fl">Player Name</label>
+      <input class="fi" id="ls-p" placeholder="Jackson Holliday" autocorrect="off">
+      <div class="fr2">
+        <div class="fg"><label class="fl">Year</label><input class="fi" id="ls-y" placeholder="2025" autocorrect="off"></div>
+        <div class="fg"><label class="fl">Brand / Set</label><input class="fi" id="ls-b" placeholder="Bowman Chrome" autocorrect="off"></div>
+      </div>
+      <label class="fl">Card Type</label>
+      <select class="fi" id="ls-t">
+        <option>Auto</option>
+        <option>1st Bowman Auto</option>
+        <option>Prospect Auto</option>
+        <option>Refractor</option>
+        <option>Base</option>
+        <option>RC</option>
+        <option>Insert</option>
+      </select>
+      <div class="fr2">
+        <div class="fg"><label class="fl">Parallel</label><input class="fi" id="ls-par" placeholder="Blue /99" autocorrect="off"></div>
+        <div class="fg"><label class="fl">Grade</label>
+          <select class="fi" id="ls-g">
+            <option>Raw</option><option>PSA 10</option><option>PSA 9</option>
+            <option>BGS 9.5</option><option>BGS 10</option><option>CGC 10</option>
+          </select>
+        </div>
+      </div>
+      <label class="fl">Price ($)</label>
+      <input class="fi" id="ls-pr" placeholder="49.99" type="number" inputmode="decimal">
+      <button class="gbtn ghost" onclick="addCard()">+ Add Card to Queue</button>
+      <div id="ls-q" style="margin-top:10px;margin-bottom:10px"></div>
+      <button class="gbtn" id="ls-gb" onclick="runLS()" disabled style="background:var(--red)">⚡ Generate Listings</button>
+    </div>
+
+    <div class="ldg" id="ls-l">
+      <div class="ldg-icon">🃏</div>
+      <div class="ldg-t" id="ls-lt">Writing listings...</div>
+      <div class="ldg-bar"><div class="ldg-fill"></div></div>
+    </div>
+
+    <div class="out" id="ls-o"></div>
+  </div>
+
+  <!-- ── BLOG ── -->
+  <div class="view" id="v-blog">
+    <div class="ag-header">
+      <div class="ag-title-wrap">
+        <div class="ag-icon-wrap" style="background:rgba(59,130,246,0.1)">📝</div>
+        <div>
+          <div class="ag-title" style="color:var(--blue)">Blog</div>
+          <div class="ag-desc">SEO article generator</div>
+        </div>
+      </div>
+      <div class="ag-status"><div class="ag-status-dot"></div>Online</div>
+    </div>
+
+    <div id="bl-f">
+      <div class="pill-group">
+        <span class="pill-lbl">Article Type</span>
+        <div class="pills" id="bl-tp">
+          <button class="pill on" data-v="Is [player] worth buying — prospect value analysis">Worth buying?</button>
+          <button class="pill" data-v="Best parallels under $X — value guide">Best parallels</button>
+          <button class="pill" data-v="Buy sell or hold — investment call">Buy/Sell/Hold</button>
+          <button class="pill" data-v="Full set breakdown and analysis">Set breakdown</button>
+          <button class="pill" data-v="How-to guide — educational">How-to</button>
+        </div>
+      </div>
+      <label class="fl">Subject</label>
+      <input class="fi" id="bl-sub" placeholder="e.g. Jackson Holliday, 2025 Bowman Chrome" autocorrect="off">
+      <label class="fl">Your Angle</label>
+      <input class="fi" id="bl-ang" placeholder="e.g. buy now before call-up" autocorrect="off">
+      <label class="fl">Target Keyword</label>
+      <input class="fi" id="bl-kw" placeholder="e.g. Jackson Holliday card value 2025" autocorrect="off">
+      <label class="fl">Word Count</label>
+      <select class="fi" id="bl-wc">
+        <option value="600">~600 words</option>
+        <option value="800" selected>~800 words</option>
+        <option value="1000">~1000 words</option>
+      </select>
+      <label class="fl">Extra Details (optional)</label>
+      <textarea class="fi" id="bl-det" style="height:68px" placeholder="Comps, news, price data, talking points..."></textarea>
+      <button class="gbtn" onclick="runBL()" style="background:var(--blue)">⚡ Generate Article</button>
+    </div>
+
+    <div class="ldg" id="bl-l">
+      <div class="ldg-icon">📝</div>
+      <div class="ldg-t">Writing your article...</div>
+      <div class="ldg-bar"><div class="ldg-fill"></div></div>
+    </div>
+
+    <div class="out" id="bl-o">
+      <div class="oc"><div class="oc-h"><span class="oc-l">Full Article</span><button class="cpb" onclick="cp('bl-a',this)">Copy</button></div><div class="oc-b" id="bl-a"></div></div>
+      <div class="oc"><div class="oc-h"><span class="oc-l">SEO Metadata</span><button class="cpb" onclick="cp('bl-s',this)">Copy</button></div><div class="oc-b" id="bl-s"></div></div>
+      <div class="oc"><div class="oc-h"><span class="oc-l">Promo Posts</span><button class="cpb" onclick="cp('bl-p',this)">Copy</button></div><div class="oc-b" id="bl-p"></div></div>
+      <button class="rl" onclick="rst('bl')">← New article</button>
+    </div>
+  </div>
+
+  <!-- ── VIRAL ── -->
+  <div class="view" id="v-viral">
+    <div class="ag-header">
+      <div class="ag-title-wrap">
+        <div class="ag-icon-wrap" style="background:rgba(244,63,94,0.1)">⚡</div>
+        <div>
+          <div class="ag-title" style="color:var(--pink)">Viral</div>
+          <div class="ag-desc">ClipFuel engine</div>
+        </div>
+      </div>
+      <div class="ag-status"><div class="ag-status-dot"></div>Online</div>
+    </div>
+
+    <div id="vr-f">
+      <div class="pill-group">
+        <span class="pill-lbl">Niche</span>
+        <div class="pills" id="vr-np">
+          <button class="pill on" data-v="sports cards">⚾ Cards</button>
+          <button class="pill" data-v="MLB prospects">🔮 Prospects</button>
+          <button class="pill" data-v="card breaks">📦 Breaks</button>
+          <button class="pill" data-v="card investing">💰 Investing</button>
+          <button class="pill" data-v="ancient history">🏛 History</button>
+          <button class="pill" data-v="AI tools">🤖 AI</button>
+          <button class="pill" data-v="shift work">⚙️ Shift Work</button>
+        </div>
+      </div>
+      <div class="pill-group">
+        <span class="pill-lbl">Platform</span>
+        <div class="pills" id="vr-pp">
+          <button class="pill on" data-v="Instagram">Instagram</button>
+          <button class="pill" data-v="TikTok">TikTok</button>
+          <button class="pill" data-v="YouTube Shorts">YT Shorts</button>
+          <button class="pill" data-v="X/Twitter">X / Twitter</button>
+          <button class="pill" data-v="Facebook">Facebook</button>
+        </div>
+      </div>
+      <div class="pill-group">
+        <span class="pill-lbl">Optimize For</span>
+        <div class="pills" id="vr-fp">
+          <button class="pill on" data-v="saves">Saves</button>
+          <button class="pill" data-v="comments">Comments</button>
+          <button class="pill" data-v="shares">Shares</button>
+          <button class="pill" data-v="follows">Follows</button>
+        </div>
+      </div>
+      <label class="fl">Transcript or Description</label>
+      <textarea class="fi" id="vr-tr" style="height:110px" placeholder="Paste transcript or describe the clip...&#10;&#10;e.g. '2025 Bowman Chrome break, last pack pulls Jackson Holliday superfractor /25...'"></textarea>
+      <label class="fl">Context (optional)</label>
+      <textarea class="fi" id="vr-ctx" style="height:62px" placeholder="What makes this special? Numbers, reactions..."></textarea>
+      <button class="gbtn fire" onclick="runVR()">⚡ Ignite Viral Engine</button>
+    </div>
+
+    <div class="ldg" id="vr-l">
+      <div class="ldg-icon">⚡</div>
+      <div class="ldg-t">Scoring virality...</div>
+      <div class="ldg-bar"><div class="ldg-fill"></div></div>
+    </div>
+
+    <div class="out" id="vr-o">
+      <div class="score-badge">
+        <div class="score-num" id="vr-sc">--</div>
+        <div>
+          <div class="score-verdict" id="vr-vd"></div>
+          <div class="score-reason" id="vr-rs"></div>
+        </div>
+      </div>
+      <div class="oc"><div class="oc-h"><span class="oc-l">Opening Hook</span><button class="cpb" onclick="cp('vr-hk',this)">Copy</button></div><div class="oc-b" id="vr-hk"></div></div>
+      <div class="oc"><div class="oc-h"><span class="oc-l">Full Caption</span><button class="cpb" onclick="cp('vr-cp',this)">Copy</button></div><div class="oc-b" id="vr-cp"></div></div>
+      <div class="oc"><div class="oc-h"><span class="oc-l">Hashtags</span><button class="cpb" onclick="cp('vr-ht',this)">Copy</button></div><div class="oc-b" id="vr-ht" style="font-family:'Share Tech Mono',monospace;font-size:13px;color:var(--blue)"></div></div>
+      <div class="oc">
+        <div class="oc-h"><span class="oc-l">A/B Variants</span><button class="cpb" onclick="cpAB()">Copy Both</button></div>
+        <div class="ab-g">
+          <div class="ab-c"><div class="ab-l">Variant A — Curiosity</div><div class="ab-t" id="vr-va"></div></div>
+          <div class="ab-c"><div class="ab-l">Variant B — Value</div><div class="ab-t" id="vr-vb"></div></div>
+        </div>
+      </div>
+      <div class="oc"><div class="oc-h"><span class="oc-l">Post Strategy</span><button class="cpb" onclick="cp('vr-st',this)">Copy</button></div><div class="oc-b" id="vr-st"></div></div>
+      <div class="oc"><div class="oc-h"><span class="oc-l">Legal Disclaimer</span><button class="cpb" onclick="cp('vr-disc',this)">Copy</button></div><div class="oc-b" id="vr-disc">DISCLAIMER: Card Acumen is for informational and entertainment purposes only. Nothing published constitutes financial, investment, legal, or professional advice. Sports card values can decrease as well as increase. Always conduct your own research before making any purchase or sale decision. Card Acumen is not a registered investment advisor. The author may hold positions in cards mentioned. | cardacumen.com</div></div>
+<button class="rl" onclick="rst('vr')">← New clip</button>
+    </div>
+  </div>
+
+  <!-- ── SEO CLUSTER ── -->
+  <div class="view" id="v-cluster">
+    <div class="ag-header">
+      <div class="ag-title-wrap">
+        <div class="ag-icon-wrap" style="background:rgba(167,139,250,0.1)">🗺️</div>
+        <div>
+          <div class="ag-title" style="color:var(--purple)">SEO Cluster</div>
+          <div class="ag-desc">Content cluster builder</div>
+        </div>
+      </div>
+      <div class="ag-status"><div class="ag-status-dot"></div>Online</div>
+    </div>
+
+    <div id="cluster-f">
+      <div class="fi-g"><label class="fl">Hub topic</label><input class="fi" id="cl-topic" placeholder="e.g. 2025 Bowman Chrome, Jackson Holliday, PSA grading" autocorrect="off"></div>
+      <div class="fi-g"><label class="fl">Your niche / site focus</label><input class="fi" id="cl-niche" placeholder="e.g. baseball card investing, sports card collectors" autocorrect="off"></div>
+      <div class="fi-g"><label class="fl">Spoke article count</label>
+        <select class="fi" id="cl-count">
+          <option value="6">6 spoke articles</option>
+          <option value="8" selected>8 spoke articles</option>
+          <option value="10">10 spoke articles</option>
+        </select>
+      </div>
+      <div class="fi-g"><label class="fl">Audience level</label>
+        <select class="fi" id="cl-aud">
+          <option value="beginner collectors">Beginner collectors</option>
+          <option value="intermediate hobbyists" selected>Intermediate hobbyists</option>
+          <option value="serious card investors">Serious card investors</option>
+        </select>
+      </div>
+      <button class="gbtn" onclick="runCluster()" style="background:var(--purple)">⚡ Build Content Cluster</button>
+    </div>
+
+    <div class="ldg" id="cluster-l">
+      <div class="ldg-icon">🗺️</div>
+      <div class="ldg-t" id="cluster-lt">Building your cluster map...</div>
+      <div class="ldg-bar"><div class="ldg-fill"></div></div>
+    </div>
+
+    <div class="ob" id="cluster-o">
+      <div class="oc"><div class="oc-h"><span class="oc-l">Hub article outline</span><button class="cpb" onclick="cp('cl-hub',this)">Copy</button></div><div class="oc-b" id="cl-hub"></div></div>
+      <div class="oc"><div class="oc-h"><span class="oc-l">Spoke articles</span><button class="cpb" onclick="cp('cl-spokes',this)">Copy</button></div><div class="oc-b" id="cl-spokes"></div></div>
+      <div class="oc"><div class="oc-h"><span class="oc-l">Internal linking map</span><button class="cpb" onclick="cp('cl-links',this)">Copy</button></div><div class="oc-b" id="cl-links"></div></div>
+      <div class="oc"><div class="oc-h"><span class="oc-l">Schema markup</span><button class="cpb" onclick="cp('cl-schema',this)">Copy</button></div><div class="oc-b" id="cl-schema" style="font-family:'Share Tech Mono',monospace;font-size:12px"></div></div>
+      <div class="oc"><div class="oc-h"><span class="oc-l">Publishing calendar</span><button class="cpb" onclick="cp('cl-cal',this)">Copy</button></div><div class="oc-b" id="cl-cal"></div></div>
+      <button class="rl" onclick="rst('cluster')">← New cluster</button>
+    </div>
+  </div>
+
+  <!-- ── KEYWORD INTEL ── -->
+  <div class="view" id="v-keyword">
+    <div class="ag-header">
+      <div class="ag-title-wrap">
+        <div class="ag-icon-wrap" style="background:rgba(34,197,94,0.1)">🔍</div>
+        <div>
+          <div class="ag-title" style="color:var(--green)">Keywords</div>
+          <div class="ag-desc">Keyword intel agent</div>
+        </div>
+      </div>
+      <div class="ag-status"><div class="ag-status-dot"></div>Online</div>
+    </div>
+
+    <div id="keyword-f">
+      <div class="fi-g"><label class="fl">Seed topic or player name</label><input class="fi" id="kw-seed" placeholder="e.g. Jackson Holliday, 2025 Bowman Chrome" autocorrect="off"></div>
+      <div class="fi-g"><label class="fl">Content goal</label>
+        <select class="fi" id="kw-goal">
+          <option value="affiliate revenue from eBay and card pricing tools">Affiliate revenue</option>
+          <option value="newsletter signups from organic search">Newsletter signups</option>
+          <option value="establishing topical authority in the sports card niche">Topical authority</option>
+          <option value="ranking for buyer-intent keywords to drive card sales">Drive card sales</option>
+        </select>
+      </div>
+      <div class="fi-g"><label class="fl">Competition level</label>
+        <select class="fi" id="kw-comp">
+          <option value="very low competition only — brand new site">Very low only (new site)</option>
+          <option value="low to medium competition" selected>Low to medium</option>
+          <option value="any competition level — established site">Any level (established)</option>
+        </select>
+      </div>
+      <div class="fi-g"><label class="fl">Keyword count</label>
+        <select class="fi" id="kw-cnt">
+          <option value="15">15 keywords</option>
+          <option value="25" selected>25 keywords</option>
+          <option value="40">40 keywords</option>
+        </select>
+      </div>
+      <button class="gbtn" onclick="runKeyword()" style="background:var(--green);color:#060810">⚡ Generate Keyword Intel</button>
+    </div>
+
+    <div class="ldg" id="keyword-l">
+      <div class="ldg-icon">🔍</div>
+      <div class="ldg-t">Researching keyword opportunities...</div>
+      <div class="ldg-bar"><div class="ldg-fill"></div></div>
+    </div>
+
+    <div class="ob" id="keyword-o">
+      <div class="oc"><div class="oc-h"><span class="oc-l">Top keyword opportunities</span><button class="cpb" onclick="cp('kw-top',this)">Copy</button></div><div class="oc-b" id="kw-top"></div></div>
+      <div class="oc"><div class="oc-h"><span class="oc-l">Quick wins — write this week</span><button class="cpb" onclick="cp('kw-quick',this)">Copy</button></div><div class="oc-b" id="kw-quick"></div></div>
+      <div class="oc"><div class="oc-h"><span class="oc-l">Long-term authority keywords</span><button class="cpb" onclick="cp('kw-long',this)">Copy</button></div><div class="oc-b" id="kw-long"></div></div>
+      <div class="oc"><div class="oc-h"><span class="oc-l">Content gap analysis</span><button class="cpb" onclick="cp('kw-gaps',this)">Copy</button></div><div class="oc-b" id="kw-gaps"></div></div>
+      <button class="rl" onclick="rst('keyword')">← New research</button>
+    </div>
+  </div>
+
+  <!-- ── REPURPOSE ── -->
+  <div class="view" id="v-repurpose">
+    <div class="ag-header">
+      <div class="ag-title-wrap">
+        <div class="ag-icon-wrap" style="background:rgba(251,146,60,0.1)">♻️</div>
+        <div>
+          <div class="ag-title" style="color:var(--orange)">Repurpose</div>
+          <div class="ag-desc">Content multiplier</div>
+        </div>
+      </div>
+      <div class="ag-status"><div class="ag-status-dot"></div>Online</div>
+    </div>
+
+    <div id="repurpose-f">
+      <div class="fi-g"><label class="fl">Source content type</label>
+        <select class="fi" id="rp-type">
+          <option value="YouTube video script">YouTube script</option>
+          <option value="blog article">Blog article</option>
+          <option value="newsletter issue">Newsletter issue</option>
+          <option value="social media post or thread">Social post / thread</option>
+        </select>
+      </div>
+      <div class="fi-g"><label class="fl">Paste your content</label>
+        <textarea class="fi" id="rp-content" style="height:140px" placeholder="Paste your YouTube script, blog article, newsletter, or social post here..."></textarea>
+      </div>
+      <div class="fi-g"><label class="fl">Core topic / subject</label>
+        <input class="fi" id="rp-topic" placeholder="e.g. Why Jackson Holliday is a buy right now" autocorrect="off">
+      </div>
+      <div class="fi-g"><label class="fl">Target audience</label>
+        <input class="fi" id="rp-aud" placeholder="e.g. sports card collectors and investors" autocorrect="off">
+      </div>
+      <button class="gbtn" onclick="runRepurpose()" style="background:var(--orange);color:#060810">⚡ Repurpose into 7 Formats</button>
+    </div>
+
+    <div class="ldg" id="repurpose-l">
+      <div class="ldg-icon">♻️</div>
+      <div class="ldg-t">Repurposing your content...</div>
+      <div class="ldg-bar"><div class="ldg-fill"></div></div>
+    </div>
+
+    <div class="ob" id="repurpose-o">
+      <div class="oc"><div class="oc-h"><span class="oc-l">Blog post version</span><button class="cpb" onclick="cp('rp-blog',this)">Copy</button></div><div class="oc-b" id="rp-blog"></div></div>
+      <div class="oc"><div class="oc-h"><span class="oc-l">Newsletter section</span><button class="cpb" onclick="cp('rp-nl',this)">Copy</button></div><div class="oc-b" id="rp-nl"></div></div>
+      <div class="oc"><div class="oc-h"><span class="oc-l">5 social media posts</span><button class="cpb" onclick="cp('rp-social',this)">Copy</button></div><div class="oc-b" id="rp-social"></div></div>
+      <div class="oc"><div class="oc-h"><span class="oc-l">Reddit thread post</span><button class="cpb" onclick="cp('rp-reddit',this)">Copy</button></div><div class="oc-b" id="rp-reddit"></div></div>
+      <div class="oc"><div class="oc-h"><span class="oc-l">YouTube Short script</span><button class="cpb" onclick="cp('rp-yt',this)">Copy</button></div><div class="oc-b" id="rp-yt"></div></div>
+      <div class="oc"><div class="oc-h"><span class="oc-l">Email subject + teaser</span><button class="cpb" onclick="cp('rp-email',this)">Copy</button></div><div class="oc-b" id="rp-email"></div></div>
+      <div class="oc"><div class="oc-h"><span class="oc-l">SEO meta + link suggestions</span><button class="cpb" onclick="cp('rp-seo',this)">Copy</button></div><div class="oc-b" id="rp-seo"></div></div>
+      <button class="rl" onclick="rst('repurpose')">← Repurpose new content</button>
+    </div>
+  </div>
+
+  <!-- BOTTOM NAV -->
+  <nav class="botnav">
+    <button class="bn on" id="bn-home" onclick="go('home')">
+      <span class="bn-i">🏠</span>
+      <span class="bn-l">Home</span>
+      <div class="bn-pip"></div>
+    </button>
+    <button class="bn" id="bn-newsletter" onclick="go('newsletter')">
+      <span class="bn-i">📧</span>
+      <span class="bn-l">News</span>
+      <div class="bn-pip"></div>
+    </button>
+    <button class="bn" id="bn-listings" onclick="go('listings')">
+      <span class="bn-i">🃏</span>
+      <span class="bn-l">List</span>
+      <div class="bn-pip"></div>
+    </button>
+    <button class="bn" id="bn-blog" onclick="go('blog')">
+      <span class="bn-i">📝</span>
+      <span class="bn-l">Blog</span>
+      <div class="bn-pip"></div>
+    </button>
+    <button class="bn" id="bn-viral" onclick="go('viral')">
+      <span class="bn-i">⚡</span>
+      <span class="bn-l">Viral</span>
+      <div class="bn-pip"></div>
+    </button>
+    <button class="bn" id="bn-more" onclick="toggleMore()">
+      <span class="bn-i">🔥</span>
+      <span class="bn-l">SEO</span>
+      <div class="bn-pip"></div>
+    </button>
+  </nav>
+
+  <!-- SEO Submenu -->
+  <div class="seo-menu" id="more-menu">
+    <div class="seo-grid">
+      <button class="seo-btn" id="bn-cluster" onclick="go('cluster');toggleMore(true)">
+        <span class="seo-btn-i">🗺️</span>
+        <span class="seo-btn-l">Cluster</span>
+      </button>
+      <button class="seo-btn" id="bn-keyword" onclick="go('keyword');toggleMore(true)">
+        <span class="seo-btn-i">🔍</span>
+        <span class="seo-btn-l">Keywords</span>
+      </button>
+      <button class="seo-btn" id="bn-repurpose" onclick="go('repurpose');toggleMore(true)">
+        <span class="seo-btn-i">♻️</span>
+        <span class="seo-btn-l">Repurpose</span>
+      </button>
+    </div>
+  </div>
+
+</div><!-- end #app -->
+
+<script>
+var KEY='',QUE=[];
+var VS=['home','newsletter','listings','blog','viral','cluster','keyword','repurpose'];
+
+document.addEventListener('DOMContentLoaded',function(){
+  var k=localStorage.getItem('ca_k');
+  if(k&&k.indexOf('sk-')===0&&k.length>=20){KEY=k;boot();}
+  document.getElementById('apiKey').addEventListener('keydown',function(e){if(e.key==='Enter')doLaunch();});
+  initP();tick();setInterval(tick,1000);
+});
+
+function doLaunch(){
+  var k=document.getElementById('apiKey').value.trim();
+  var err=document.getElementById('apiErr');
+  if(!k){err.textContent='// Please enter your API key';err.style.display='block';return;}
+  if(k.length < 20){err.textContent='// Key is too short — check and try again';err.style.display='block';return;}
+  err.style.display='none';
+  KEY=k;
+  try{localStorage.setItem('ca_k',k);}catch(e){}
+  boot();
+}
+
+function boot(){
+  var api=document.getElementById('apiScreen');
+  var app=document.getElementById('app');
+  if(api)api.style.display='none';
+  if(app){app.style.display='block';app.style.visibility='visible';}
+}
+
+function resetKey(){
+  if(!confirm('Reset API key?'))return;
+  try{localStorage.removeItem('ca_k');}catch(e){}KEY='';
+  document.getElementById('apiKey').value='';
+  document.getElementById('apiErr').style.display='none';
+  document.getElementById('app').style.display='none';
+  document.getElementById('apiScreen').style.display='flex';
+}
+
+function tick(){var n=new Date();document.getElementById('clk').textContent=String(n.getHours()).padStart(2,'0')+':'+String(n.getMinutes()).padStart(2,'0');}
+
+function go(name){
+  VS.forEach(function(v){
+    var vw=document.getElementById('v-'+v);var bn=document.getElementById('bn-'+v);
+    if(vw)vw.classList.toggle('on',v===name);
+    if(bn)bn.classList.toggle('on',v===name);
+  });
+  window.scrollTo(0,0);
+}
+
+function initP(){
+  ['bl-tp','vr-np','vr-pp','vr-fp'].forEach(function(gid){
+    var g=document.getElementById(gid);if(!g)return;
+    var ps=g.querySelectorAll('.pill');
+    ps.forEach(function(p){p.addEventListener('click',function(){ps.forEach(function(x){x.classList.remove('on');});p.classList.add('on');});});
+  });
+}
+
+function gp(gid){var g=document.getElementById(gid);if(!g)return'';var a=g.querySelector('.pill.on');return a?(a.getAttribute('data-v')||a.textContent.trim()):'';}
+function gv(id){var e=document.getElementById(id);return e?e.value.trim():'';}
+function st(id,v){var e=document.getElementById(id);if(e)e.textContent=v;}
+
+function sL(px,msg){
+  var f=document.getElementById(px+'-f');
+  var l=document.getElementById(px+'-l');
+  var o=document.getElementById(px+'-o');
+  if(f)f.style.display='none';
+  if(o){o.style.display='none';o.classList.remove('on');}
+  if(l){l.style.display='block';l.classList.add('on');}
+  if(msg){var t=document.getElementById(px+'-lt');if(t)t.textContent=msg;}
+}
+
+function sO(px){
+  var l=document.getElementById(px+'-l');
+  var o=document.getElementById(px+'-o');
+  if(l){l.style.display='none';l.classList.remove('on');}
+  if(o){
+    o.style.display='block';
+    o.classList.add('on');
+  }
+}
+
+function rst(px){
+  var f=document.getElementById(px+'-f'),l=document.getElementById(px+'-l'),o=document.getElementById(px+'-o');
+  if(f)f.style.display='block';
+  if(l){l.style.display='none';l.classList.remove('on');}
+  if(o){o.style.display='none';o.classList.remove('on');}
+}
+
+function cp(id,btn){
+  var e=document.getElementById(id);if(!e)return;
+  navigator.clipboard.writeText(e.textContent).then(function(){
+    var o=btn.textContent;btn.textContent='Copied!';btn.classList.add('ok');
+    setTimeout(function(){btn.textContent=o;btn.classList.remove('ok');},1800);
+  }).catch(function(){alert('Long-press the text to copy manually.');});
+}
+
+function cpAB(){
+  var a=document.getElementById('vr-va'),b=document.getElementById('vr-vb');
+  if(a&&b)navigator.clipboard.writeText('VARIANT A:\n'+a.textContent+'\n\nVARIANT B:\n'+b.textContent);
+}
+
+function ex(txt,h1,h2){
+  var m=txt.match(new RegExp('---'+h1+'---([\\s\\S]*?)(?=---'+h2+'---|$)'));
+  return m?m[1].trim():'';
+}
+
+async function callAPI(prompt){
+  var r=await fetch('https://api.anthropic.com/v1/messages',{
+    method:'POST',
+    headers:{'Content-Type':'application/json','x-api-key':KEY,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
+    body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1500,messages:[{role:'user',content:prompt}]})
+  });
+  if(!r.ok){var e=await r.json().catch(function(){return{};});throw new Error((e.error&&e.error.message)||'API error '+r.status);}
+  var d=await r.json();return d.content.map(function(b){return b.text||'';}).join('');
+}
+
+async function runNL(){
+  var buy=gv('nl-buy'),sell=gv('nl-sell'),hold=gv('nl-hold');
+  if(!buy||!sell||!hold){alert('Fill in Buy, Sell, and Hold cards.');return;}
+  sL('nl','Writing your issue...');
+  var p='You are a sharp sports card market analyst writing a weekly newsletter.\nReturn THREE sections with EXACT headers:\n---SUBJECT---\n---BODY---\n---SOCIAL---\n\nNEWSLETTER: "'+(gv('nl-nm')||'Card Acumen')+'" — '+(gv('nl-iss')||'Issue #1')+'\nBUY: '+buy+' | '+(gv('nl-br')||'strong value')+'\nSELL: '+sell+' | '+(gv('nl-sr')||'take profits')+'\nHOLD: '+hold+' | '+(gv('nl-hr')||'watch for news')+'\nSET: '+(gv('nl-set')||'general market')+'\n\n---SUBJECT---: Subject line under 50 chars. Then preview text under 90 chars on next line.\n---BODY---: Full newsletter. Opening hook 2-3 sentences. BUY/SELL/HOLD sections 3-4 sentences each. Hobby terms: autos, refractors, chrome, parallels, PSA, eBay comps. Confident insider voice.\n---SOCIAL---: POST 1 (Instagram under 150 chars 2-3 hashtags). POST 2 (Reddit conversational 2-3 sentences no hashtags). POST 3 (Story text under 80 chars).';
+  try{var t=await callAPI(p);st('nl-s',ex(t,'SUBJECT','BODY'));var nb=ex(t,'BODY','SOCIAL');st('nl-b',nb+'\n\n---\nDISCLAIMER: Card Acumen is for informational and entertainment purposes only. Nothing published constitutes financial, investment, legal, or professional advice. Sports card values can decrease as well as increase. Always conduct your own research before making any purchase or sale decision. Card Acumen is not a registered investment advisor. The author may hold positions in cards mentioned. | cardacumen.com');st('nl-t',ex(t,'SOCIAL','XXXXEND'));sO('nl');}
+  catch(e){rst('nl');alert('Error: '+e.message);}
+}
+
+function addCard(){
+  var p=gv('ls-p'),y=gv('ls-y'),b=gv('ls-b');
+  if(!p||!y||!b){alert('Player, year, and brand required.');return;}
+  QUE.push({p:p,y:y,b:b,t:document.getElementById('ls-t').value,g:document.getElementById('ls-g').value,par:gv('ls-par'),pr:gv('ls-pr'),id:Date.now()});
+  renderQ();
+  ['ls-p','ls-y','ls-b','ls-par','ls-pr'].forEach(function(id){var e=document.getElementById(id);if(e)e.value='';});
+}
+
+function renderQ(){
+  var c=document.getElementById('ls-q'),btn=document.getElementById('ls-gb');
+  if(QUE.length===0){c.innerHTML='';btn.disabled=true;return;}
+  btn.disabled=false;
+  c.innerHTML=QUE.map(function(card){return'<div class="qi"><div><div class="qi-n">'+card.y+' '+card.b+' '+card.t+' — '+card.p+'</div><div class="qi-m">'+(card.par||'base')+' | '+card.g+(card.pr?' | $'+card.pr:'')+'</div></div><button class="qi-x" onclick="rmCard('+card.id+')">×</button></div>';}).join('');
+}
+
+function rmCard(id){QUE=QUE.filter(function(c){return c.id!==id;});renderQ();}
+
+async function runLS(){
+  if(!QUE.length)return;
+  sL('ls','Writing listing 1 of '+QUE.length+'...');
+  var res=[];
+  for(var i=0;i<QUE.length;i++){
+    var c=QUE[i];
+    var lt=document.getElementById('ls-lt');if(lt)lt.textContent='Writing '+(i+1)+' of '+QUE.length+': '+c.p+'...';
+    var p='You are an expert eBay sports card seller.\nCARD: '+c.y+' '+c.b+' '+c.t+' — '+c.p+' | Parallel: '+(c.par||'standard')+' | Grade: '+c.g+(c.pr?' | Price: $'+c.pr:'')+'\n\nReturn with EXACT headers:\nTITLE:\n[80-char max eBay title. Pack with player name, year, brand, card type, parallel, grade. No filler.]\nDESCRIPTION:\n[4 paragraphs: (1) card significance and player prospect story (2) condition/grade details (3) buy thesis and comp context (4) Ships in toploader and team bag in bubble mailer within 1 business day. Combined shipping available. All major payments accepted.]\nKEYWORDS:\n[10 comma-separated eBay search tags]\nSELLER TIP:\n[1 pricing or timing tip for this card right now]';
+    try{var r=await callAPI(p);res.push({c:c,t:r});}catch(e){res.push({c:c,t:'ERROR: '+e.message});}
+  }
+  var out=document.getElementById('ls-o');
+  out.innerHTML=res.map(function(r,i){
+    var tm=r.t.match(/TITLE:\s*([\s\S]*?)(?=\nDESCRIPTION:|$)/i);
+    var dm=r.t.match(/DESCRIPTION:\s*([\s\S]*?)(?=\nKEYWORDS:|$)/i);
+    var km=r.t.match(/KEYWORDS:\s*([\s\S]*?)(?=\nSELLER TIP:|$)/i);
+    var sm=r.t.match(/SELLER TIP:\s*([\s\S]*?)$/i);
+    var ti=tm?tm[1].trim():'',de=dm?dm[1].trim():r.t,kw=km?km[1].trim():'',tp=sm?sm[1].trim():'';
+    var cc=ti.length;window['_l'+i]=('TITLE:\n'+ti+'\n\nDESCRIPTION:\n'+de+'\n\nKEYWORDS:\n'+kw+'\n\nSELLER TIP:\n'+tp);
+    return'<div class="oc"><div class="oc-h"><span class="oc-l">Listing '+(i+1)+' — '+r.c.p.toUpperCase()+'</span><button class="cpb" onclick="navigator.clipboard.writeText(window[\'_l'+i+'\']);this.textContent=\'Copied!\';this.classList.add(\'ok\');setTimeout(function(){this.textContent=\'Copy All\';this.classList.remove(\'ok\');}.bind(this),1800)">Copy All</button></div>'+(ti?'<div class="listing-title-block"><div class="listing-title-text">'+ti+'</div><div class="char-count" style="color:'+(cc<=80?'var(--green)':'var(--red)')+'">'+cc+'/80 '+(cc<=80?'✓':'⚠ trim')+'</div></div>':'')+(de?'<div class="oc-b">'+de+'</div>':'')+(kw?'<div style="padding:9px 15px;border-top:1px solid var(--border);font-family:Share Tech Mono,monospace;font-size:11px;color:var(--muted)">'+kw+'</div>':'')+(tp?'<div style="padding:9px 15px;border-top:1px solid var(--border);font-size:13px;color:var(--muted);font-style:italic">💡 '+tp+'</div>':'')+'</div>';
+  }).join('')+'<button class="rl" onclick="QUE=[];renderQ();rst(\'ls\')">← New batch</button>';
+  sO('ls');
+}
+
+async function runBL(){
+  var sub=gv('bl-sub');if(!sub){alert('Enter a subject.');return;}
+  sL('bl','Writing your article...');
+  var p='You are a sports card market analyst and SEO writer.\nTYPE: '+gp('bl-tp')+'\nSUBJECT: '+sub+'\nANGLE: '+(gv('bl-ang')||'balanced perspective')+'\nKEYWORD: '+(gv('bl-kw')||sub+' card value')+'\nWORDS: ~'+document.getElementById('bl-wc').value+'\nDETAILS: '+(gv('bl-det')||'none')+'\n\nReturn with EXACT headers:\n---ARTICLE---\n---SEO---\n---PROMO---\n\n---ARTICLE---: Full article. H1 title with keyword. Hook intro 2-3 sentences. 3-4 H2 sections: background, market analysis, value, recommendation. Hobby terms: chrome autos, refractors, parallels, PSA pop, eBay comps, Bowman, call-up. Realistic prices. Clear buy/sell/hold conclusion. Confident insider voice.\n---SEO---:\nMETA TITLE: [under 60 chars]\nMETA DESCRIPTION: [under 155 chars with keyword]\nURL SLUG: [lowercase-hyphenated]\nTAGS: [8 comma-separated tags]\n---PROMO---:\nREDDIT POST: [r/baseballcards conversational 2-3 sentences no hashtags]\nINSTAGRAM CAPTION: [under 150 chars 3-4 hashtags CTA to link in bio]';
+  try{var t=await callAPI(p);st('bl-a',ex(t,'ARTICLE','SEO')+'\n\n---\nDISCLAIMER: This article is for informational purposes only and does not constitute financial or investment advice. Sports card values can decrease as well as increase. Always conduct your own research. Card Acumen is not a registered investment advisor. The author may hold positions in cards mentioned.');st('bl-s',ex(t,'SEO','PROMO'));st('bl-p',ex(t,'PROMO','XXXXEND'));sO('bl');}
+  catch(e){rst('bl');alert('Error: '+e.message);}
+}
+
+async function runVR(){
+  var tr=gv('vr-tr');if(!tr){alert('Describe or paste your clip transcript.');return;}
+  sL('vr','Scoring virality...');
+  var plat=gp('vr-pp');
+  var rules={'Instagram':'hook under 125 chars first line, 3-5 sentences, 5-10 hashtags at end, CTA for saves','TikTok':'under 150 chars, 3-5 hashtags, question to drive comments','YouTube Shorts':'title under 60 chars, 1-2 sentence description','X/Twitter':'under 280 chars, 1-2 hashtags','Facebook':'2-3 conversational sentences, drive shares'};
+  var p='You are an elite social media strategist for the '+gp('vr-np')+' niche.\nPLATFORM: '+plat+' | RULE: '+(rules[plat]||'strong hook caption')+'\nOPTIMIZE: '+gp('vr-fp')+'\nTRANSCRIPT: '+tr+'\nCONTEXT: '+(gv('vr-ctx')||'none')+'\n\nReturn with EXACT headers:\n---SCORE---\n---HOOK---\n---CAPTION---\n---HASHTAGS---\n---VARIANTA---\n---VARIANTB---\n---STRATEGY---\n\n---SCORE---: Line 1: number 1-100. Line 2: 4-6 word verdict. Line 3: 1-2 sentence explanation.\n---HOOK---: Single hook under 12 words. Open loop or shock. No explanation.\n---CAPTION---: Full caption for '+plat+'. Hook as first line. Authentic voice. CTA. No hashtags.\n---HASHTAGS---: Mix broad/mid/niche tags. One per line.\n---VARIANTA---: Curiosity angle. Under 5 sentences. No hashtags.\n---VARIANTB---: Value/number led. Under 5 sentences. No hashtags.\n---STRATEGY---: 4 bullets: best post time, which variant first and why, 30-min engagement tactic, cross-platform move.';
+  try{
+    var t=await callAPI(p);
+    var sr=ex(t,'SCORE','HOOK'),lines=sr.split('\n').filter(function(l){return l.trim();});
+    var sn=parseInt((lines[0]||'').match(/\d+/)||['0']);
+    var se=document.getElementById('vr-sc');se.textContent=sn||'?';
+    se.style.color=sn>=80?'var(--green)':sn>=60?'var(--gold)':'var(--red)';
+    st('vr-vd',(lines[1]||'').trim());st('vr-rs',lines.slice(2).join(' ').trim());
+    st('vr-hk',ex(t,'HOOK','CAPTION'));st('vr-cp',ex(t,'CAPTION','HASHTAGS'));
+    st('vr-ht',ex(t,'HASHTAGS','VARIANTA'));st('vr-va',ex(t,'VARIANTA','VARIANTB'));
+    st('vr-vb',ex(t,'VARIANTB','STRATEGY'));st('vr-st',ex(t,'STRATEGY','XXXXEND'));
+    sO('vr');
+  }catch(e){rst('vr');alert('Error: '+e.message);}
+}
+
+function toggleMore(forceClose){
+  var m=document.getElementById('more-menu');
+  var btn=document.getElementById('bn-more');
+  if(!m)return;
+  var open=m.classList.contains('open');
+  if(forceClose||open){m.classList.remove('open');if(btn)btn.classList.remove('on');}
+  else{m.classList.add('open');if(btn)btn.classList.add('on');}
+}
+
+async function runCluster(){
+  var topic=document.getElementById('cl-topic');
+  if(!topic||!topic.value.trim()){alert('Enter a hub topic.');return;}
+  var t=topic.value.trim();
+  var niche=document.getElementById('cl-niche').value.trim()||'sports card investing';
+  var count=document.getElementById('cl-count').value;
+  var aud=document.getElementById('cl-aud').value;
+  sL('cluster','Building your content cluster...');
+  var p='You are an expert SEO strategist for a sports card investing blog. Build a complete content cluster.\nHUB TOPIC: '+t+'\nNICHE: '+niche+'\nAUDIENCE: '+aud+'\nSPOKE COUNT: '+count+'\n\nReturn with EXACT headers:\n---HUB---\n---SPOKES---\n---LINKS---\n---SCHEMA---\n---CALENDAR---\n\n---HUB---: Write the complete hub article outline with: H1 title (include primary keyword), meta description under 155 chars, 5-7 H2 section headings with 2-3 bullet points each, internal link placeholders for each spoke article, word count target, primary keyword, and 3 secondary keywords.\n---SPOKES---: List all '+count+' spoke articles. For each: NUMBER. TITLE (keyword-optimized, under 60 chars) | TARGET KEYWORD | SEARCH INTENT (informational/commercial/transactional) | ESTIMATED MONTHLY SEARCHES (low/medium/high) | DIFFICULTY (low/medium/high) | AFFILIATE OPPORTUNITY (yes/no + which).\n---LINKS---: Internal linking map. Show which spoke links to hub and which spokes link to each other. Format as: SPOKE TITLE → links to → [list of articles]. Include anchor text suggestions for each link.\n---SCHEMA---: JSON-LD schema markup for the hub article. Use Article schema with full properties: headline, description, author, datePublished, keywords, about. Make it copy-paste ready.\n---CALENDAR---: 10-week publishing schedule. Week 1: Hub article. Weeks 2-'+count+': One spoke per week. For each week: WEEK N | ARTICLE TITLE | WHY THIS ORDER | SOCIAL PROMOTION TASK | NEWSLETTER MENTION.';
+  try{
+    var res=await callAPI(p);
+    st('cl-hub',ex(res,'HUB','SPOKES'));
+    st('cl-spokes',ex(res,'SPOKES','LINKS'));
+    st('cl-links',ex(res,'LINKS','SCHEMA'));
+    st('cl-schema',ex(res,'SCHEMA','CALENDAR'));
+    st('cl-cal',ex(res,'CALENDAR','XXXXEND')+'
+
+---
+DISCLAIMER: Card Acumen is for informational and entertainment purposes only. Nothing published constitutes financial, investment, legal, or professional advice. Sports card values can decrease as well as increase. Always conduct your own research before making any purchase or sale decision. Card Acumen is not a registered investment advisor. The author may hold positions in cards mentioned. | cardacumen.com');
+    sO('cluster');
+  }catch(e){rst('cluster');alert('Error: '+e.message);}
+}
+
+async function runKeyword(){
+  var seed=document.getElementById('kw-seed');
+  if(!seed||!seed.value.trim()){alert('Enter a seed topic.');return;}
+  var s=seed.value.trim();
+  var goal=document.getElementById('kw-goal').value;
+  var comp=document.getElementById('kw-comp').value;
+  var cnt=document.getElementById('kw-cnt').value;
+  sL('keyword','Researching keyword opportunities...');
+  var p='You are an expert SEO keyword researcher for a sports card investing blog. Generate comprehensive keyword research.\nSEED TOPIC: '+s+'\nCONTENT GOAL: '+goal+'\nCOMPETITION TARGET: '+comp+'\nKEYWORD COUNT: '+cnt+'\n\nReturn with EXACT headers:\n---TOP---\n---QUICK---\n---LONG---\n---GAPS---\n\n---TOP---: The top '+cnt+' keyword opportunities ranked by opportunity score. For each keyword: KEYWORD | MONTHLY SEARCHES (estimate low/med/high) | COMPETITION (low/med/high) | SEARCH INTENT | CONTENT TYPE TO RANK | AFFILIATE ANGLE. Format as a numbered list. Focus on long-tail keywords 3-6 words that a hobby blog can realistically rank for.\n---QUICK---: Top 8 quick win keywords to write about THIS WEEK. These should be very low competition, high buyer intent, and directly tied to '+s+'. For each: KEYWORD | WHY IT WINS NOW | ARTICLE TITLE TO USE | CTA TO INCLUDE.\n---LONG---: Top 8 long-term authority keywords. These may be harder to rank for now but build domain authority over 6-12 months. For each: KEYWORD | WHY IT MATTERS LONG TERM | CONTENT STRATEGY | HOW IT FEEDS OTHER KEYWORDS.\n---GAPS---: Content gap analysis. What 5 keyword opportunities exist in the '+s+' niche that almost NO hobby blogs are covering right now? For each gap: GAP TOPIC | WHY IT\'S UNDERSERVED | ARTICLE ANGLE | ESTIMATED TRAFFIC POTENTIAL | MONETIZATION PATH.';
+  try{
+    var res=await callAPI(p);
+    st('kw-top',ex(res,'TOP','QUICK'));
+    st('kw-quick',ex(res,'QUICK','LONG'));
+    st('kw-long',ex(res,'LONG','GAPS'));
+    st('kw-gaps',ex(res,'GAPS','XXXXEND'));
+    sO('keyword');
+  }catch(e){rst('keyword');alert('Error: '+e.message);}
+}
+
+async function runRepurpose(){
+  var content=document.getElementById('rp-content');
+  if(!content||!content.value.trim()){alert('Paste your source content.');return;}
+  var c=content.value.trim();
+  var type=document.getElementById('rp-type').value;
+  var topic=document.getElementById('rp-topic').value.trim()||'sports card investing';
+  var aud=document.getElementById('rp-aud').value.trim()||'sports card collectors';
+  sL('repurpose','Repurposing into 7 formats...');
+  var p='You are a content repurposing expert for a sports card investing brand. Take this '+type+' and repurpose it into 7 distinct formats.\nSOURCE CONTENT:\n'+c+'\nTOPIC: '+topic+'\nAUDIENCE: '+aud+'\n\nReturn with EXACT headers:\n---BLOG---\n---NEWSLETTER---\n---SOCIAL---\n---REDDIT---\n---YTSHORT---\n---EMAIL---\n---SEO---\n\n---BLOG---: Full SEO blog post version (400-600 words). H1 title, 3 H2 sections, conclusion with CTA. Use hobby terminology. Include [EBAY_AFFILIATE_LINK] and [CARDLADDER_LINK] placeholders naturally.\n---NEWSLETTER---: Newsletter section (150-200 words). Punchy opening, key insight from the content, specific actionable takeaway, CTA to view listings or subscribe.\n---SOCIAL---: 5 social posts labeled POST 1-5. POST 1: Instagram caption with 5 hashtags. POST 2: Twitter/X under 280 chars. POST 3: Facebook conversational. POST 4: Instagram Story text (under 80 chars, punchy). POST 5: LinkedIn if relevant to hobby business angle.\n---REDDIT---: Reddit post for r/baseballcards or r/sportscards. Conversational, genuine, adds value, no obvious self-promotion. 3-4 sentences. Include a question to drive comments.\n---YTSHORT---: YouTube Shorts script (45-60 seconds). Hook line (under 5 words). 3 punchy points. CTA. Include [VISUAL: description] cues.\n---EMAIL---: Email subject line (under 50 chars) + preview text (under 90 chars) + 2-sentence teaser that drives clicks.\n---SEO---: META TITLE (under 60 chars) | META DESCRIPTION (under 155 chars) | URL SLUG | 5 INTERNAL LINK SUGGESTIONS (articles this content should link to or from) | 3 BACKLINK OUTREACH TARGETS (types of sites that would link to this).';
+  try{
+    var res=await callAPI(p);
+    st('rp-blog',ex(res,'BLOG','NEWSLETTER')+'
+
+---
+DISCLAIMER: Card Acumen is for informational and entertainment purposes only. Nothing published constitutes financial, investment, legal, or professional advice. Sports card values can decrease as well as increase. Always conduct your own research before making any purchase or sale decision. Card Acumen is not a registered investment advisor. The author may hold positions in cards mentioned. | cardacumen.com');
+    st('rp-nl',ex(res,'NEWSLETTER','SOCIAL')+'
+
+---
+DISCLAIMER: Card Acumen is for informational and entertainment purposes only. Nothing published constitutes financial, investment, legal, or professional advice. Sports card values can decrease as well as increase. Always conduct your own research before making any purchase or sale decision. Card Acumen is not a registered investment advisor. The author may hold positions in cards mentioned. | cardacumen.com');
+    st('rp-social',ex(res,'SOCIAL','REDDIT'));
+    st('rp-reddit',ex(res,'REDDIT','YTSHORT'));
+    st('rp-yt',ex(res,'YTSHORT','EMAIL'));
+    st('rp-email',ex(res,'EMAIL','SEO'));
+    st('rp-seo',ex(res,'SEO','XXXXEND'));
+    sO('repurpose');
+  }catch(e){rst('repurpose');alert('Error: '+e.message);}
+}
+</script>
+</body>
+</html>
