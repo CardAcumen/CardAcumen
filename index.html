@@ -3,28 +3,1146 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Card Acumen — Weekly buy/sell/hold picks for serious baseball card investors. Prospect analysis, eBay intelligence, and market edge.">
 <title>Card Acumen — Invest Smarter. Collect Better.</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:ital,wght@0,300;0,400;0,600;0,700;1,300&family=Share+Tech+Mono&display=swap" rel="stylesheet">
 <style>
+/* ── RESET ── */
 *{box-sizing:border-box;margin:0;padding:0}
-body{background:#060810;color:#EEF4FF;font-family:-apple-system,'Helvetica Neue',Arial,sans-serif;display:flex;align-items:center;justify-content:center;min-height:100vh;text-align:center;padding:24px}
-.wrap{max-width:480px}
-.diamond{width:44px;height:44px;border:2px solid #F5B800;transform:rotate(45deg);margin:0 auto 32px;opacity:0.5}
-.logo{font-size:44px;font-weight:900;letter-spacing:5px;line-height:1;margin-bottom:8px}
-.logo span{color:#F5B800}
-.tag{font-family:'Courier New',monospace;font-size:11px;letter-spacing:4px;color:#4A6070;text-transform:uppercase;margin-bottom:40px;display:block}
-.soon{font-family:'Courier New',monospace;font-size:11px;letter-spacing:3px;color:#1E2A38;text-transform:uppercase;margin-bottom:28px}
-.sub{font-size:13px;color:#2A3A50;font-family:'Courier New',monospace;letter-spacing:1px}
-.app-link{display:inline-block;margin-top:32px;padding:12px 24px;border:1px solid #F5B800;color:#F5B800;font-family:'Courier New',monospace;font-size:11px;letter-spacing:2px;text-decoration:none;border-radius:6px}
+html{scroll-behavior:smooth}
+body{background:#060810;color:#C8D8E8;font-family:'Barlow',sans-serif;font-size:16px;line-height:1.6;overflow-x:hidden}
+
+/* ── VARIABLES ── */
+:root{
+  --gold:#F5B800;
+  --gold2:#C89000;
+  --dark:#060810;
+  --s1:#0D1420;
+  --s2:#111C2C;
+  --s3:#162030;
+  --border:#1A2A3A;
+  --border2:#243444;
+  --text:#C8D8E8;
+  --muted:#4A6070;
+  --bright:#EEF4FF;
+  --green:#22C55E;
+  --red:#E03A2F;
+}
+
+/* ── BACKGROUND GRID ── */
+body::before{
+  content:'';
+  position:fixed;
+  inset:0;
+  background-image:linear-gradient(rgba(245,184,0,0.025) 1px,transparent 1px),linear-gradient(90deg,rgba(245,184,0,0.025) 1px,transparent 1px);
+  background-size:44px 44px;
+  pointer-events:none;
+  z-index:0;
+}
+
+/* ── NAVBAR ── */
+.navbar{
+  position:fixed;
+  top:0;left:0;right:0;
+  z-index:1000;
+  background:rgba(6,8,16,0.95);
+  backdrop-filter:blur(12px);
+  -webkit-backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--border);
+  height:64px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:0 24px;
+}
+
+.nav-brand{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  text-decoration:none;
+  cursor:pointer;
+}
+
+.nav-diamond{
+  width:28px;height:28px;
+  position:relative;
+  flex-shrink:0;
+}
+.nav-diamond .d-outer{
+  width:22px;height:22px;
+  border:1.5px solid var(--gold);
+  transform:rotate(45deg);
+  position:absolute;top:3px;left:3px;
+}
+.nav-diamond .d-inner{
+  width:9px;height:9px;
+  background:var(--gold);
+  transform:rotate(45deg);
+  position:absolute;top:9.5px;left:9.5px;
+}
+
+.nav-logo{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:22px;
+  letter-spacing:4px;
+  color:var(--bright);
+  line-height:1;
+}
+.nav-logo span{color:var(--gold)}
+
+.nav-tabs{
+  display:flex;
+  gap:4px;
+  align-items:center;
+}
+
+.nav-tab{
+  padding:7px 16px;
+  font-family:'Share Tech Mono',monospace;
+  font-size:11px;
+  letter-spacing:1.5px;
+  text-transform:uppercase;
+  color:var(--muted);
+  cursor:pointer;
+  border-radius:4px;
+  border:1px solid transparent;
+  transition:all 0.15s;
+  background:transparent;
+  text-decoration:none;
+}
+.nav-tab:hover{color:var(--gold);border-color:rgba(245,184,0,0.25);background:rgba(245,184,0,0.04)}
+.nav-tab.active{color:var(--gold);border-color:rgba(245,184,0,0.35);background:rgba(245,184,0,0.08);font-weight:600}
+
+.nav-cta{
+  padding:7px 16px;
+  background:var(--gold);
+  color:#060810;
+  font-family:'Share Tech Mono',monospace;
+  font-size:11px;
+  letter-spacing:1.5px;
+  text-transform:uppercase;
+  border:none;
+  border-radius:4px;
+  cursor:pointer;
+  text-decoration:none;
+  font-weight:700;
+  transition:all 0.15s;
+  white-space:nowrap;
+}
+.nav-cta:hover{background:#FFD040}
+
+/* Mobile hamburger */
+.hamburger{
+  display:none;
+  flex-direction:column;
+  gap:5px;
+  cursor:pointer;
+  padding:4px;
+  background:none;
+  border:none;
+}
+.hamburger span{
+  display:block;width:22px;height:2px;
+  background:var(--muted);border-radius:2px;
+  transition:all 0.2s;
+}
+
+/* Mobile nav menu */
+.mobile-nav{
+  display:none;
+  position:fixed;
+  top:64px;left:0;right:0;
+  background:rgba(6,8,16,0.98);
+  border-bottom:1px solid var(--border);
+  padding:16px;
+  z-index:999;
+  flex-direction:column;
+  gap:4px;
+}
+.mobile-nav.open{display:flex}
+.mobile-nav .nav-tab{padding:12px 16px;font-size:13px;width:100%;color:var(--muted)}
+.mobile-nav .nav-cta{margin-top:8px;text-align:center;display:block;padding:12px}
+
+/* ── VIEWS ── */
+.page{display:none;padding-top:64px;position:relative;z-index:1;min-height:100vh}
+.page.active{display:block}
+
+/* ── HOME PAGE ── */
+.hero{
+  min-height:calc(100vh - 64px);
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  padding:60px 24px 40px;
+  position:relative;
+}
+
+.hero-eyebrow{
+  font-family:'Share Tech Mono',monospace;
+  font-size:10px;
+  letter-spacing:4px;
+  color:var(--muted);
+  text-transform:uppercase;
+  margin-bottom:20px;
+}
+
+.hero-diamond{
+  width:72px;height:72px;
+  position:relative;
+  margin:0 auto 28px;
+}
+.hero-diamond .d-outer{
+  width:56px;height:56px;
+  border:2px solid var(--gold);
+  transform:rotate(45deg);
+  position:absolute;top:8px;left:8px;
+  box-shadow:0 0 20px rgba(245,184,0,0.15);
+}
+.hero-diamond .d-inner{
+  width:22px;height:22px;
+  background:var(--gold);
+  transform:rotate(45deg);
+  position:absolute;top:25px;left:25px;
+  box-shadow:0 0 12px rgba(245,184,0,0.4);
+}
+
+.hero-title{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:clamp(60px,14vw,96px);
+  letter-spacing:6px;
+  line-height:0.92;
+  color:var(--bright);
+  margin-bottom:12px;
+}
+.hero-title span{
+  color:var(--gold);
+  text-shadow:0 0 40px rgba(245,184,0,0.2);
+}
+
+.hero-tagline{
+  font-family:'Share Tech Mono',monospace;
+  font-size:clamp(11px,2.5vw,14px);
+  letter-spacing:4px;
+  color:var(--muted);
+  text-transform:uppercase;
+  margin-bottom:36px;
+}
+
+.hero-divider{
+  width:60px;height:1px;
+  background:linear-gradient(90deg,transparent,var(--gold),transparent);
+  margin:0 auto 36px;
+}
+
+.hero-desc{
+  font-size:clamp(16px,3.5vw,20px);
+  font-weight:300;
+  color:#8AAABB;
+  max-width:520px;
+  margin:0 auto 48px;
+  line-height:1.7;
+}
+.hero-desc strong{color:var(--bright);font-weight:600}
+
+.hero-btns{
+  display:flex;
+  gap:14px;
+  justify-content:center;
+  flex-wrap:wrap;
+  margin-bottom:72px;
+}
+
+.btn-primary{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  padding:14px 28px;
+  background:var(--gold);
+  color:#060810;
+  font-family:'Share Tech Mono',monospace;
+  font-size:12px;
+  letter-spacing:2px;
+  text-transform:uppercase;
+  font-weight:700;
+  border-radius:4px;
+  text-decoration:none;
+  transition:all 0.15s;
+  border:none;
+  cursor:pointer;
+}
+.btn-primary:hover{background:#FFD040;transform:translateY(-1px);box-shadow:0 6px 24px rgba(245,184,0,0.25)}
+
+.btn-secondary{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  padding:14px 28px;
+  background:transparent;
+  color:var(--gold);
+  font-family:'Share Tech Mono',monospace;
+  font-size:12px;
+  letter-spacing:2px;
+  text-transform:uppercase;
+  border:1px solid rgba(245,184,0,0.4);
+  border-radius:4px;
+  text-decoration:none;
+  transition:all 0.15s;
+  cursor:pointer;
+}
+.btn-secondary:hover{background:rgba(245,184,0,0.06);border-color:var(--gold)}
+
+/* Feature cards */
+.features{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:16px;
+  max-width:900px;
+  width:100%;
+  margin:0 auto;
+  padding:0 24px 80px;
+}
+
+.feat-card{
+  background:var(--s1);
+  border:1px solid var(--border);
+  border-radius:10px;
+  padding:24px;
+  transition:border-color 0.15s;
+}
+.feat-card:hover{border-color:var(--border2)}
+.feat-icon{font-size:28px;margin-bottom:12px;display:block}
+.feat-title{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:20px;
+  letter-spacing:2px;
+  color:var(--bright);
+  margin-bottom:8px;
+}
+.feat-desc{font-size:14px;color:var(--muted);line-height:1.6}
+
+/* ── BLOG PAGE ── */
+.page-header{
+  padding:60px 24px 40px;
+  text-align:center;
+  border-bottom:1px solid var(--border);
+  max-width:800px;
+  margin:0 auto;
+}
+.page-title{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:clamp(40px,8vw,64px);
+  letter-spacing:4px;
+  color:var(--bright);
+  margin-bottom:8px;
+}
+.page-title span{color:var(--gold)}
+.page-sub{
+  font-family:'Share Tech Mono',monospace;
+  font-size:11px;
+  letter-spacing:3px;
+  color:var(--muted);
+  text-transform:uppercase;
+}
+
+.blog-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
+  gap:20px;
+  max-width:1000px;
+  margin:40px auto;
+  padding:0 24px 80px;
+}
+
+.blog-card{
+  background:var(--s1);
+  border:1px solid var(--border);
+  border-radius:12px;
+  overflow:hidden;
+  transition:all 0.2s;
+  cursor:pointer;
+}
+.blog-card:hover{border-color:var(--border2);transform:translateY(-2px)}
+
+.blog-card-top{
+  padding:24px 24px 16px;
+}
+.blog-tag{
+  display:inline-block;
+  padding:3px 10px;
+  background:rgba(245,184,0,0.1);
+  color:var(--gold2);
+  font-family:'Share Tech Mono',monospace;
+  font-size:9px;
+  letter-spacing:2px;
+  text-transform:uppercase;
+  border-radius:3px;
+  margin-bottom:12px;
+}
+.blog-tag.sell{background:rgba(224,58,47,0.1);color:#E03A2F}
+.blog-tag.hold{background:rgba(245,184,0,0.1);color:var(--gold)}
+.blog-tag.buy{background:rgba(34,197,94,0.1);color:var(--green)}
+
+.blog-card-title{
+  font-family:'Barlow',sans-serif;
+  font-size:18px;
+  font-weight:700;
+  color:var(--bright);
+  line-height:1.3;
+  margin-bottom:10px;
+}
+.blog-card-excerpt{
+  font-size:14px;
+  color:var(--muted);
+  line-height:1.6;
+}
+.blog-card-footer{
+  padding:14px 24px;
+  border-top:1px solid var(--border);
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+}
+.blog-card-date{
+  font-family:'Share Tech Mono',monospace;
+  font-size:10px;
+  color:var(--muted);
+  letter-spacing:1px;
+}
+.blog-card-read{
+  font-family:'Share Tech Mono',monospace;
+  font-size:10px;
+  color:var(--gold);
+  letter-spacing:1px;
+  text-transform:uppercase;
+}
+
+.blog-coming{
+  text-align:center;
+  padding:80px 24px;
+  max-width:500px;
+  margin:0 auto;
+}
+.blog-coming-icon{font-size:48px;margin-bottom:20px;display:block}
+.blog-coming h3{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:28px;
+  letter-spacing:3px;
+  color:var(--bright);
+  margin-bottom:12px;
+}
+.blog-coming p{font-size:15px;color:var(--muted);line-height:1.7;margin-bottom:28px}
+
+/* ── NEWSLETTER PAGE ── */
+.nl-wrap{
+  max-width:600px;
+  margin:0 auto;
+  padding:60px 24px 80px;
+}
+.nl-hero{
+  text-align:center;
+  margin-bottom:48px;
+}
+.nl-badge{
+  display:inline-block;
+  padding:4px 14px;
+  background:rgba(245,184,0,0.1);
+  color:var(--gold2);
+  font-family:'Share Tech Mono',monospace;
+  font-size:10px;
+  letter-spacing:2px;
+  text-transform:uppercase;
+  border-radius:20px;
+  border:1px solid rgba(245,184,0,0.2);
+  margin-bottom:20px;
+}
+.nl-title{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:clamp(40px,8vw,60px);
+  letter-spacing:4px;
+  color:var(--bright);
+  line-height:1;
+  margin-bottom:16px;
+}
+.nl-title span{color:var(--gold)}
+.nl-desc{
+  font-size:17px;
+  font-weight:300;
+  color:#8AAABB;
+  line-height:1.7;
+  margin-bottom:40px;
+}
+.nl-desc strong{color:var(--bright);font-weight:600}
+
+.nl-what{
+  background:var(--s1);
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:28px;
+  margin-bottom:32px;
+}
+.nl-what-title{
+  font-family:'Share Tech Mono',monospace;
+  font-size:10px;
+  letter-spacing:3px;
+  text-transform:uppercase;
+  color:var(--muted);
+  margin-bottom:20px;
+}
+.nl-item{
+  display:flex;
+  align-items:flex-start;
+  gap:14px;
+  margin-bottom:16px;
+}
+.nl-item:last-child{margin-bottom:0}
+.nl-dot{
+  width:8px;height:8px;
+  border-radius:50%;
+  flex-shrink:0;
+  margin-top:7px;
+}
+.nl-dot.buy{background:var(--green)}
+.nl-dot.sell{background:var(--red)}
+.nl-dot.hold{background:var(--gold)}
+.nl-dot.info{background:#3B82F6}
+.nl-item-text{font-size:15px;color:var(--text);line-height:1.5}
+.nl-item-text strong{color:var(--bright)}
+
+.nl-form{
+  background:var(--s2);
+  border:1px solid var(--border2);
+  border-radius:12px;
+  padding:28px;
+  margin-bottom:20px;
+}
+.nl-form-title{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:24px;
+  letter-spacing:2px;
+  color:var(--bright);
+  margin-bottom:4px;
+}
+.nl-form-sub{
+  font-size:13px;
+  color:var(--muted);
+  margin-bottom:20px;
+  font-family:'Share Tech Mono',monospace;
+  letter-spacing:1px;
+}
+.nl-input{
+  display:block;
+  width:100%;
+  padding:14px 16px;
+  background:var(--s1);
+  border:1px solid var(--border);
+  border-radius:8px;
+  color:var(--bright);
+  font-size:16px;
+  font-family:'Barlow',sans-serif;
+  outline:none;
+  margin-bottom:12px;
+  -webkit-appearance:none;
+  transition:border-color 0.15s;
+}
+.nl-input:focus{border-color:var(--gold2)}
+.nl-input::placeholder{color:var(--muted)}
+.nl-btn{
+  display:block;
+  width:100%;
+  padding:15px;
+  background:var(--gold);
+  color:#060810;
+  font-family:'Share Tech Mono',monospace;
+  font-size:13px;
+  letter-spacing:2px;
+  text-transform:uppercase;
+  font-weight:700;
+  border:none;
+  border-radius:8px;
+  cursor:pointer;
+  transition:all 0.15s;
+  -webkit-appearance:none;
+}
+.nl-btn:hover{background:#FFD040}
+.nl-privacy{
+  font-size:11px;
+  color:var(--muted);
+  text-align:center;
+  font-family:'Share Tech Mono',monospace;
+  letter-spacing:0.5px;
+}
+
+/* ── ABOUT PAGE ── */
+.about-wrap{
+  max-width:700px;
+  margin:0 auto;
+  padding:60px 24px 80px;
+}
+.about-hero{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  text-align:center;
+  margin-bottom:60px;
+}
+.about-avatar{
+  width:80px;height:80px;
+  background:var(--s2);
+  border:2px solid var(--border2);
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:32px;
+  margin-bottom:20px;
+}
+.about-name{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:36px;
+  letter-spacing:4px;
+  color:var(--bright);
+  margin-bottom:4px;
+}
+.about-role{
+  font-family:'Share Tech Mono',monospace;
+  font-size:11px;
+  letter-spacing:3px;
+  color:var(--gold);
+  text-transform:uppercase;
+  margin-bottom:20px;
+}
+.about-bio{
+  font-size:17px;
+  font-weight:300;
+  color:#8AAABB;
+  line-height:1.8;
+  max-width:520px;
+}
+
+.about-section{margin-bottom:48px}
+.about-section-title{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:22px;
+  letter-spacing:3px;
+  color:var(--bright);
+  margin-bottom:16px;
+  padding-bottom:10px;
+  border-bottom:1px solid var(--border);
+}
+.about-text{
+  font-size:16px;
+  color:var(--text);
+  line-height:1.8;
+  margin-bottom:16px;
+}
+.about-text strong{color:var(--bright)}
+
+.about-pillars{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+  margin-top:16px;
+}
+.pillar{
+  background:var(--s1);
+  border:1px solid var(--border);
+  border-radius:8px;
+  padding:16px;
+}
+.pillar-icon{font-size:20px;margin-bottom:8px;display:block}
+.pillar-name{
+  font-family:'Share Tech Mono',monospace;
+  font-size:10px;
+  letter-spacing:2px;
+  text-transform:uppercase;
+  color:var(--gold);
+  margin-bottom:4px;
+}
+.pillar-desc{font-size:13px;color:var(--muted);line-height:1.5}
+
+/* ── APP PAGE ── */
+.app-wrap{
+  max-width:700px;
+  margin:0 auto;
+  padding:60px 24px 80px;
+  text-align:center;
+}
+.app-title{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:clamp(40px,8vw,64px);
+  letter-spacing:4px;
+  color:var(--bright);
+  margin-bottom:8px;
+}
+.app-title span{color:var(--gold)}
+.app-sub{
+  font-family:'Share Tech Mono',monospace;
+  font-size:11px;
+  letter-spacing:3px;
+  color:var(--muted);
+  text-transform:uppercase;
+  margin-bottom:32px;
+}
+.app-desc{
+  font-size:17px;
+  font-weight:300;
+  color:#8AAABB;
+  line-height:1.7;
+  max-width:500px;
+  margin:0 auto 48px;
+}
+.app-agents{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+  gap:14px;
+  margin-bottom:48px;
+  text-align:left;
+}
+.agent-card{
+  background:var(--s1);
+  border:1px solid var(--border);
+  border-radius:10px;
+  padding:20px;
+}
+.agent-icon{font-size:24px;margin-bottom:10px;display:block}
+.agent-name{
+  font-family:'Share Tech Mono',monospace;
+  font-size:10px;
+  letter-spacing:2px;
+  text-transform:uppercase;
+  color:var(--gold);
+  margin-bottom:6px;
+}
+.agent-desc{font-size:13px;color:var(--muted);line-height:1.5}
+.app-launch-btn{
+  display:inline-flex;
+  align-items:center;
+  gap:10px;
+  padding:18px 40px;
+  background:var(--gold);
+  color:#060810;
+  font-family:'Bebas Neue',sans-serif;
+  font-size:22px;
+  letter-spacing:3px;
+  border-radius:6px;
+  text-decoration:none;
+  transition:all 0.2s;
+  box-shadow:0 4px 24px rgba(245,184,0,0.2);
+}
+.app-launch-btn:hover{background:#FFD040;transform:translateY(-2px);box-shadow:0 8px 32px rgba(245,184,0,0.3)}
+
+/* ── FOOTER ── */
+.site-footer{
+  border-top:1px solid var(--border);
+  padding:32px 24px;
+  text-align:center;
+  position:relative;
+  z-index:1;
+}
+.footer-logo{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:20px;
+  letter-spacing:4px;
+  color:var(--muted);
+  margin-bottom:12px;
+}
+.footer-logo span{color:var(--gold2)}
+.footer-links{
+  display:flex;
+  gap:20px;
+  justify-content:center;
+  margin-bottom:20px;
+  flex-wrap:wrap;
+}
+.footer-link{
+  font-family:'Share Tech Mono',monospace;
+  font-size:10px;
+  letter-spacing:2px;
+  color:var(--muted);
+  text-transform:uppercase;
+  cursor:pointer;
+  text-decoration:none;
+  transition:color 0.15s;
+}
+.footer-link:hover{color:var(--text)}
+.footer-disclaimer{
+  font-family:'Share Tech Mono',monospace;
+  font-size:9px;
+  color:#3A5468;
+  line-height:1.8;
+  max-width:700px;
+  margin:0 auto;
+  letter-spacing:0.3px;
+}
+
+/* ── RESPONSIVE ── */
+@media(max-width:640px){
+  .nav-tabs,.nav-cta{display:none}
+  .hamburger{display:flex}
+  .about-pillars{grid-template-columns:1fr}
+  .hero-btns{flex-direction:column;align-items:center}
+  .btn-primary,.btn-secondary{width:100%;max-width:320px;justify-content:center}
+}
 </style>
 </head>
 <body>
-<div class="wrap">
-<div class="diamond"></div>
-<div class="logo">CARD<span>ACUMEN</span></div>
-<span class="tag">Invest Smarter. Collect Better.</span>
-<div class="soon">// Launching Soon</div>
-<div class="sub">Weekly buy/sell/hold picks for serious card investors.</div>
-<a class="app-link" href="CardAcumen-OS.html">Launch CardAcumen OS</a>
+
+<!-- ── NAVBAR ── -->
+<nav class="navbar">
+  <div class="nav-brand" onclick="showPage('home')">
+    <div class="nav-diamond">
+      <div class="d-outer"></div>
+      <div class="d-inner"></div>
+    </div>
+    <div class="nav-logo">CARD<span>ACUMEN</span></div>
+  </div>
+  <div class="nav-tabs">
+    <a class="nav-tab active" id="tab-home" onclick="showPage('home')">Home</a>
+    <a class="nav-tab" id="tab-blog" onclick="showPage('blog')">Blog</a>
+    <a class="nav-tab" id="tab-newsletter" onclick="showPage('newsletter')">Newsletter</a>
+    <a class="nav-tab" id="tab-about" onclick="showPage('about')">About</a>
+    <a class="nav-tab" id="tab-app" onclick="showPage('app')">The OS</a>
+  </div>
+  <a class="nav-cta" href="CardAcumen-OS.html">⚡ Launch OS</a>
+  <button class="hamburger" onclick="toggleMobile()" id="hamburger">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- Mobile menu -->
+<div class="mobile-nav" id="mobile-nav">
+  <a class="nav-tab" onclick="showPage('home');toggleMobile()">Home</a>
+  <a class="nav-tab" onclick="showPage('blog');toggleMobile()">Blog</a>
+  <a class="nav-tab" onclick="showPage('newsletter');toggleMobile()">Newsletter</a>
+  <a class="nav-tab" onclick="showPage('about');toggleMobile()">About</a>
+  <a class="nav-tab" onclick="showPage('app');toggleMobile()">The OS</a>
+  <a class="nav-cta" href="CardAcumen-OS.html">⚡ Launch CardAcumen OS</a>
 </div>
+
+<!-- ══════════════════════════════════ -->
+<!-- HOME PAGE                         -->
+<!-- ══════════════════════════════════ -->
+<div class="page active" id="page-home">
+  <section class="hero">
+    <div class="hero-eyebrow">// Card Market Intelligence</div>
+    <div class="hero-diamond">
+      <div class="d-outer"></div>
+      <div class="d-inner"></div>
+    </div>
+    <h1 class="hero-title">CARD<span>ACUMEN</span></h1>
+    <div class="hero-tagline">Invest Smarter &nbsp;·&nbsp; Collect Better</div>
+    <div class="hero-divider"></div>
+    <p class="hero-desc">
+      Weekly <strong>buy / sell / hold</strong> picks for serious card investors.
+      Prospect analysis, eBay intelligence, and market edge —
+      before everyone else catches on.
+    </p>
+    <div class="hero-btns">
+      <a class="btn-primary" href="CardAcumen-OS.html">⚡ Launch CardAcumen OS</a>
+      <button class="btn-secondary" onclick="showPage('newsletter')">📧 Get Weekly Picks</button>
+    </div>
+  </section>
+
+  <section class="features">
+    <div class="feat-card">
+      <span class="feat-icon">🔮</span>
+      <div class="feat-title">Prospect Intel</div>
+      <p class="feat-desc">Identify breakout prospects before the call-up. Buy in the risk window, sell into the certainty premium.</p>
+    </div>
+    <div class="feat-card">
+      <span class="feat-icon">🃏</span>
+      <div class="feat-title">eBay Edge</div>
+      <p class="feat-desc">Optimized listings, timing strategies, and pricing intelligence that consistently beats the market average.</p>
+    </div>
+    <div class="feat-card">
+      <span class="feat-icon">📊</span>
+      <div class="feat-title">Market Analysis</div>
+      <p class="feat-desc">Bowman Chrome parallel rankings, PSA pop report analysis, and set-by-set investment breakdowns.</p>
+    </div>
+    <div class="feat-card">
+      <span class="feat-icon">📧</span>
+      <div class="feat-title">Weekly Picks</div>
+      <p class="feat-desc">Every Tuesday — one buy, one sell, one watch. 500 words. The research done for you.</p>
+    </div>
+  </section>
+
+  <footer class="site-footer">
+    <div class="footer-logo">CARD<span>ACUMEN</span></div>
+    <div class="footer-links">
+      <a class="footer-link" onclick="showPage('home')">Home</a>
+      <a class="footer-link" onclick="showPage('blog')">Blog</a>
+      <a class="footer-link" onclick="showPage('newsletter')">Newsletter</a>
+      <a class="footer-link" onclick="showPage('about')">About</a>
+      <a class="footer-link" onclick="showPage('app')">The OS</a>
+    </div>
+    <p class="footer-disclaimer">DISCLAIMER: Card Acumen is for informational and entertainment purposes only. Nothing published on this site, in Card Acumen Weekly, or through any Card Acumen tools or content constitutes financial, investment, legal, or professional advice of any kind. Sports card values can decrease as well as increase. Past performance of any card or player is not indicative of future results. Always conduct your own independent research before making any purchase, sale, or investment decision. Card Acumen is not a registered investment advisor, broker-dealer, or financial institution. The author may hold positions in cards or players mentioned. &copy; 2026 Card Acumen. All rights reserved.</p>
+  </footer>
+</div>
+
+<!-- ══════════════════════════════════ -->
+<!-- BLOG PAGE                         -->
+<!-- ══════════════════════════════════ -->
+<div class="page" id="page-blog">
+  <div class="page-header">
+    <h1 class="page-title">CARD <span>INTEL</span></h1>
+    <div class="page-sub">// Prospect analysis &amp; market breakdowns</div>
+  </div>
+
+  <div class="blog-grid">
+    <div class="blog-card">
+      <div class="blog-card-top">
+        <span class="blog-tag buy">Buy</span>
+        <div class="blog-card-title">The Complete 2025 Bowman Chrome Investing Guide</div>
+        <p class="blog-card-excerpt">Which prospects to target, which parallels offer value, and how to use eBay sold data to never overpay again.</p>
+      </div>
+      <div class="blog-card-footer">
+        <span class="blog-card-date">Coming Soon</span>
+        <span class="blog-card-read">Read →</span>
+      </div>
+    </div>
+    <div class="blog-card">
+      <div class="blog-card-top">
+        <span class="blog-tag">Grading</span>
+        <div class="blog-card-title">PSA vs BGS vs CGC: The Complete 2025 Grading Guide</div>
+        <p class="blog-card-excerpt">When grading adds value, when it destroys it, and the break-even math every investor needs to know.</p>
+      </div>
+      <div class="blog-card-footer">
+        <span class="blog-card-date">Coming Soon</span>
+        <span class="blog-card-read">Read →</span>
+      </div>
+    </div>
+    <div class="blog-card">
+      <div class="blog-card-top">
+        <span class="blog-tag buy">Strategy</span>
+        <div class="blog-card-title">How to Invest in Baseball Prospect Cards</div>
+        <p class="blog-card-excerpt">The complete framework — when to buy, when to sell, and how to build a card portfolio that compounds.</p>
+      </div>
+      <div class="blog-card-footer">
+        <span class="blog-card-date">Coming Soon</span>
+        <span class="blog-card-read">Read →</span>
+      </div>
+    </div>
+    <div class="blog-card">
+      <div class="blog-card-top">
+        <span class="blog-tag">eBay</span>
+        <div class="blog-card-title">How to Sell Baseball Cards on eBay: Maximum Profits</div>
+        <p class="blog-card-excerpt">Optimized titles, pricing strategy, shipping tips, and timing secrets that separate professional sellers from the rest.</p>
+      </div>
+      <div class="blog-card-footer">
+        <span class="blog-card-date">Coming Soon</span>
+        <span class="blog-card-read">Read →</span>
+      </div>
+    </div>
+  </div>
+
+  <footer class="site-footer">
+    <div class="footer-logo">CARD<span>ACUMEN</span></div>
+    <p class="footer-disclaimer">DISCLAIMER: Card Acumen is for informational and entertainment purposes only. Nothing published on this site, in Card Acumen Weekly, or through any Card Acumen tools or content constitutes financial, investment, legal, or professional advice of any kind. Sports card values can decrease as well as increase. Past performance of any card or player is not indicative of future results. Always conduct your own independent research before making any purchase, sale, or investment decision. Card Acumen is not a registered investment advisor, broker-dealer, or financial institution. The author may hold positions in cards or players mentioned. &copy; 2026 Card Acumen. All rights reserved.</p>
+  </footer>
+</div>
+
+<!-- ══════════════════════════════════ -->
+<!-- NEWSLETTER PAGE                   -->
+<!-- ══════════════════════════════════ -->
+<div class="page" id="page-newsletter">
+  <div class="nl-wrap">
+    <div class="nl-hero">
+      <div class="nl-badge">Free Every Tuesday</div>
+      <h1 class="nl-title">CARD ACUMEN <span>WEEKLY</span></h1>
+      <p class="nl-desc">
+        One <strong>buy</strong>, one <strong>sell</strong>, one <strong>watch</strong>.
+        Every Tuesday. 500 words. The research done for you —
+        so you can move before the market catches up.
+      </p>
+    </div>
+
+    <div class="nl-what">
+      <div class="nl-what-title">// What you get every week</div>
+      <div class="nl-item">
+        <div class="nl-dot buy"></div>
+        <div class="nl-item-text"><strong>Buy of the Week</strong> — The prospect or card with the best risk/reward right now. Price context, timing, and why.</div>
+      </div>
+      <div class="nl-item">
+        <div class="nl-dot sell"></div>
+        <div class="nl-item-text"><strong>Sell Now</strong> — The card that's hit its ceiling. Take profits before the market corrects.</div>
+      </div>
+      <div class="nl-item">
+        <div class="nl-dot hold"></div>
+        <div class="nl-item-text"><strong>Hold &amp; Watch</strong> — The card on the bubble. What catalyst to wait for before acting.</div>
+      </div>
+      <div class="nl-item">
+        <div class="nl-dot info"></div>
+        <div class="nl-item-text"><strong>Market Pulse</strong> — What's moving in the hobby this week. Set releases, call-ups, rankings drops.</div>
+      </div>
+    </div>
+
+    <div class="nl-form">
+      <div class="nl-form-title">Get the Weekly Edge</div>
+      <div class="nl-form-sub">// Free. No spam. Unsubscribe anytime.</div>
+      <input class="nl-input" type="text" placeholder="First name" id="nl-fname">
+      <input class="nl-input" type="email" placeholder="Email address" id="nl-email">
+      <button class="nl-btn" onclick="handleSignup()">SUBSCRIBE FREE →</button>
+    </div>
+    <p class="nl-privacy">Your email is never shared or sold. Ever.</p>
+  </div>
+
+  <footer class="site-footer">
+    <div class="footer-logo">CARD<span>ACUMEN</span></div>
+    <p class="footer-disclaimer">DISCLAIMER: Card Acumen is for informational and entertainment purposes only. Nothing published on this site, in Card Acumen Weekly, or through any Card Acumen tools or content constitutes financial, investment, legal, or professional advice of any kind. Sports card values can decrease as well as increase. Past performance of any card or player is not indicative of future results. Always conduct your own independent research before making any purchase, sale, or investment decision. Card Acumen is not a registered investment advisor, broker-dealer, or financial institution. The author may hold positions in cards or players mentioned. &copy; 2026 Card Acumen. All rights reserved.</p>
+  </footer>
+</div>
+
+<!-- ══════════════════════════════════ -->
+<!-- ABOUT PAGE                        -->
+<!-- ══════════════════════════════════ -->
+<div class="page" id="page-about">
+  <div class="about-wrap">
+    <div class="about-hero">
+      <div class="about-avatar">🃏</div>
+      <div class="about-name">CARD ACUMEN</div>
+      <div class="about-role">// Card Market Intelligence</div>
+      <p class="about-bio">
+        Serious analysis for serious collectors. Card Acumen exists to give investors the edge that casual hobbyists don't have — systematic research, market timing, and the discipline to act before the market catches up.
+      </p>
+    </div>
+
+    <div class="about-section">
+      <div class="about-section-title">THE MISSION</div>
+      <p class="about-text">Most card content is either pure fandom or pure speculation. Card Acumen sits in between — systematic, informed, and actionable. The research is real, the picks are specific, and the framework is built on the same principles that drive serious investing in any asset class.</p>
+      <p class="about-text">The hobby rewards collectors who <strong>think like investors</strong>. Buy in the risk window, hold through development, sell into the excitement. That's the Card Acumen framework — applied every week to the cards and prospects that matter most.</p>
+    </div>
+
+    <div class="about-section">
+      <div class="about-section-title">THE FOUR PILLARS</div>
+      <div class="about-pillars">
+        <div class="pillar">
+          <span class="pillar-icon">⚾</span>
+          <div class="pillar-name">Bowman Chrome</div>
+          <p class="pillar-desc">The most important set for prospect investors. Parallel values, timing windows, and which autos to target.</p>
+        </div>
+        <div class="pillar">
+          <span class="pillar-icon">🔬</span>
+          <div class="pillar-name">Grading Intel</div>
+          <p class="pillar-desc">PSA vs BGS, pop report analysis, and the break-even math that tells you when grading actually adds value.</p>
+        </div>
+        <div class="pillar">
+          <span class="pillar-icon">🔮</span>
+          <div class="pillar-name">Prospect Research</div>
+          <p class="pillar-desc">Minor league stats, call-up signals, and the buying windows that the market consistently misprices.</p>
+        </div>
+        <div class="pillar">
+          <span class="pillar-icon">🛒</span>
+          <div class="pillar-name">eBay Intelligence</div>
+          <p class="pillar-desc">Listing optimization, pricing from sold data, and timing strategies that maximize every sale.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="about-section">
+      <div class="about-section-title">DISCLAIMER</div>
+      <p class="about-text" style="font-size:13px;color:var(--muted)">Card Acumen is for informational and entertainment purposes only. Nothing published on this site, in Card Acumen Weekly, or through any Card Acumen tools or content constitutes financial, investment, legal, or professional advice of any kind. Sports card values can decrease as well as increase. Always conduct your own independent research before making any purchase or sale decision. Card Acumen is not a registered investment advisor. The author may hold positions in cards or players mentioned. &copy; 2026 Card Acumen.</p>
+    </div>
+  </div>
+
+  <footer class="site-footer">
+    <div class="footer-logo">CARD<span>ACUMEN</span></div>
+    <p class="footer-disclaimer">DISCLAIMER: Card Acumen is for informational and entertainment purposes only. Nothing published on this site, in Card Acumen Weekly, or through any Card Acumen tools or content constitutes financial, investment, legal, or professional advice of any kind. Sports card values can decrease as well as increase. Past performance of any card or player is not indicative of future results. Always conduct your own independent research before making any purchase, sale, or investment decision. Card Acumen is not a registered investment advisor, broker-dealer, or financial institution. The author may hold positions in cards or players mentioned. &copy; 2026 Card Acumen. All rights reserved.</p>
+  </footer>
+</div>
+
+<!-- ══════════════════════════════════ -->
+<!-- THE OS PAGE                       -->
+<!-- ══════════════════════════════════ -->
+<div class="page" id="page-app">
+  <div class="app-wrap">
+    <h1 class="app-title">THE <span>OS</span></h1>
+    <div class="app-sub">// CardAcumen AI Command Center</div>
+    <p class="app-desc">Seven AI-powered agents that run your entire card investing operation. Newsletter, listings, blog, viral content, SEO clusters, keyword research, and content repurposing — all in one tool.</p>
+
+    <div class="app-agents">
+      <div class="agent-card">
+        <span class="agent-icon">📧</span>
+        <div class="agent-name">Newsletter</div>
+        <p class="agent-desc">3 picks → full issue, subject line, and 3 social teasers ready to paste into Beehiiv.</p>
+      </div>
+      <div class="agent-card">
+        <span class="agent-icon">🃏</span>
+        <div class="agent-name">Listings</div>
+        <p class="agent-desc">Queue cards → 80-char eBay titles, full descriptions, keywords, and seller tips.</p>
+      </div>
+      <div class="agent-card">
+        <span class="agent-icon">📝</span>
+        <div class="agent-name">Blog</div>
+        <p class="agent-desc">Prospect + angle → full SEO article, meta tags, URL slug, and promo posts.</p>
+      </div>
+      <div class="agent-card">
+        <span class="agent-icon">⚡</span>
+        <div class="agent-name">Viral</div>
+        <p class="agent-desc">Paste transcript → virality score, hook, caption, hashtags, and A/B variants.</p>
+      </div>
+      <div class="agent-card">
+        <span class="agent-icon">🗺️</span>
+        <div class="agent-name">SEO Cluster</div>
+        <p class="agent-desc">Hub topic → full content cluster with internal linking map and schema markup.</p>
+      </div>
+      <div class="agent-card">
+        <span class="agent-icon">🔍</span>
+        <div class="agent-name">Keywords</div>
+        <p class="agent-desc">Seed topic → 25 ranked keywords with competition levels and content gap analysis.</p>
+      </div>
+      <div class="agent-card">
+        <span class="agent-icon">♻️</span>
+        <div class="agent-name">Repurpose</div>
+        <p class="agent-desc">Any content → 7 formats: blog, newsletter, 5 social posts, Reddit, YouTube Short, email.</p>
+      </div>
+    </div>
+
+    <a class="app-launch-btn" href="CardAcumen-OS.html">⚡ LAUNCH CARDACUMEN OS</a>
+  </div>
+
+  <footer class="site-footer">
+    <div class="footer-logo">CARD<span>ACUMEN</span></div>
+    <p class="footer-disclaimer">DISCLAIMER: Card Acumen is for informational and entertainment purposes only. Nothing published on this site, in Card Acumen Weekly, or through any Card Acumen tools or content constitutes financial, investment, legal, or professional advice of any kind. Sports card values can decrease as well as increase. Past performance of any card or player is not indicative of future results. Always conduct your own independent research before making any purchase, sale, or investment decision. Card Acumen is not a registered investment advisor, broker-dealer, or financial institution. The author may hold positions in cards or players mentioned. &copy; 2026 Card Acumen. All rights reserved.</p>
+  </footer>
+</div>
+
+<script>
+// ── PAGE NAVIGATION ──
+var PAGES = ['home','blog','newsletter','about','app'];
+
+function showPage(name) {
+  PAGES.forEach(function(p) {
+    var page = document.getElementById('page-'+p);
+    var tab = document.getElementById('tab-'+p);
+    if(page) page.classList.toggle('active', p===name);
+    if(tab) tab.classList.toggle('active', p===name);
+  });
+  window.scrollTo(0,0);
+}
+
+// ── MOBILE NAV ──
+function toggleMobile() {
+  var nav = document.getElementById('mobile-nav');
+  nav.classList.toggle('open');
+}
+
+// ── NEWSLETTER SIGNUP ──
+function handleSignup() {
+  var fname = document.getElementById('nl-fname').value.trim();
+  var email = document.getElementById('nl-email').value.trim();
+  if(!email || email.indexOf('@') === -1) {
+    alert('Please enter a valid email address.');
+    return;
+  }
+  // Replace this URL with your actual Beehiiv signup URL
+  var beehiivUrl = 'https://cardacumen.beehiiv.com/subscribe?email=' + encodeURIComponent(email) + '&first_name=' + encodeURIComponent(fname);
+  window.open(beehiivUrl, '_blank');
+}
+</script>
+
 </body>
 </html>
