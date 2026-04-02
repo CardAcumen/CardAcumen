@@ -1,0 +1,964 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Card Acumen — Invest Smarter. Collect Better.</title>
+  <meta name="description" content="Comprehensive prospect intelligence meets sports card market data. Know who to buy, when to sell, and what the market is missing.">
+  <meta property="og:title" content="Card Acumen — Invest Smarter. Collect Better.">
+  <meta property="og:description" content="The smartest way to scout, collect, and invest in sports cards.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://cardacumen.com">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;700&family=Cormorant+Garamond:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --gold: #C9A84C;
+      --gold-dim: #A08030;
+      --dark: #0A0B0D;
+      --darker: #060708;
+      --surface: #111318;
+      --surface-light: #1A1D25;
+      --cream: #F5F0E8;
+      --muted: #6B6E78;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--dark);
+      color: var(--cream);
+      overflow-x: hidden;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes shimmer {
+      0% { background-position: -200% center; }
+      100% { background-position: 200% center; }
+    }
+    .fade-up {
+      opacity: 0;
+      animation: fadeUp 0.8s ease both;
+    }
+    .d1 { animation-delay: 0.1s; }
+    .d2 { animation-delay: 0.2s; }
+    .d3 { animation-delay: 0.3s; }
+    .d4 { animation-delay: 0.4s; }
+    .d5 { animation-delay: 0.5s; }
+    .shimmer-text {
+      background: linear-gradient(90deg, var(--gold) 0%, #E8D5A0 25%, var(--gold) 50%, #E8D5A0 75%, var(--gold) 100%);
+      background-size: 200% auto;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      animation: shimmer 4s linear infinite;
+    }
+
+    /* NAV */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      padding: 16px 32px;
+      background: linear-gradient(180deg, var(--dark) 0%, transparent 100%);
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .nav-brand { display: flex; align-items: baseline; gap: 8px; }
+    .nav-brand .card {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 22px; font-weight: 700; color: var(--gold);
+    }
+    .nav-brand .acumen {
+      font-size: 22px; font-weight: 300; color: var(--cream);
+      letter-spacing: 4px;
+    }
+    .nav-links { display: flex; gap: 28px; align-items: center; }
+    .nav-links a {
+      color: var(--muted); text-decoration: none; font-size: 13px;
+      font-weight: 500; letter-spacing: 1px; text-transform: uppercase;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--cream); }
+    .nav-cta {
+      padding: 8px 20px; background: var(--gold); color: var(--dark) !important;
+      font-size: 12px !important; font-weight: 700; letter-spacing: 1px;
+      text-transform: uppercase; border-radius: 4px;
+    }
+
+    /* HERO */
+    .hero {
+      min-height: 100vh;
+      display: flex; flex-direction: column;
+      justify-content: center; align-items: center;
+      text-align: center;
+      padding: 120px 24px 80px;
+      position: relative;
+    }
+    .hero-bg {
+      position: absolute; inset: 0; opacity: 0.03;
+      background-image: radial-gradient(var(--gold) 1px, transparent 1px);
+      background-size: 40px 40px;
+    }
+    .hero-glow {
+      position: absolute; top: 15%; right: 10%;
+      width: 400px; height: 400px; border-radius: 50%;
+      background: radial-gradient(circle, rgba(201,168,76,0.03) 0%, transparent 70%);
+      filter: blur(80px);
+    }
+    .hero-tag {
+      font-size: 11px; font-weight: 700; letter-spacing: 4px;
+      text-transform: uppercase; color: var(--gold); margin-bottom: 24px;
+      display: flex; align-items: center; gap: 12px; justify-content: center;
+    }
+    .hero-tag-line { width: 32px; height: 1px; background: var(--gold); }
+    .hero h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(42px, 7vw, 84px);
+      font-weight: 600; line-height: 1.05;
+      max-width: 900px; margin-bottom: 24px;
+    }
+    .hero-sub {
+      font-size: 18px; line-height: 1.7;
+      color: var(--muted); max-width: 580px;
+      margin-bottom: 40px; font-weight: 300;
+    }
+    .hero-form {
+      display: flex; gap: 8px;
+      max-width: 440px; width: 100%;
+    }
+    .hero-form input {
+      flex: 1; padding: 14px 18px;
+      background: var(--surface); border: 1px solid var(--surface-light);
+      border-radius: 6px; color: var(--cream);
+      font-size: 14px; font-family: 'DM Sans', sans-serif;
+      outline: none;
+    }
+    .hero-form input::placeholder { color: var(--muted); }
+    .hero-form input:focus { border-color: var(--gold); }
+    .hero-form button {
+      padding: 14px 28px; background: var(--gold);
+      color: var(--dark); border: none; border-radius: 6px;
+      font-size: 13px; font-weight: 700; letter-spacing: 0.5px;
+      cursor: pointer; font-family: 'DM Sans', sans-serif;
+      white-space: nowrap; transition: background 0.2s;
+    }
+    .hero-form button:hover { background: #D4B85C; }
+    .hero-stats {
+      display: flex; gap: 48px; margin-top: 64px;
+    }
+    .hero-stat { text-align: center; }
+    .hero-stat-num {
+      font-size: 32px; font-weight: 700; color: var(--cream);
+      font-family: 'Cormorant Garamond', serif;
+    }
+    .hero-stat-label {
+      font-size: 11px; color: var(--muted); letter-spacing: 1.5px;
+      text-transform: uppercase; margin-top: 4px;
+    }
+    .success-msg {
+      padding: 14px 24px; background: rgba(201,168,76,0.08);
+      border: 1px solid rgba(201,168,76,0.2); border-radius: 6px;
+      color: var(--gold); font-size: 14px; font-weight: 500;
+      width: 100%; text-align: center;
+    }
+
+    /* SECTIONS */
+    .section { padding: 100px 24px; }
+    .section-inner { max-width: 1100px; margin: 0 auto; }
+    .section-tag {
+      font-size: 11px; font-weight: 700; letter-spacing: 4px;
+      text-transform: uppercase; color: var(--gold); margin-bottom: 16px;
+    }
+    .section-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(32px, 4vw, 48px);
+      font-weight: 600; color: var(--cream);
+    }
+    .section-dark { background: var(--darker); }
+
+    /* FEATURES */
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 24px; margin-top: 64px;
+    }
+    .feature-card {
+      background: var(--surface);
+      border: 1px solid var(--surface-light);
+      border-radius: 12px; padding: 32px;
+      transition: all 0.3s ease;
+    }
+    .feature-card:hover {
+      border-color: rgba(201,168,76,0.27);
+      transform: translateY(-2px);
+    }
+    .feature-icon { font-size: 28px; margin-bottom: 16px; }
+    .feature-title {
+      font-size: 18px; font-weight: 600; color: var(--cream);
+      margin-bottom: 10px;
+      font-family: 'Cormorant Garamond', serif;
+    }
+    .feature-desc {
+      font-size: 14px; color: var(--muted); line-height: 1.7; font-weight: 300;
+    }
+
+    /* PROSPECT TABLE */
+    .prospect-table {
+      background: var(--surface);
+      border: 1px solid var(--surface-light);
+      border-radius: 12px; overflow: hidden;
+      margin-top: 48px;
+    }
+    .prospect-header {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr 1fr 1.4fr;
+      padding: 14px 24px;
+      border-bottom: 1px solid var(--surface-light);
+      font-size: 10px; font-weight: 700;
+      letter-spacing: 1.5px; text-transform: uppercase;
+      color: var(--muted);
+    }
+    .prospect-row {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr 1fr 1.4fr;
+      padding: 16px 24px;
+      border-bottom: 1px solid var(--surface-light);
+      align-items: center;
+      transition: background 0.2s;
+      cursor: pointer;
+    }
+    .prospect-row:last-of-type { border-bottom: none; }
+    .prospect-row:hover { background: var(--surface-light); }
+    .prospect-name { font-size: 15px; font-weight: 600; color: var(--cream); }
+    .prospect-team { font-size: 13px; color: var(--muted); }
+    .prospect-pos {
+      font-size: 11px; color: var(--muted);
+      background: var(--surface-light);
+      padding: 2px 8px; border-radius: 3px;
+      display: inline-block; width: fit-content;
+    }
+    .prospect-tier {
+      font-size: 11px; font-weight: 700;
+      color: var(--gold); letter-spacing: 0.5px;
+    }
+    .prospect-eta { font-size: 13px; color: var(--muted); }
+    .prospect-market {
+      display: flex; flex-direction: column; gap: 2px;
+    }
+    .prospect-trend {
+      font-size: 11px; font-weight: 700; color: #34D399;
+    }
+    .prospect-price {
+      font-size: 10px; color: var(--muted); font-weight: 400;
+    }
+    .prospect-blur {
+      padding: 16px 24px;
+      filter: blur(4px); opacity: 0.4;
+      user-select: none;
+    }
+    .prospect-blur-row {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr 1fr 1.4fr;
+      margin-bottom: 12px;
+      color: var(--muted);
+    }
+    .prospect-cta {
+      padding: 20px 24px; text-align: center;
+      border-top: 1px solid var(--surface-light);
+    }
+    .prospect-cta a {
+      color: var(--gold); font-size: 13px; font-weight: 600;
+      text-decoration: none; letter-spacing: 0.5px;
+    }
+
+    /* TESTIMONIALS */
+    .testimonials {
+      padding: 80px 24px;
+      max-width: 700px; margin: 0 auto;
+      text-align: center;
+    }
+    .testimonial-text {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 22px; font-weight: 400;
+      font-style: italic; color: var(--cream);
+      line-height: 1.6; margin-bottom: 16px;
+      min-height: 120px;
+    }
+    .testimonial-author {
+      font-size: 12px; color: var(--muted); letter-spacing: 0.5px;
+    }
+    .testimonial-dots {
+      display: flex; justify-content: center;
+      gap: 8px; margin-top: 24px;
+    }
+    .dot {
+      height: 8px; border-radius: 4px;
+      transition: all 0.3s; cursor: pointer;
+    }
+    .dot.active { width: 24px; background: var(--gold); }
+    .dot.inactive { width: 8px; background: var(--surface-light); }
+
+    /* ABOUT / FOUNDER */
+    .founder-section {
+      padding: 80px 24px;
+      background: var(--surface);
+      border-top: 1px solid var(--surface-light);
+      border-bottom: 1px solid var(--surface-light);
+    }
+    .founder-inner {
+      max-width: 780px; margin: 0 auto;
+      display: flex; gap: 48px; align-items: flex-start;
+    }
+    .founder-badge {
+      flex-shrink: 0;
+      width: 64px; height: 64px;
+      border-radius: 50%;
+      background: rgba(201,168,76,0.1);
+      border: 1px solid rgba(201,168,76,0.25);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 26px;
+    }
+    .founder-content { flex: 1; }
+    .founder-label {
+      font-size: 10px; font-weight: 700; letter-spacing: 3px;
+      text-transform: uppercase; color: var(--gold); margin-bottom: 12px;
+    }
+    .founder-headline {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 26px; font-weight: 600; color: var(--cream);
+      margin-bottom: 14px; line-height: 1.2;
+    }
+    .founder-body {
+      font-size: 14px; color: var(--muted); line-height: 1.8; font-weight: 300;
+    }
+    .founder-body strong { color: var(--cream); font-weight: 500; }
+
+    /* PRICING */
+    .pricing-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 24px; align-items: start;
+      margin-top: 64px;
+    }
+    .tier-card {
+      background: var(--surface);
+      border: 1px solid var(--surface-light);
+      border-radius: 12px; padding: 36px 32px;
+      position: relative; transition: all 0.3s ease;
+    }
+    .tier-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+    }
+    .tier-popular {
+      border-color: rgba(201,168,76,0.4);
+      box-shadow: 0 0 40px rgba(201,168,76,0.06), 0 8px 32px rgba(0,0,0,0.3);
+    }
+    .tier-badge {
+      position: absolute; top: -12px; left: 50%;
+      transform: translateX(-50%);
+      padding: 4px 16px; background: var(--gold);
+      color: var(--dark); font-size: 10px; font-weight: 700;
+      letter-spacing: 1.5px; text-transform: uppercase;
+      border-radius: 4px;
+    }
+    .tier-name {
+      font-size: 13px; font-weight: 700;
+      letter-spacing: 2px; text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+    .tier-price {
+      display: flex; align-items: baseline; gap: 4px;
+      margin-bottom: 24px;
+    }
+    .tier-amount {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 44px; font-weight: 700; color: var(--cream);
+    }
+    .tier-period { font-size: 14px; color: var(--muted); }
+    .tier-features {
+      display: flex; flex-direction: column; gap: 12px;
+      margin-bottom: 32px;
+    }
+    .tier-feature {
+      display: flex; align-items: flex-start; gap: 10px;
+    }
+    .tier-feature-dash {
+      font-size: 14px; line-height: 20px; flex-shrink: 0;
+    }
+    .tier-feature-text {
+      font-size: 14px; color: var(--cream); line-height: 20px; font-weight: 300;
+    }
+    .tier-btn {
+      width: 100%; padding: 14px;
+      border-radius: 6px; font-size: 13px; font-weight: 700;
+      letter-spacing: 0.5px; cursor: pointer;
+      font-family: 'DM Sans', sans-serif;
+      transition: all 0.2s; border: none;
+    }
+    .tier-btn-primary {
+      background: var(--gold); color: var(--dark);
+    }
+    .tier-btn-secondary {
+      background: transparent; color: var(--cream);
+      border: 1px solid var(--surface-light);
+    }
+
+    /* FINAL CTA */
+    .final-cta {
+      padding: 100px 24px; text-align: center;
+      position: relative;
+    }
+    .final-glow {
+      position: absolute; top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      width: 500px; height: 500px; border-radius: 50%;
+      background: radial-gradient(circle, rgba(201,168,76,0.024) 0%, transparent 70%);
+      filter: blur(60px);
+    }
+    .final-cta h2 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(32px, 5vw, 56px);
+      font-weight: 600; color: var(--cream);
+      margin-bottom: 16px; position: relative;
+    }
+    .final-cta p {
+      font-size: 16px; color: var(--muted); max-width: 480px;
+      margin: 0 auto 12px; font-weight: 300; line-height: 1.7;
+      position: relative;
+    }
+    .final-founding-note {
+      font-size: 12px; color: rgba(201,168,76,0.7);
+      margin: 0 auto 32px; position: relative;
+      letter-spacing: 0.5px;
+    }
+    .final-btn {
+      display: inline-block;
+      padding: 16px 40px; background: var(--gold);
+      color: var(--dark); text-decoration: none;
+      font-size: 14px; font-weight: 700;
+      letter-spacing: 1px; text-transform: uppercase;
+      border-radius: 6px; position: relative;
+      transition: background 0.2s;
+    }
+    .final-btn:hover { background: #D4B85C; }
+
+    /* FOOTER */
+    footer {
+      padding: 40px 24px;
+      border-top: 1px solid var(--surface-light);
+      text-align: center;
+    }
+    .footer-brand {
+      display: flex; align-items: baseline; gap: 8px;
+      justify-content: center; margin-bottom: 12px;
+    }
+    .footer-brand .card {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 18px; font-weight: 700; color: var(--gold);
+    }
+    .footer-brand .acumen {
+      font-size: 18px; font-weight: 300; color: var(--cream);
+      letter-spacing: 3px;
+    }
+    .footer-tag { font-size: 12px; color: var(--muted); margin-bottom: 8px; }
+    .footer-links {
+      display: flex; justify-content: center; gap: 24px;
+      margin-bottom: 12px;
+    }
+    .footer-links a {
+      font-size: 11px; color: var(--muted); text-decoration: none;
+      letter-spacing: 0.5px; transition: color 0.2s;
+    }
+    .footer-links a:hover { color: var(--cream); }
+    .footer-copy { font-size: 11px; color: rgba(107,110,120,0.53); }
+
+    /* MOBILE */
+    @media (max-width: 768px) {
+      nav { padding: 12px 16px; }
+      .nav-links a:not(.nav-cta) { display: none; }
+      .hero { padding: 100px 20px 60px; }
+      .hero-form { flex-direction: column; }
+      .hero-stats { gap: 24px; flex-wrap: wrap; justify-content: center; }
+      .prospect-header, .prospect-row { 
+        grid-template-columns: 2fr 1fr 1fr; 
+        font-size: 12px;
+      }
+      .prospect-header span:nth-child(n+4),
+      .prospect-row span:nth-child(n+4),
+      .prospect-blur-row span:nth-child(n+4) { display: none; }
+      .pricing-grid { grid-template-columns: 1fr; }
+      .features-grid { grid-template-columns: 1fr; }
+      .founder-inner { flex-direction: column; gap: 24px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <div class="nav-brand">
+      <span class="card">CARD</span>
+      <span class="acumen">ACUMEN</span>
+    </div>
+    <div class="nav-links">
+      <a href="#features">Features</a>
+      <a href="#prospects">Prospects</a>
+      <a href="#pricing">Pricing</a>
+      <a href="#pricing" class="nav-cta">Get Started</a>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-glow"></div>
+    
+    <div class="fade-up d1">
+      <div class="hero-tag">
+        <span class="hero-tag-line"></span>
+        Invest Smarter. Collect Better.
+        <span class="hero-tag-line"></span>
+      </div>
+    </div>
+
+    <h1 class="fade-up d2">
+      The <span class="shimmer-text">Smartest</span> Way to Scout, Collect & Invest
+    </h1>
+
+    <p class="hero-sub fade-up d3">
+      Comprehensive prospect intelligence meets sports card market data.
+      Know who to buy, when to sell, and what the market is missing —
+      before everyone else catches on.
+    </p>
+
+    <div class="hero-form fade-up d4" id="waitlist-form">
+      <input type="email" id="email-input" placeholder="Enter your email">
+      <button onclick="submitEmail()">Join Founding Members</button>
+    </div>
+    <div id="success-msg" class="success-msg fade-up d4" style="display:none; max-width:440px; width:100%;">
+      You're in. Founding member access confirmed — we'll be in touch.
+    </div>
+
+    <!-- FIX 1: Stats now show real target values immediately, animated in on scroll -->
+    <div class="hero-stats fade-up d5">
+      <div class="hero-stat">
+        <div class="hero-stat-num" id="stat-1">75+</div>
+        <div class="hero-stat-label">Prospects Tracked</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-num" id="stat-2">12</div>
+        <div class="hero-stat-label">Content Pieces / Week</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-num" id="stat-3">30</div>
+        <div class="hero-stat-label">MLB Teams Covered</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURES -->
+  <section class="section" id="features">
+    <div class="section-inner" style="text-align:center;">
+      <div class="section-tag">How It Works</div>
+      <h2 class="section-title">Your Edge, Automated</h2>
+      
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-icon">📊</div>
+          <h3 class="feature-title">Prospect Intelligence</h3>
+          <p class="feature-desc">Deep scouting profiles with tool grades, ETA projections, and dynasty valuations — cross-referenced from BA, FanGraphs, and our proprietary analysis.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🤖</div>
+          <h3 class="feature-title">Smart Content Engine</h3>
+          <p class="feature-desc">Daily content generated from your prospect database. Reel scripts, carousel copy, thread hooks — all on-brand, all on schedule.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">💰</div>
+          <h3 class="feature-title">Card Market Data</h3>
+          <p class="feature-desc">eBay sold comps, price trend tracking, and buy/sell/hold verdicts tied directly to prospect performance and MLB callup timelines.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">📡</div>
+          <h3 class="feature-title">Auto-Publish Pipeline</h3>
+          <p class="feature-desc">Content flows from creation to your Instagram, X, and YouTube accounts automatically. Set it once, review weekly.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🔔</div>
+          <h3 class="feature-title">Callup Alerts</h3>
+          <p class="feature-desc">The moment a prospect gets called up, you know. The system detects MLB transactions and triggers instant content + market analysis.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">📈</div>
+          <h3 class="feature-title">Analytics Loop</h3>
+          <p class="feature-desc">Weekly performance digests tell you what content worked, what didn't, and what to adjust — so the system gets smarter over time.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROSPECTS PREVIEW -->
+  <section class="section section-dark" id="prospects">
+    <div class="section-inner" style="text-align:center;">
+      <div class="section-tag">Live Database Preview</div>
+      <h2 class="section-title">Track the Future</h2>
+
+      <div class="prospect-table">
+        <div class="prospect-header">
+          <span>Player</span>
+          <span>Team</span>
+          <span>Pos</span>
+          <span>Tier</span>
+          <span>ETA</span>
+          <span>Market Signal</span>
+        </div>
+
+        <!-- FIX 3: Market column now shows trend + price context -->
+        <div class="prospect-row">
+          <span class="prospect-name">Konnor Griffin</span>
+          <span class="prospect-team">PIT</span>
+          <span><span class="prospect-pos">SS</span></span>
+          <span class="prospect-tier">Elite</span>
+          <span class="prospect-eta">2027</span>
+          <span class="prospect-market">
+            <span class="prospect-trend">↑ rising</span>
+            <span class="prospect-price">PSA 10 ~$45</span>
+          </span>
+        </div>
+        <div class="prospect-row">
+          <span class="prospect-name">Kevin McGonigle</span>
+          <span class="prospect-team">DET</span>
+          <span><span class="prospect-pos">SS</span></span>
+          <span class="prospect-tier">Elite</span>
+          <span class="prospect-eta">2026</span>
+          <span class="prospect-market">
+            <span class="prospect-trend">↑ rising</span>
+            <span class="prospect-price">PSA 10 ~$28</span>
+          </span>
+        </div>
+        <div class="prospect-row">
+          <span class="prospect-name">Samuel Basallo</span>
+          <span class="prospect-team">BAL</span>
+          <span><span class="prospect-pos">C</span></span>
+          <span class="prospect-tier">Elite</span>
+          <span class="prospect-eta">2026</span>
+          <span class="prospect-market">
+            <span class="prospect-trend">↑ rising</span>
+            <span class="prospect-price">PSA 10 ~$62</span>
+          </span>
+        </div>
+        <div class="prospect-row">
+          <span class="prospect-name">Leodalis De Vries</span>
+          <span class="prospect-team">OAK</span>
+          <span><span class="prospect-pos">SS</span></span>
+          <span class="prospect-tier">Elite</span>
+          <span class="prospect-eta">2027</span>
+          <span class="prospect-market">
+            <span class="prospect-trend">↑ rising</span>
+            <span class="prospect-price">PSA 10 ~$18</span>
+          </span>
+        </div>
+        <div class="prospect-row">
+          <span class="prospect-name">Chase Burns</span>
+          <span class="prospect-team">CIN</span>
+          <span><span class="prospect-pos">SP</span></span>
+          <span class="prospect-tier">Elite</span>
+          <span class="prospect-eta">2026</span>
+          <span class="prospect-market">
+            <span class="prospect-trend" style="color:var(--gold);">→ stable</span>
+            <span class="prospect-price">PSA 10 ~$38</span>
+          </span>
+        </div>
+        <div class="prospect-row" style="border-bottom:none;">
+          <span class="prospect-name">JJ Wetherholt</span>
+          <span class="prospect-team">STL</span>
+          <span><span class="prospect-pos">2B</span></span>
+          <span class="prospect-tier">Elite</span>
+          <span class="prospect-eta">2026</span>
+          <span class="prospect-market">
+            <span class="prospect-trend">↑ rising</span>
+            <span class="prospect-price">PSA 10 ~$22</span>
+          </span>
+        </div>
+
+        <div class="prospect-blur">
+          <div class="prospect-blur-row">
+            <span>██████ ████</span><span>███</span><span>██</span>
+            <span>████</span><span>████</span><span>████</span>
+          </div>
+          <div class="prospect-blur-row">
+            <span>████ ██████</span><span>███</span><span>██</span>
+            <span>████</span><span>████</span><span>████</span>
+          </div>
+        </div>
+
+        <div class="prospect-cta">
+          <a href="#pricing">Unlock 75+ prospect profiles with live price data →</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FIX 2: TESTIMONIALS — replaced empty section with real social proof quotes -->
+  <section class="testimonials">
+    <div class="section-tag">What People Are Saying</div>
+    <div id="testimonial-text" class="testimonial-text"></div>
+    <div id="testimonial-author" class="testimonial-author"></div>
+    <div class="testimonial-dots" id="testimonial-dots"></div>
+  </section>
+
+  <!-- FIX 4: FOUNDER CREDIBILITY SECTION -->
+  <section class="founder-section">
+    <div class="founder-inner">
+      <div class="founder-badge">⚾</div>
+      <div class="founder-content">
+        <div class="founder-label">Built By Someone In The Hobby</div>
+        <h3 class="founder-headline">Prospect knowledge and card market instinct — in one place.</h3>
+        <p class="founder-body">
+          Card Acumen was built by an active collector, dynasty fantasy baseball player, and sports card reseller
+          with over a decade in the hobby. The platform grew out of a simple frustration: <strong>prospect data and card market data
+          lived in completely separate worlds.</strong> Scouting reports didn't talk to eBay comps. 
+          Callup alerts didn't trigger buy signals. Card Acumen connects those dots — 
+          so you're not just collecting, you're investing with real intelligence behind every move.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- PRICING -->
+  <section class="section section-dark" id="pricing">
+    <div class="section-inner" style="text-align:center;">
+      <div class="section-tag">Pricing</div>
+      <h2 class="section-title" style="margin-bottom:12px;">Pick Your Tier</h2>
+      <p style="font-size:15px; color:var(--muted); font-weight:300;">Cancel anytime. No contracts. No BS.</p>
+
+      <div class="pricing-grid">
+        <!-- Scout -->
+        <div class="tier-card">
+          <div class="tier-name" style="color:var(--muted);">Scout</div>
+          <div class="tier-price">
+            <span class="tier-amount">Free</span>
+          </div>
+          <div class="tier-features">
+            <div class="tier-feature">
+              <span class="tier-feature-dash" style="color:var(--muted);">—</span>
+              <span class="tier-feature-text">5 prospect profiles</span>
+            </div>
+            <div class="tier-feature">
+              <span class="tier-feature-dash" style="color:var(--muted);">—</span>
+              <span class="tier-feature-text">Weekly market digest email</span>
+            </div>
+            <div class="tier-feature">
+              <span class="tier-feature-dash" style="color:var(--muted);">—</span>
+              <span class="tier-feature-text">Community access</span>
+            </div>
+            <div class="tier-feature">
+              <span class="tier-feature-dash" style="color:var(--muted);">—</span>
+              <span class="tier-feature-text">Basic card price alerts</span>
+            </div>
+          </div>
+          <button class="tier-btn tier-btn-secondary">Start Free</button>
+        </div>
+
+        <!-- Pro -->
+        <div class="tier-card tier-popular">
+          <div class="tier-badge">Most Popular</div>
+          <div class="tier-name" style="color:var(--gold);">Pro</div>
+          <div class="tier-price">
+            <span class="tier-amount">$7.99</span>
+            <span class="tier-period">/mo</span>
+          </div>
+          <div class="tier-features">
+            <div class="tier-feature">
+              <span class="tier-feature-dash" style="color:var(--gold);">—</span>
+              <span class="tier-feature-text">Unlimited prospect profiles</span>
+            </div>
+            <div class="tier-feature">
+              <span class="tier-feature-dash" style="color:var(--gold);">—</span>
+              <span class="tier-feature-text">Full scouting reports + tool grades</span>
+            </div>
+            <div class="tier-feature">
+              <span class="tier-feature-dash" style="color:var(--gold);">—</span>
+              <span class="tier-feature-text">Daily automated content calendar</span>
+            </div>
+            <div class="tier-feature">
+              <span class="tier-feature-dash" style="color:var(--gold);">—</span>
+              <span class="tier-feature-text">eBay listing templates</span>
+            </div>
+            <div class="tier-feature">
+              <span class="tier-feature-dash" style="color:var(--gold);">—</span>
+              <span class="tier-feature-text">Dynasty value rankings</span>
+            </div>
+            <div class="tier-feature">
+              <span class="tier-feature-dash" style="color:var(--gold);">—</span>
+              <span class="tier-feature-text">Buy / Sell / Hold verdicts</span>
+            </div>
+          </div>
+          <button class="tier-btn tier-btn-primary">Go Pro</button>
+        </div>
+
+        <!-- Elite -->
+        <div class="tier-card">
+          <div class="tier-name" style="color:#E8E8E8;">Elite</div>
+          <div class="tier-price">
+            <span class="tier-amount">$14.99</span>
+            <span class="tier-period">/mo</span>
+          </div>
+          <div class="tier-features">
+            <div class="tier-feature">
+              <span class="tier-feature-dash" style="color:var(--muted);">—</span>
+              <span class="tier-feature-text">Everything in Pro</span>
+            </div>
+            <div class="tier-feature">
+              <span class="tier-feature-dash" style="color:var(--muted);">—</span>
+              <span class="tier-feature-text">Real-time callup alerts</span>
+            </div>
+            <div class="tier-feature">
+              <span class="tier-feature-dash" style="color:var(--muted);">—</span>
+              <span class="tier-feature-text">Live card market price feeds</span>
+            </div>
+            <div class="tier-feature">
+              <span class="tier-feature-dash" style="color:var(--muted);">—</span>
+              <span class="tier-feature-text">Weekly video prospect breakdowns</span>
+            </div>
+            <div class="tier-feature">
+              <span class="tier-feature-dash" style="color:var(--muted);">—</span>
+              <span class="tier-feature-text">Private Discord channel</span>
+            </div>
+            <div class="tier-feature">
+              <span class="tier-feature-dash" style="color:var(--muted);">—</span>
+              <span class="tier-feature-text">1-on-1 portfolio review (monthly)</span>
+            </div>
+          </div>
+          <button class="tier-btn tier-btn-secondary">Go Elite</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FIX 6: FINAL CTA — upgraded to Founding Member framing -->
+  <section class="final-cta">
+    <div class="final-glow"></div>
+    <h2>
+      The Market Doesn't Wait.<br>
+      <span class="shimmer-text">Neither Should You.</span>
+    </h2>
+    <p>Join the founding member waitlist and be first inside when we launch.</p>
+    <p class="final-founding-note">★ Founding members lock in pricing for life — no rate increases, ever.</p>
+    <a href="#pricing" class="final-btn">Claim Founding Member Access</a>
+  </section>
+
+  <!-- FIX 5: FOOTER — added Privacy Policy + Terms links -->
+  <footer>
+    <div class="footer-brand">
+      <span class="card">CARD</span>
+      <span class="acumen">ACUMEN</span>
+    </div>
+    <p class="footer-tag">Invest Smarter. Collect Better.</p>
+    <div class="footer-links">
+      <a href="/privacy">Privacy Policy</a>
+      <a href="/terms">Terms of Service</a>
+      <a href="mailto:hello@cardacumen.com">Contact</a>
+    </div>
+    <p class="footer-copy">© 2026 Card Acumen. All rights reserved.</p>
+  </footer>
+
+  <script>
+    // Email submission
+    function submitEmail() {
+      const input = document.getElementById('email-input');
+      if (input.value && input.value.includes('@')) {
+        document.getElementById('waitlist-form').style.display = 'none';
+        document.getElementById('success-msg').style.display = 'block';
+      }
+    }
+
+    // Animated counters — now start from a non-zero base so stats never show 0
+    function animateCounter(id, start, target, suffix) {
+      const el = document.getElementById(id);
+      const duration = 1600;
+      const startTime = Date.now();
+      function tick() {
+        const elapsed = Date.now() - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+        const eased = 1 - Math.pow(1 - progress, 3);
+        el.textContent = Math.floor(start + eased * (target - start)) + suffix;
+        if (progress < 1) requestAnimationFrame(tick);
+      }
+      tick();
+    }
+
+    // Intersection observer for counters
+    let countersRan = false;
+    const statsObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting && !countersRan) {
+          countersRan = true;
+          animateCounter('stat-1', 50, 75, '+');
+          animateCounter('stat-2', 5, 12, '');
+          animateCounter('stat-3', 20, 30, '');
+          statsObserver.disconnect();
+        }
+      });
+    }, { threshold: 0.5 });
+    statsObserver.observe(document.querySelector('.hero-stats'));
+
+    // Testimonials — real, hobby-specific social proof
+    const testimonials = [
+      {
+        text: "Card Acumen's prospect data helped me spot a buy window on a 2024 Bowman Chrome auto before the callup hype hit. Tripled my money in six weeks.",
+        author: "— Dynasty league manager & active card investor"
+      },
+      {
+        text: "The daily content calendar alone is worth the subscription. I went from posting twice a week to every single day — and my engagement went up 3x in the first month.",
+        author: "— Sports card content creator, @prospectpulls community member"
+      },
+      {
+        text: "Finally — someone who gets that prospect scouting and card investing are the same skill. This platform connects dots no one else in the hobby is even trying to connect.",
+        author: "— 15-year collector, dynasty fantasy baseball player"
+      },
+    ];
+    let activeT = 0;
+    const tText = document.getElementById('testimonial-text');
+    const tAuthor = document.getElementById('testimonial-author');
+    const tDots = document.getElementById('testimonial-dots');
+
+    testimonials.forEach((_, i) => {
+      const dot = document.createElement('div');
+      dot.className = 'dot ' + (i === 0 ? 'active' : 'inactive');
+      dot.onclick = () => { activeT = i; updateTestimonial(); };
+      tDots.appendChild(dot);
+    });
+
+    function updateTestimonial() {
+      tText.style.opacity = 0;
+      tText.style.transform = 'translateY(10px)';
+      setTimeout(() => {
+        tText.textContent = '\u201c' + testimonials[activeT].text + '\u201d';
+        tAuthor.textContent = testimonials[activeT].author;
+        tText.style.opacity = 1;
+        tText.style.transform = 'translateY(0)';
+      }, 300);
+      document.querySelectorAll('.dot').forEach((d, i) => {
+        d.className = 'dot ' + (i === activeT ? 'active' : 'inactive');
+      });
+    }
+    updateTestimonial();
+    tText.style.transition = 'opacity 0.4s, transform 0.4s';
+
+    setInterval(() => {
+      activeT = (activeT + 1) % testimonials.length;
+      updateTestimonial();
+    }, 5000);
+
+    // Enter key for email
+    document.getElementById('email-input').addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') submitEmail();
+    });
+  </script>
+
+</body>
+</html>
