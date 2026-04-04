@@ -1,0 +1,1135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Card Acumen — Content Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@400;500;600;700&family=Barlow+Condensed:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --gold: #F5B800;
+    --gold-dark: #C89000;
+    --gold-dim: rgba(245,184,0,0.15);
+    --black: #0a0a0a;
+    --surface: #111111;
+    --surface2: #1a1a1a;
+    --surface3: #222222;
+    --border: rgba(245,184,0,0.2);
+    --text: #ffffff;
+    --text-dim: rgba(255,255,255,0.5);
+    --text-muted: rgba(255,255,255,0.3);
+    --green: #22c55e;
+    --red: #ef4444;
+    --blue: #3b82f6;
+    --radius: 8px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--black);
+    color: var(--text);
+    font-family: 'Barlow', sans-serif;
+    min-height: 100vh;
+  }
+
+  /* HEADER */
+  header {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 0 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 64px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .logo-mark {
+    width: 36px;
+    height: 36px;
+    background: var(--gold);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 22px;
+    color: var(--black);
+    border-radius: 6px;
+  }
+
+  .logo-text {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 20px;
+    letter-spacing: 2px;
+    color: var(--text);
+  }
+
+  .logo-sub {
+    font-size: 11px;
+    color: var(--gold);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin-top: -2px;
+  }
+
+  .header-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .btn {
+    padding: 8px 16px;
+    border-radius: var(--radius);
+    font-family: 'Barlow', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    transition: all 0.15s;
+    letter-spacing: 0.5px;
+  }
+
+  .btn-gold {
+    background: var(--gold);
+    color: var(--black);
+  }
+
+  .btn-gold:hover { background: var(--gold-dark); }
+
+  .btn-outline {
+    background: transparent;
+    color: var(--text);
+    border: 1px solid var(--border);
+  }
+
+  .btn-outline:hover { border-color: var(--gold); color: var(--gold); }
+
+  .btn-sm { padding: 6px 12px; font-size: 12px; }
+
+  .btn-approve { background: var(--green); color: white; }
+  .btn-approve:hover { background: #16a34a; }
+  .btn-reject { background: transparent; color: var(--red); border: 1px solid var(--red); }
+  .btn-reject:hover { background: var(--red); color: white; }
+  .btn-edit { background: transparent; color: var(--text-dim); border: 1px solid rgba(255,255,255,0.15); }
+  .btn-edit:hover { border-color: var(--gold); color: var(--gold); }
+
+  /* STATS BAR */
+  .stats-bar {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 16px 24px;
+    display: flex;
+    gap: 32px;
+    overflow-x: auto;
+  }
+
+  .stat {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    white-space: nowrap;
+  }
+
+  .stat-label {
+    font-size: 11px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+  }
+
+  .stat-value {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 24px;
+    color: var(--gold);
+    line-height: 1;
+  }
+
+  .stat-sub {
+    font-size: 11px;
+    color: var(--text-dim);
+  }
+
+  /* FILTERS */
+  .filters {
+    padding: 16px 24px;
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    flex-wrap: wrap;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+  }
+
+  .filter-btn {
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    border: 1px solid rgba(255,255,255,0.15);
+    background: transparent;
+    color: var(--text-dim);
+    transition: all 0.15s;
+    font-family: 'Barlow', sans-serif;
+    letter-spacing: 0.5px;
+  }
+
+  .filter-btn:hover, .filter-btn.active {
+    border-color: var(--gold);
+    color: var(--gold);
+    background: var(--gold-dim);
+  }
+
+  .filter-sep {
+    width: 1px;
+    height: 20px;
+    background: rgba(255,255,255,0.1);
+    margin: 0 4px;
+  }
+
+  .search-box {
+    margin-left: auto;
+    position: relative;
+  }
+
+  .search-box input {
+    background: var(--surface2);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: var(--radius);
+    padding: 7px 12px 7px 32px;
+    color: var(--text);
+    font-family: 'Barlow', sans-serif;
+    font-size: 13px;
+    width: 200px;
+    outline: none;
+  }
+
+  .search-box input:focus { border-color: var(--gold); }
+  .search-box input::placeholder { color: var(--text-muted); }
+
+  .search-icon {
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-muted);
+    font-size: 14px;
+  }
+
+  /* BULK ACTIONS */
+  .bulk-bar {
+    padding: 10px 24px;
+    background: var(--gold-dim);
+    border-bottom: 1px solid var(--border);
+    display: none;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .bulk-bar.visible { display: flex; }
+
+  .bulk-count {
+    font-size: 13px;
+    color: var(--gold);
+    font-weight: 600;
+  }
+
+  /* CONTENT GRID */
+  .content-area {
+    padding: 24px;
+  }
+
+  .content-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 16px;
+  }
+
+  /* CONTENT CARD */
+  .content-card {
+    background: var(--surface);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 12px;
+    overflow: hidden;
+    transition: all 0.2s;
+    position: relative;
+  }
+
+  .content-card:hover {
+    border-color: var(--border);
+    transform: translateY(-2px);
+  }
+
+  .content-card.selected {
+    border-color: var(--gold);
+    background: var(--surface2);
+  }
+
+  .card-select {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    z-index: 10;
+  }
+
+  .card-select input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+    accent-color: var(--gold);
+  }
+
+  /* IMAGE PREVIEW */
+  .card-image {
+    position: relative;
+    height: 180px;
+    background: var(--surface2);
+    overflow: hidden;
+  }
+
+  .card-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .card-image-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-muted);
+    font-size: 13px;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .card-image-placeholder svg {
+    opacity: 0.3;
+  }
+
+  .platform-badge {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+  }
+
+  .platform-twitter { background: #000; color: white; border: 1px solid rgba(255,255,255,0.2); }
+  .platform-instagram { background: linear-gradient(135deg, #833ab4, #fd1d1d, #fcb045); color: white; }
+
+  .type-badge {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+
+  .type-post { background: rgba(59,130,246,0.8); color: white; }
+  .type-thread { background: rgba(168,85,247,0.8); color: white; }
+  .type-poll { background: rgba(245,184,0,0.8); color: black; }
+
+  /* CARD BODY */
+  .card-body {
+    padding: 14px 16px;
+  }
+
+  .card-title {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 6px;
+    letter-spacing: 0.3px;
+  }
+
+  .card-text {
+    font-size: 12px;
+    color: var(--text-dim);
+    line-height: 1.5;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    margin-bottom: 10px;
+  }
+
+  .card-meta {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 12px;
+    flex-wrap: wrap;
+  }
+
+  .meta-item {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 11px;
+    color: var(--text-muted);
+  }
+
+  .meta-item span { color: var(--text-dim); }
+
+  /* STATUS */
+  .status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+  }
+
+  .status-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+  }
+
+  .status-scheduled { background: rgba(59,130,246,0.15); color: #60a5fa; }
+  .status-scheduled .status-dot { background: #60a5fa; }
+  .status-approved { background: rgba(34,197,94,0.15); color: #4ade80; }
+  .status-approved .status-dot { background: #4ade80; }
+  .status-published { background: rgba(245,184,0,0.15); color: var(--gold); }
+  .status-published .status-dot { background: var(--gold); }
+  .status-failed { background: rgba(239,68,68,0.15); color: #f87171; }
+  .status-failed .status-dot { background: #f87171; }
+
+  /* CARD ACTIONS */
+  .card-actions {
+    display: flex;
+    gap: 6px;
+    padding: 0 16px 14px;
+  }
+
+  .card-actions .btn { flex: 1; text-align: center; }
+
+  /* EDIT MODAL */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.85);
+    z-index: 1000;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+  }
+
+  .modal-overlay.open { display: flex; }
+
+  .modal {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    width: 100%;
+    max-width: 600px;
+    max-height: 90vh;
+    overflow-y: auto;
+  }
+
+  .modal-header {
+    padding: 20px 24px;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .modal-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 20px;
+    letter-spacing: 1px;
+    color: var(--gold);
+  }
+
+  .modal-close {
+    background: none;
+    border: none;
+    color: var(--text-dim);
+    cursor: pointer;
+    font-size: 20px;
+    padding: 4px;
+  }
+
+  .modal-close:hover { color: var(--text); }
+
+  .modal-body { padding: 24px; }
+
+  .form-group { margin-bottom: 18px; }
+
+  .form-label {
+    display: block;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 8px;
+  }
+
+  .form-control {
+    width: 100%;
+    background: var(--surface2);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: var(--radius);
+    padding: 10px 14px;
+    color: var(--text);
+    font-family: 'Barlow', sans-serif;
+    font-size: 14px;
+    outline: none;
+    resize: vertical;
+    transition: border-color 0.15s;
+  }
+
+  .form-control:focus { border-color: var(--gold); }
+
+  textarea.form-control { min-height: 120px; }
+
+  .modal-footer {
+    padding: 16px 24px;
+    border-top: 1px solid rgba(255,255,255,0.06);
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+  }
+
+  /* IMAGE MODAL */
+  .image-modal img {
+    width: 100%;
+    border-radius: 8px;
+    margin-bottom: 16px;
+  }
+
+  /* LOADING */
+  .loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 80px;
+    flex-direction: column;
+    gap: 16px;
+    color: var(--text-dim);
+  }
+
+  .spinner {
+    width: 40px;
+    height: 40px;
+    border: 3px solid rgba(245,184,0,0.2);
+    border-top-color: var(--gold);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+  }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* EMPTY STATE */
+  .empty-state {
+    text-align: center;
+    padding: 80px 24px;
+    color: var(--text-dim);
+  }
+
+  .empty-icon {
+    font-size: 48px;
+    margin-bottom: 16px;
+    opacity: 0.3;
+  }
+
+  .empty-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 24px;
+    color: var(--text-dim);
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+  }
+
+  /* TOAST */
+  .toast-container {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    z-index: 2000;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .toast {
+    padding: 12px 20px;
+    border-radius: var(--radius);
+    font-size: 13px;
+    font-weight: 600;
+    animation: slideIn 0.3s ease;
+    max-width: 320px;
+  }
+
+  .toast-success { background: var(--green); color: white; }
+  .toast-error { background: var(--red); color: white; }
+  .toast-info { background: var(--surface2); color: var(--text); border: 1px solid var(--border); }
+
+  @keyframes slideIn {
+    from { transform: translateX(100%); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+  }
+
+  /* PIPELINE STATUS */
+  .pipeline {
+    display: flex;
+    gap: 4px;
+    align-items: center;
+    padding: 0 24px;
+    margin-bottom: 0;
+  }
+
+  .pipeline-step {
+    flex: 1;
+    padding: 8px 12px;
+    background: var(--surface2);
+    border-radius: 6px;
+    font-size: 11px;
+    text-align: center;
+  }
+
+  .pipeline-step-label { color: var(--text-muted); margin-bottom: 2px; }
+  .pipeline-step-value { color: var(--gold); font-weight: 700; font-family: 'Bebas Neue', sans-serif; font-size: 18px; }
+  .pipeline-arrow { color: var(--text-muted); font-size: 16px; }
+
+  /* TABS */
+  .tabs {
+    display: flex;
+    gap: 0;
+    padding: 0 24px;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    margin-top: 8px;
+  }
+
+  .tab {
+    padding: 12px 20px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-dim);
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    transition: all 0.15s;
+    letter-spacing: 0.3px;
+  }
+
+  .tab:hover { color: var(--text); }
+  .tab.active { color: var(--gold); border-bottom-color: var(--gold); }
+
+  /* MOBILE */
+  @media (max-width: 600px) {
+    .stats-bar { gap: 20px; }
+    .content-grid { grid-template-columns: 1fr; }
+    header { padding: 0 16px; }
+    .content-area { padding: 16px; }
+    .filters { padding: 12px 16px; }
+    .search-box { width: 100%; }
+    .search-box input { width: 100%; }
+  }
+
+  .char-count {
+    font-size: 11px;
+    color: var(--text-muted);
+    text-align: right;
+    margin-top: 4px;
+  }
+
+  .char-count.over { color: var(--red); }
+
+  .hashtags-preview {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 8px;
+  }
+
+  .hashtag {
+    padding: 3px 8px;
+    background: var(--gold-dim);
+    color: var(--gold);
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 600;
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="logo">
+    <div class="logo-mark">A</div>
+    <div>
+      <div class="logo-text">CARD ACUMEN</div>
+      <div class="logo-sub">Content Dashboard</div>
+    </div>
+  </div>
+  <div class="header-actions">
+    <button class="btn btn-outline btn-sm" onclick="refreshContent()">↻ Refresh</button>
+    <button class="btn btn-gold btn-sm" onclick="bulkApproveAll()">✓ Approve All Scheduled</button>
+  </div>
+</header>
+
+<!-- STATS BAR -->
+<div class="stats-bar" id="statsBar">
+  <div class="stat">
+    <div class="stat-label">Scheduled</div>
+    <div class="stat-value" id="statScheduled">—</div>
+    <div class="stat-sub">Awaiting review</div>
+  </div>
+  <div class="stat">
+    <div class="stat-label">Approved</div>
+    <div class="stat-value" id="statApproved">—</div>
+    <div class="stat-sub">Ready to publish</div>
+  </div>
+  <div class="stat">
+    <div class="stat-label">Published</div>
+    <div class="stat-value" id="statPublished">—</div>
+    <div class="stat-sub">Live on socials</div>
+  </div>
+  <div class="stat">
+    <div class="stat-label">Failed</div>
+    <div class="stat-value" id="statFailed">—</div>
+    <div class="stat-sub">Needs attention</div>
+  </div>
+  <div class="stat">
+    <div class="stat-label">Total</div>
+    <div class="stat-value" id="statTotal">—</div>
+    <div class="stat-sub">All time</div>
+  </div>
+</div>
+
+<!-- TABS -->
+<div class="tabs">
+  <div class="tab active" onclick="switchTab('all', this)">All Content</div>
+  <div class="tab" onclick="switchTab('scheduled', this)">Needs Review</div>
+  <div class="tab" onclick="switchTab('approved', this)">Approved</div>
+  <div class="tab" onclick="switchTab('published', this)">Published</div>
+  <div class="tab" onclick="switchTab('failed', this)">Failed</div>
+</div>
+
+<!-- FILTERS -->
+<div class="filters">
+  <button class="filter-btn active" onclick="filterPlatform('all', this)">All Platforms</button>
+  <button class="filter-btn" onclick="filterPlatform('X/Twitter', this)">𝕏 Twitter</button>
+  <button class="filter-btn" onclick="filterPlatform('Instagram', this)">📸 Instagram</button>
+  <div class="filter-sep"></div>
+  <button class="filter-btn active-type" onclick="filterType('all', this)">All Types</button>
+  <button class="filter-btn" onclick="filterType('Post', this)">Post</button>
+  <button class="filter-btn" onclick="filterType('Thread', this)">Thread</button>
+  <button class="filter-btn" onclick="filterType('Poll', this)">Poll</button>
+  <div class="search-box">
+    <span class="search-icon">🔍</span>
+    <input type="text" placeholder="Search content..." oninput="searchContent(this.value)">
+  </div>
+</div>
+
+<!-- BULK ACTIONS -->
+<div class="bulk-bar" id="bulkBar">
+  <span class="bulk-count" id="bulkCount">0 selected</span>
+  <button class="btn btn-approve btn-sm" onclick="bulkAction('approved')">✓ Approve Selected</button>
+  <button class="btn btn-reject btn-sm" onclick="bulkAction('failed')">✗ Reject Selected</button>
+  <button class="btn btn-outline btn-sm" onclick="clearSelection()">Clear</button>
+</div>
+
+<!-- CONTENT -->
+<div class="content-area">
+  <div id="contentGrid" class="content-grid">
+    <div class="loading">
+      <div class="spinner"></div>
+      <div>Loading content...</div>
+    </div>
+  </div>
+</div>
+
+<!-- EDIT MODAL -->
+<div class="modal-overlay" id="editModal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">Edit Content</div>
+      <button class="modal-close" onclick="closeModal('editModal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="editId">
+      <div class="form-group">
+        <label class="form-label">Title</label>
+        <input type="text" class="form-control" id="editTitle">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Body <span id="editPlatformLabel" style="color:var(--gold)"></span></label>
+        <textarea class="form-control" id="editBody" oninput="updateCharCount(this)"></textarea>
+        <div class="char-count" id="charCount">0 / 280</div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Hashtags</label>
+        <input type="text" class="form-control" id="editHashtags">
+        <div class="hashtags-preview" id="hashtagsPreview"></div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Scheduled Date</label>
+        <input type="date" class="form-control" id="editDate">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Status</label>
+        <select class="form-control" id="editStatus">
+          <option value="scheduled">Scheduled</option>
+          <option value="approved">Approved</option>
+          <option value="failed">Failed</option>
+        </select>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('editModal')">Cancel</button>
+      <button class="btn btn-gold" onclick="saveEdit()">Save Changes</button>
+    </div>
+  </div>
+</div>
+
+<!-- IMAGE MODAL -->
+<div class="modal-overlay" id="imageModal">
+  <div class="modal image-modal" style="max-width:500px">
+    <div class="modal-header">
+      <div class="modal-title" id="imageModalTitle">Preview</div>
+      <button class="modal-close" onclick="closeModal('imageModal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <img id="imageModalImg" src="" alt="Preview">
+      <div style="font-size:12px;color:var(--text-dim);word-break:break-all" id="imageModalUrl"></div>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST CONTAINER -->
+<div class="toast-container" id="toastContainer"></div>
+
+<script>
+const SUPABASE_URL = 'https://xczoesywcgyulibcqpjm.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inhjem9lc3l3Y2d5dWxpYmNxcGptIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ2MzQyMzYsImV4cCI6MjA5MDIxMDIzNn0.VEPCkFeeOr9C-KczweWU8X8W1l37UOwVjuDDI3r9dv8';
+
+let allContent = [];
+let filteredContent = [];
+let selectedIds = new Set();
+let currentTab = 'all';
+let currentPlatform = 'all';
+let currentType = 'all';
+let searchQuery = '';
+
+async function supabaseRequest(method, path, body = null) {
+  const opts = {
+    method,
+    headers: {
+      'apikey': SUPABASE_ANON_KEY,
+      'Authorization': 'Bearer ' + SUPABASE_ANON_KEY,
+      'Content-Type': 'application/json',
+      'Prefer': method === 'PATCH' ? 'return=minimal' : 'return=representation',
+    }
+  };
+  if (body) opts.body = JSON.stringify(body);
+  const res = await fetch(SUPABASE_URL + path, opts);
+  if (method === 'PATCH') return { ok: res.ok };
+  return res.json();
+}
+
+async function loadContent() {
+  try {
+    const data = await supabaseRequest('GET', '/rest/v1/content_items?select=*&order=created_at.desc&limit=100');
+    allContent = Array.isArray(data) ? data : [];
+    updateStats();
+    applyFilters();
+  } catch (err) {
+    showToast('Failed to load content: ' + err.message, 'error');
+    document.getElementById('contentGrid').innerHTML = '<div class="empty-state"><div class="empty-icon">⚠️</div><div class="empty-title">Connection Error</div><p>Check your Supabase anon key in the dashboard config.</p></div>';
+  }
+}
+
+function updateStats() {
+  const counts = { scheduled: 0, approved: 0, published: 0, failed: 0 };
+  allContent.forEach(c => { if (counts[c.status] !== undefined) counts[c.status]++; });
+  document.getElementById('statScheduled').textContent = counts.scheduled;
+  document.getElementById('statApproved').textContent = counts.approved;
+  document.getElementById('statPublished').textContent = counts.published;
+  document.getElementById('statFailed').textContent = counts.failed;
+  document.getElementById('statTotal').textContent = allContent.length;
+}
+
+function applyFilters() {
+  filteredContent = allContent.filter(c => {
+    if (currentTab !== 'all' && c.status !== currentTab) return false;
+    if (currentPlatform !== 'all' && c.platform !== currentPlatform) return false;
+    if (currentType !== 'all' && c.content_type !== currentType) return false;
+    if (searchQuery) {
+      const q = searchQuery.toLowerCase();
+      if (!c.title?.toLowerCase().includes(q) && !c.body?.toLowerCase().includes(q)) return false;
+    }
+    return true;
+  });
+  renderContent();
+}
+
+function renderContent() {
+  const grid = document.getElementById('contentGrid');
+  if (filteredContent.length === 0) {
+    grid.innerHTML = '<div class="empty-state"><div class="empty-icon">📭</div><div class="empty-title">No Content Found</div><p style="color:var(--text-muted);font-size:14px">Try adjusting your filters or generate new content.</p></div>';
+    return;
+  }
+  grid.innerHTML = filteredContent.map(c => renderCard(c)).join('');
+}
+
+function renderCard(c) {
+  const isSelected = selectedIds.has(c.id);
+  const platform = c.platform || 'Unknown';
+  const platformClass = platform.includes('Twitter') ? 'platform-twitter' : 'platform-instagram';
+  const platformLabel = platform.includes('Twitter') ? '𝕏 Twitter' : '📸 Instagram';
+  const typeClass = 'type-' + (c.content_type || 'post').toLowerCase();
+  const statusClass = 'status-' + (c.status || 'scheduled');
+  const bodyPreview = (c.body || '').replace(/\n/g, ' ');
+  const dateStr = c.scheduled_date || '—';
+  const hasImage = !!c.image_url;
+
+  return `
+    <div class="content-card ${isSelected ? 'selected' : ''}" id="card-${c.id}">
+      <div class="card-select">
+        <input type="checkbox" ${isSelected ? 'checked' : ''} onchange="toggleSelect('${c.id}', this.checked)">
+      </div>
+      <div class="card-image" ${hasImage ? `onclick="showImage('${c.image_url}', '${escapeHtml(c.title)}')" style="cursor:pointer"` : ''}>
+        ${hasImage
+          ? `<img src="${c.image_url}" alt="${escapeHtml(c.title)}" loading="lazy">`
+          : `<div class="card-image-placeholder"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg><span>No image</span></div>`
+        }
+        <div class="platform-badge ${platformClass}">${platformLabel}</div>
+        <div class="type-badge ${typeClass}">${c.content_type || 'Post'}</div>
+      </div>
+      <div class="card-body">
+        <div class="card-title">${escapeHtml(c.title || 'Untitled')}</div>
+        <div class="card-text">${escapeHtml(bodyPreview)}</div>
+        <div class="card-meta">
+          <div class="meta-item">📅 <span>${dateStr}</span></div>
+          ${c.published_at ? `<div class="meta-item">✅ <span>Published</span></div>` : ''}
+          ${hasImage ? `<div class="meta-item">🖼️ <span>Has image</span></div>` : ''}
+        </div>
+        <div class="status-badge ${statusClass}">
+          <div class="status-dot"></div>
+          ${c.status || 'scheduled'}
+        </div>
+      </div>
+      <div class="card-actions">
+        ${c.status === 'scheduled' || c.status === 'failed'
+          ? `<button class="btn btn-approve btn-sm" onclick="updateStatus('${c.id}', 'approved')">✓ Approve</button>`
+          : ''
+        }
+        ${c.status === 'approved'
+          ? `<button class="btn btn-reject btn-sm" onclick="updateStatus('${c.id}', 'scheduled')">↩ Unqueue</button>`
+          : ''
+        }
+        ${c.status !== 'published'
+          ? `<button class="btn btn-reject btn-sm" onclick="updateStatus('${c.id}', 'failed')">✗ Reject</button>`
+          : ''
+        }
+        <button class="btn btn-edit btn-sm" onclick="openEdit('${c.id}')">✎ Edit</button>
+      </div>
+    </div>
+  `;
+}
+
+function escapeHtml(str) {
+  if (!str) return '';
+  return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+async function updateStatus(id, status) {
+  try {
+    const extraFields = status === 'approved' ? {} : status === 'failed' ? { published_at: null } : {};
+    await supabaseRequest('PATCH', `/rest/v1/content_items?id=eq.${id}`, { status, ...extraFields, updated_at: new Date().toISOString() });
+    const item = allContent.find(c => c.id === id);
+    if (item) item.status = status;
+    updateStats();
+    applyFilters();
+    showToast(`Content ${status === 'approved' ? 'approved ✓' : status === 'failed' ? 'rejected' : 'updated'}`, status === 'approved' ? 'success' : 'info');
+  } catch (err) {
+    showToast('Update failed: ' + err.message, 'error');
+  }
+}
+
+function toggleSelect(id, checked) {
+  if (checked) selectedIds.add(id);
+  else selectedIds.delete(id);
+  const card = document.getElementById('card-' + id);
+  if (card) card.classList.toggle('selected', checked);
+  updateBulkBar();
+}
+
+function updateBulkBar() {
+  const bar = document.getElementById('bulkBar');
+  const count = document.getElementById('bulkCount');
+  if (selectedIds.size > 0) {
+    bar.classList.add('visible');
+    count.textContent = selectedIds.size + ' selected';
+  } else {
+    bar.classList.remove('visible');
+  }
+}
+
+function clearSelection() {
+  selectedIds.clear();
+  document.querySelectorAll('.content-card').forEach(c => c.classList.remove('selected'));
+  document.querySelectorAll('.card-select input').forEach(cb => cb.checked = false);
+  updateBulkBar();
+}
+
+async function bulkAction(status) {
+  const ids = [...selectedIds];
+  for (const id of ids) {
+    await updateStatus(id, status);
+  }
+  clearSelection();
+  showToast(`${ids.length} items ${status === 'approved' ? 'approved' : 'rejected'}`, 'success');
+}
+
+async function bulkApproveAll() {
+  const toApprove = allContent.filter(c => c.status === 'scheduled');
+  if (toApprove.length === 0) { showToast('No scheduled content to approve', 'info'); return; }
+  for (const item of toApprove) {
+    await updateStatus(item.id, 'approved');
+  }
+  showToast(`${toApprove.length} items approved ✓`, 'success');
+}
+
+function switchTab(tab, el) {
+  currentTab = tab;
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  applyFilters();
+}
+
+function filterPlatform(platform, el) {
+  currentPlatform = platform;
+  document.querySelectorAll('.filters .filter-btn:nth-child(-n+3)').forEach(b => b.classList.remove('active'));
+  el.classList.add('active');
+  applyFilters();
+}
+
+function filterType(type, el) {
+  currentType = type;
+  applyFilters();
+}
+
+function searchContent(query) {
+  searchQuery = query;
+  applyFilters();
+}
+
+function openEdit(id) {
+  const item = allContent.find(c => c.id === id);
+  if (!item) return;
+  document.getElementById('editId').value = id;
+  document.getElementById('editTitle').value = item.title || '';
+  document.getElementById('editBody').value = item.body || '';
+  document.getElementById('editHashtags').value = item.hashtags || '';
+  document.getElementById('editDate').value = item.scheduled_date || '';
+  document.getElementById('editStatus').value = item.status || 'scheduled';
+  document.getElementById('editPlatformLabel').textContent = '(' + (item.platform || '') + ')';
+  updateCharCount(document.getElementById('editBody'));
+  updateHashtagsPreview(item.hashtags || '');
+  document.getElementById('editModal').classList.add('open');
+}
+
+function updateCharCount(textarea) {
+  const len = textarea.value.length;
+  const el = document.getElementById('charCount');
+  el.textContent = len + ' / 280';
+  el.classList.toggle('over', len > 280);
+}
+
+function updateHashtagsPreview(tags) {
+  const preview = document.getElementById('hashtagsPreview');
+  const matches = (tags || '').match(/#\w+/g) || [];
+  preview.innerHTML = matches.map(t => `<span class="hashtag">${t}</span>`).join('');
+}
+
+async function saveEdit() {
+  const id = document.getElementById('editId').value;
+  const updates = {
+    title: document.getElementById('editTitle').value,
+    body: document.getElementById('editBody').value,
+    hashtags: document.getElementById('editHashtags').value,
+    scheduled_date: document.getElementById('editDate').value,
+    status: document.getElementById('editStatus').value,
+    updated_at: new Date().toISOString(),
+  };
+  try {
+    await supabaseRequest('PATCH', `/rest/v1/content_items?id=eq.${id}`, updates);
+    const item = allContent.find(c => c.id === id);
+    if (item) Object.assign(item, updates);
+    updateStats();
+    applyFilters();
+    closeModal('editModal');
+    showToast('Changes saved ✓', 'success');
+  } catch (err) {
+    showToast('Save failed: ' + err.message, 'error');
+  }
+}
+
+function showImage(url, title) {
+  document.getElementById('imageModalTitle').textContent = title || 'Preview';
+  document.getElementById('imageModalImg').src = url;
+  document.getElementById('imageModalUrl').textContent = url;
+  document.getElementById('imageModal').classList.add('open');
+}
+
+function closeModal(id) {
+  document.getElementById(id).classList.remove('open');
+}
+
+function showToast(msg, type = 'info') {
+  const container = document.getElementById('toastContainer');
+  const toast = document.createElement('div');
+  toast.className = 'toast toast-' + type;
+  toast.textContent = msg;
+  container.appendChild(toast);
+  setTimeout(() => toast.remove(), 3000);
+}
+
+function refreshContent() {
+  document.getElementById('contentGrid').innerHTML = '<div class="loading"><div class="spinner"></div><div>Refreshing...</div></div>';
+  loadContent();
+}
+
+document.getElementById('editHashtags').addEventListener('input', function() {
+  updateHashtagsPreview(this.value);
+});
+
+document.querySelectorAll('.modal-overlay').forEach(overlay => {
+  overlay.addEventListener('click', function(e) {
+    if (e.target === this) this.classList.remove('open');
+  });
+});
+
+loadContent();
+</script>
+</body>
+</html>
