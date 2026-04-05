@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Card Acumen — Pricing</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --gold: #d4af37;
+      --gold-dim: rgba(212, 175, 55, 0.15);
+      --gold-glow: rgba(212, 175, 55, 0.3);
+      --bg: #0d0d0d;
+      --bg-card: rgba(255, 255, 255, 0.03);
+      --text: #f5f0e8;
+      --text-dim: rgba(245, 240, 232, 0.5);
+      --border: rgba(212, 175, 55, 0.15);
+      --elite-accent: #e8c547;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Barlow', sans-serif;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* Subtle grid texture */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: 
+        linear-gradient(rgba(212, 175, 55, 0.02) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(212, 175, 55, 0.02) 1px, transparent 1px);
+      background-size: 40px 40px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .page { position: relative; z-index: 1; }
+
+    /* ── NAV ── */
+    nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 24px 40px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+    }
+
+    .logo-icon {
+      width: 28px;
+      height: 28px;
+    }
+
+    .logo-text {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 24px;
+      letter-spacing: 4px;
+      color: var(--gold);
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 32px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      color: var(--text-dim);
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 500;
+      letter-spacing: 0.5px;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover { color: var(--gold); }
+
+    /* ── HERO ── */
+    .hero {
+      text-align: center;
+      padding: 80px 24px 40px;
+      max-width: 700px;
+      margin: 0 auto;
+    }
+
+    .hero-tag {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 13px;
+      letter-spacing: 4px;
+      color: var(--gold);
+      background: var(--gold-dim);
+      display: inline-block;
+      padding: 6px 20px;
+      border-radius: 30px;
+      margin-bottom: 28px;
+      opacity: 0;
+      animation: fadeUp 0.6s ease-out 0.1s forwards;
+    }
+
+    .hero h1 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(40px, 7vw, 64px);
+      letter-spacing: 3px;
+      line-height: 1.05;
+      margin-bottom: 20px;
+      opacity: 0;
+      animation: fadeUp 0.6s ease-out 0.2s forwards;
+    }
+
+    .hero p {
+      font-size: 17px;
+      color: var(--text-dim);
+      line-height: 1.6;
+      max-width: 520px;
+      margin: 0 auto;
+      opacity: 0;
+      animation: fadeUp 0.6s ease-out 0.3s forwards;
+    }
+
+    /* ── PRICING CARDS ── */
+    .pricing-section {
+      display: flex;
+      justify-content: center;
+      gap: 24px;
+      padding: 60px 24px 80px;
+      max-width: 900px;
+      margin: 0 auto;
+      flex-wrap: wrap;
+    }
+
+    .pricing-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 40px 32px 36px;
+      width: 380px;
+      position: relative;
+      transition: border-color 0.3s, transform 0.3s;
+      opacity: 0;
+      animation: fadeUp 0.6s ease-out forwards;
+    }
+
+    .pricing-card:nth-child(1) { animation-delay: 0.4s; }
+    .pricing-card:nth-child(2) { animation-delay: 0.55s; }
+
+    .pricing-card:hover {
+      border-color: var(--gold-glow);
+      transform: translateY(-4px);
+    }
+
+    .pricing-card.featured {
+      border-color: var(--gold);
+      background: linear-gradient(170deg, rgba(212, 175, 55, 0.06) 0%, var(--bg-card) 50%);
+    }
+
+    .featured-badge {
+      position: absolute;
+      top: -12px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 11px;
+      letter-spacing: 3px;
+      color: var(--bg);
+      background: var(--gold);
+      padding: 4px 20px;
+      border-radius: 20px;
+    }
+
+    .card-tier {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 28px;
+      letter-spacing: 3px;
+      color: var(--text);
+      margin-bottom: 8px;
+    }
+
+    .card-desc {
+      font-size: 14px;
+      color: var(--text-dim);
+      margin-bottom: 28px;
+      line-height: 1.5;
+    }
+
+    .card-price {
+      display: flex;
+      align-items: baseline;
+      gap: 4px;
+      margin-bottom: 32px;
+    }
+
+    .price-dollar {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 52px;
+      color: var(--gold);
+      line-height: 1;
+    }
+
+    .price-period {
+      font-size: 14px;
+      color: var(--text-dim);
+    }
+
+    .features-list {
+      list-style: none;
+      margin-bottom: 36px;
+    }
+
+    .features-list li {
+      font-size: 14px;
+      color: var(--text);
+      padding: 10px 0;
+      border-bottom: 1px solid rgba(212, 175, 55, 0.06);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .features-list li:last-child { border-bottom: none; }
+
+    .check {
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: var(--gold-dim);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .check svg {
+      width: 10px;
+      height: 10px;
+      stroke: var(--gold);
+      fill: none;
+      stroke-width: 2.5;
+    }
+
+    .cta-btn {
+      display: block;
+      width: 100%;
+      padding: 14px 0;
+      text-align: center;
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 16px;
+      letter-spacing: 2px;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.25s;
+      text-decoration: none;
+      border: none;
+    }
+
+    .cta-btn.outline {
+      background: transparent;
+      border: 1px solid var(--gold);
+      color: var(--gold);
+    }
+
+    .cta-btn.outline:hover {
+      background: var(--gold-dim);
+    }
+
+    .cta-btn.filled {
+      background: var(--gold);
+      color: var(--bg);
+    }
+
+    .cta-btn.filled:hover {
+      background: var(--elite-accent);
+      box-shadow: 0 0 30px rgba(212, 175, 55, 0.25);
+    }
+
+    .cta-btn:disabled {
+      opacity: 0.5;
+      cursor: wait;
+    }
+
+    /* ── FAQ ── */
+    .faq-section {
+      max-width: 640px;
+      margin: 0 auto;
+      padding: 0 24px 100px;
+    }
+
+    .faq-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 14px;
+      letter-spacing: 4px;
+      color: var(--gold);
+      text-align: center;
+      margin-bottom: 40px;
+      opacity: 0;
+      animation: fadeUp 0.6s ease-out 0.7s forwards;
+    }
+
+    .faq-item {
+      border-bottom: 1px solid var(--border);
+      padding: 20px 0;
+      opacity: 0;
+      animation: fadeUp 0.5s ease-out forwards;
+    }
+
+    .faq-item:nth-child(2) { animation-delay: 0.75s; }
+    .faq-item:nth-child(3) { animation-delay: 0.8s; }
+    .faq-item:nth-child(4) { animation-delay: 0.85s; }
+    .faq-item:nth-child(5) { animation-delay: 0.9s; }
+
+    .faq-q {
+      font-weight: 600;
+      font-size: 15px;
+      margin-bottom: 8px;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .faq-a {
+      font-size: 14px;
+      color: var(--text-dim);
+      line-height: 1.6;
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease-out;
+    }
+
+    .faq-item.open .faq-a { max-height: 200px; }
+    .faq-item.open .faq-arrow { transform: rotate(180deg); }
+
+    .faq-arrow {
+      transition: transform 0.3s;
+      color: var(--gold);
+      font-size: 12px;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      text-align: center;
+      padding: 40px 24px;
+      border-top: 1px solid var(--border);
+      font-size: 13px;
+      color: var(--text-dim);
+    }
+
+    /* ── LOADING SPINNER ── */
+    .spinner {
+      display: inline-block;
+      width: 14px;
+      height: 14px;
+      border: 2px solid transparent;
+      border-top-color: currentColor;
+      border-radius: 50%;
+      animation: spin 0.6s linear infinite;
+      margin-right: 8px;
+      vertical-align: middle;
+    }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 820px) {
+      .pricing-section { flex-direction: column; align-items: center; }
+      .pricing-card { width: 100%; max-width: 420px; }
+      nav { padding: 20px 24px; }
+      .nav-links { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <!-- NAV -->
+    <nav>
+      <a href="/" class="logo">
+        <svg class="logo-icon" viewBox="0 0 24 24" fill="none">
+          <path d="M12 2L2 9l10 7 10-7-10-7z" fill="#d4af37" opacity="0.8"/>
+          <path d="M2 17l10 7 10-7" stroke="#d4af37" stroke-width="1.5" fill="none"/>
+          <path d="M2 13l10 7 10-7" stroke="#d4af37" stroke-width="1.5" fill="none" opacity="0.5"/>
+        </svg>
+        <span class="logo-text">CARD ACUMEN</span>
+      </a>
+      <ul class="nav-links">
+        <li><a href="/">Home</a></li>
+        <li><a href="/pricing" style="color: var(--gold);">Pricing</a></li>
+      </ul>
+    </nav>
+
+    <!-- HERO -->
+    <section class="hero">
+      <div class="hero-tag">INVEST SMARTER. COLLECT BETTER.</div>
+      <h1>Prospect Intelligence<br>That Pays for Itself</h1>
+      <p>Real-time scouting reports, card market alerts, and dynasty fantasy analysis — delivered daily by the same system powering @prospectpulls.</p>
+    </section>
+
+    <!-- PRICING CARDS -->
+    <section class="pricing-section">
+      <!-- PRO -->
+      <div class="pricing-card">
+        <div class="card-tier">PRO</div>
+        <div class="card-desc">Everything you need to stay ahead of the prospect market.</div>
+        <div class="card-price">
+          <span class="price-dollar">$7.99</span>
+          <span class="price-period">/month</span>
+        </div>
+        <ul class="features-list">
+          <li><span class="check"><svg viewBox="0 0 12 12"><path d="M2 6l3 3 5-5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Daily prospect scouting reports</li>
+          <li><span class="check"><svg viewBox="0 0 12 12"><path d="M2 6l3 3 5-5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Card market price alerts</li>
+          <li><span class="check"><svg viewBox="0 0 12 12"><path d="M2 6l3 3 5-5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Dynasty fantasy rankings</li>
+          <li><span class="check"><svg viewBox="0 0 12 12"><path d="M2 6l3 3 5-5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Buy/sell/hold recommendations</li>
+          <li><span class="check"><svg viewBox="0 0 12 12"><path d="M2 6l3 3 5-5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Weekly prospect digest</li>
+        </ul>
+        <button class="cta-btn outline" onclick="checkout('pro')" id="btn-pro">GET PRO</button>
+      </div>
+
+      <!-- ELITE -->
+      <div class="pricing-card featured">
+        <div class="featured-badge">MOST POPULAR</div>
+        <div class="card-tier">ELITE</div>
+        <div class="card-desc">For serious collectors and dynasty players who want every edge.</div>
+        <div class="card-price">
+          <span class="price-dollar">$14.99</span>
+          <span class="price-period">/month</span>
+        </div>
+        <ul class="features-list">
+          <li><span class="check"><svg viewBox="0 0 12 12"><path d="M2 6l3 3 5-5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Everything in Pro</li>
+          <li><span class="check"><svg viewBox="0 0 12 12"><path d="M2 6l3 3 5-5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Real-time call-up & trade alerts</li>
+          <li><span class="check"><svg viewBox="0 0 12 12"><path d="M2 6l3 3 5-5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>eBay sold price tracking</li>
+          <li><span class="check"><svg viewBox="0 0 12 12"><path d="M2 6l3 3 5-5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Exclusive prospect deep dives</li>
+          <li><span class="check"><svg viewBox="0 0 12 12"><path d="M2 6l3 3 5-5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Priority access to new features</li>
+          <li><span class="check"><svg viewBox="0 0 12 12"><path d="M2 6l3 3 5-5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Direct analyst Q&A</li>
+        </ul>
+        <button class="cta-btn filled" onclick="checkout('elite')" id="btn-elite">GET ELITE</button>
+      </div>
+    </section>
+
+    <!-- FAQ -->
+    <section class="faq-section">
+      <div class="faq-title">FREQUENTLY ASKED QUESTIONS</div>
+
+      <div class="faq-item open">
+        <div class="faq-q" onclick="toggleFaq(this)">
+          What do I get with a subscription?
+          <span class="faq-arrow">▼</span>
+        </div>
+        <div class="faq-a">Daily prospect intelligence delivered to your dashboard — scouting reports, card market price movements, dynasty fantasy analysis, and buy/sell/hold recommendations based on real-time data.</div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">
+          Can I cancel anytime?
+          <span class="faq-arrow">▼</span>
+        </div>
+        <div class="faq-a">Yes. Cancel anytime from your account settings. You'll keep access through the end of your current billing period.</div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">
+          What's the difference between Pro and Elite?
+          <span class="faq-arrow">▼</span>
+        </div>
+        <div class="faq-a">Pro gives you the daily scouting reports and market alerts. Elite adds real-time call-up notifications, eBay sold price tracking, exclusive deep-dive reports, and direct access to ask our analysts questions.</div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">
+          Who is this for?
+          <span class="faq-arrow">▼</span>
+        </div>
+        <div class="faq-a">Dynasty fantasy baseball players, sports card collectors, and anyone who wants to stay ahead of the MLB prospect market. If you're buying Bowman Chrome or drafting prospects in dynasty leagues, this is built for you.</div>
+      </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+      &copy; 2026 Card Acumen. Invest Smarter. Collect Better.
+    </footer>
+  </div>
+
+  <script>
+    // ── CONFIG ──
+    const CHECKOUT_URL = 'https://xczoesywcgyulibcqpjm.supabase.co/functions/v1/stripe-checkout';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inhjem9lc3l3Y2d5dWxpYmNxcGptIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ2MzQyMzYsImV4cCI6MjA5MDIxMDIzNn0.VEPCkFeeOr9C-KczweWU8X8W1l37UOwVjuDDI3r9dv8';
+
+    async function checkout(plan) {
+      const btn = document.getElementById('btn-' + plan);
+      const originalText = btn.textContent;
+      btn.disabled = true;
+      btn.innerHTML = '<span class="spinner"></span>LOADING...';
+
+      // Prompt for email
+      const email = prompt('Enter your email to subscribe:');
+      if (!email || !email.includes('@')) {
+        btn.disabled = false;
+        btn.textContent = originalText;
+        if (email !== null) alert('Please enter a valid email address.');
+        return;
+      }
+
+      try {
+        const res = await fetch(CHECKOUT_URL, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + SUPABASE_ANON_KEY,
+          },
+          body: JSON.stringify({ plan, email }),
+        });
+
+        const data = await res.json();
+
+        if (data.url) {
+          window.location.href = data.url;
+        } else {
+          alert('Something went wrong. Please try again.');
+          btn.disabled = false;
+          btn.textContent = originalText;
+        }
+      } catch (err) {
+        alert('Connection error. Please try again.');
+        btn.disabled = false;
+        btn.textContent = originalText;
+      }
+    }
+
+    function toggleFaq(el) {
+      const item = el.parentElement;
+      document.querySelectorAll('.faq-item').forEach(i => {
+        if (i !== item) i.classList.remove('open');
+      });
+      item.classList.toggle('open');
+    }
+  </script>
+</body>
+</html>
