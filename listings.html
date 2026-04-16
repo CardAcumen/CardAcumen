@@ -248,24 +248,18 @@ let sb;
 try { sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON); } catch(e) { console.error('Supabase init failed', e); }
 
 async function checkAuth() {
-  // For now, show the tool directly (remove this line and uncomment below when Supabase auth is wired)
-  document.getElementById('mainTool').classList.remove('hidden');
-  return;
-
-  /* ── UNCOMMENT THIS BLOCK WHEN READY TO GATE ──
   if (!sb) { showGate(); return; }
   try {
     const { data: { session } } = await sb.auth.getSession();
     if (!session) { showGate(); return; }
-    // Check subscription tier
-    const { data: profile } = await sb.from('profiles').select('subscription_tier').eq('id', session.user.id).single();
-    if (profile && (profile.subscription_tier === 'pro' || profile.subscription_tier === 'elite')) {
+    // Check subscription tier in subscribers table
+    const { data: sub } = await sb.from('subscribers').select('tier, plan_tier, subscription_status').eq('id', session.user.id).single();
+    if (sub && sub.subscription_status === 'active' && (sub.tier === 'pro' || sub.tier === 'elite' || sub.plan_tier === 'pro' || sub.plan_tier === 'elite')) {
       document.getElementById('mainTool').classList.remove('hidden');
     } else {
       showGate();
     }
   } catch(e) { console.error(e); showGate(); }
-  */
 }
 
 function showGate() {
