@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="CA Listings">
+<title>eBay Listing Generator — Card Acumen</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --gold: #C9A84C;
+  --gold-dim: rgba(201,168,76,0.15);
+  --gold-border: rgba(201,168,76,0.25);
+  --bg: #0a0a0a;
+  --surface: #111111;
+  --surface2: #1a1a1a;
+  --border: #2a2a2a;
+  --text: #e8e8e8;
+  --muted: #888;
+  --red: #e53935;
+  --green: #4caf50;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: var(--bg); color: var(--text); font-family: 'Barlow', sans-serif; min-height: 100vh; -webkit-font-smoothing: antialiased; }
+
+/* Nav */
+.nav { display: flex; justify-content: space-between; align-items: center; padding: 16px 20px; border-bottom: 1px solid var(--border); background: var(--bg); position: sticky; top: 0; z-index: 100; }
+.nav-logo { font-family: 'Oswald', sans-serif; font-weight: 700; font-size: 18px; color: var(--gold); letter-spacing: 3px; text-transform: uppercase; text-decoration: none; }
+.nav-links { display: flex; gap: 20px; }
+.nav-links a { color: var(--muted); text-decoration: none; font-size: 13px; font-weight: 500; transition: color 0.2s; }
+.nav-links a:hover { color: var(--gold); }
+
+/* Header */
+.page-header { background: linear-gradient(135deg, var(--surface) 0%, #0d0d0d 100%); border-bottom: 2px solid var(--gold); padding: 24px 16px; text-align: center; }
+.page-title { font-family: 'Oswald', sans-serif; font-size: 28px; font-weight: 700; color: var(--gold); letter-spacing: 3px; text-transform: uppercase; }
+.page-subtitle { font-size: 12px; color: var(--muted); letter-spacing: 2px; margin-top: 4px; text-transform: uppercase; }
+
+/* Auth gate */
+.auth-gate { max-width: 500px; margin: 60px auto; padding: 0 16px; text-align: center; }
+.auth-gate h2 { font-family: 'Oswald', sans-serif; color: var(--gold); font-size: 22px; margin-bottom: 12px; }
+.auth-gate p { color: var(--muted); font-size: 14px; line-height: 1.6; margin-bottom: 24px; }
+.auth-btn { display: inline-block; padding: 14px 32px; background: var(--gold); color: #000; font-family: 'Oswald', sans-serif; font-size: 15px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; border: none; border-radius: 8px; cursor: pointer; text-decoration: none; transition: opacity 0.2s; }
+.auth-btn:hover { opacity: 0.9; }
+.auth-btn.ghost { background: transparent; color: var(--gold); border: 1px solid var(--gold); }
+
+/* Container */
+.container { max-width: 600px; margin: 0 auto; padding: 20px 16px; }
+
+/* Form elements */
+.card-section { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 20px; margin-bottom: 16px; }
+.section-title { font-family: 'Oswald', sans-serif; font-size: 13px; font-weight: 600; color: var(--text); letter-spacing: 1.2px; text-transform: uppercase; margin-bottom: 16px; }
+.field { margin-bottom: 14px; }
+.label { font-family: 'Oswald', sans-serif; font-size: 11px; font-weight: 600; color: var(--gold); letter-spacing: 1.2px; text-transform: uppercase; margin-bottom: 4px; }
+.row { display: grid; gap: 10px; margin-bottom: 14px; }
+.row-2 { grid-template-columns: 1fr 1fr; }
+.row-13 { grid-template-columns: 1fr 2fr; }
+input, select, textarea {
+  width: 100%; padding: 10px 12px; background: var(--surface2); border: 1px solid var(--border);
+  border-radius: 8px; color: var(--text); font-size: 14px; font-family: 'Barlow', sans-serif;
+  outline: none; transition: border-color 0.2s; appearance: none; -webkit-appearance: none;
+}
+select { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23888' d='M6 8L1 3h10z'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; padding-right: 32px; }
+input:focus, select:focus, textarea:focus { border-color: var(--gold); }
+textarea { min-height: 60px; resize: vertical; }
+
+/* Buttons */
+.btn-add { width: 100%; padding: 12px; background: transparent; border: 1px dashed var(--gold); border-radius: 8px; color: var(--gold); font-family: 'Oswald', sans-serif; font-size: 14px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; cursor: pointer; }
+.btn-generate { width: 100%; padding: 14px; margin-top: 10px; background: var(--gold); border: none; border-radius: 8px; color: #000; font-family: 'Oswald', sans-serif; font-size: 15px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; cursor: pointer; }
+.btn-copy { padding: 6px 14px; background: var(--surface2); border: 1px solid var(--border); border-radius: 6px; color: var(--gold); font-family: 'Oswald', sans-serif; font-size: 11px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; cursor: pointer; transition: all 0.2s; }
+.btn-copy.copied { background: #1b5e20; border-color: var(--green); color: var(--green); }
+.btn-full-copy { width: 100%; padding: 12px; margin-top: 16px; background: transparent; border: 1px solid var(--gold); border-radius: 8px; color: var(--gold); font-family: 'Oswald', sans-serif; font-size: 13px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; cursor: pointer; }
+.btn-reset { width: 100%; padding: 12px; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; color: var(--muted); font-family: 'Oswald', sans-serif; font-size: 13px; letter-spacing: 1px; text-transform: uppercase; cursor: pointer; }
+
+/* Queue item */
+.queue-item { display: flex; justify-content: space-between; align-items: center; padding: 10px 12px; background: var(--surface2); border-radius: 8px; margin-bottom: 6px; border: 1px solid var(--border); }
+.queue-item-label { font-size: 13px; color: var(--text); flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.queue-remove { background: none; border: none; color: var(--red); cursor: pointer; font-size: 16px; padding: 0 4px; margin-left: 8px; }
+
+/* Result card */
+.result-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; margin-bottom: 16px; }
+.result-header { background: linear-gradient(90deg, var(--gold-dim), transparent); padding: 12px 16px; border-bottom: 1px solid var(--border); }
+.result-header-text { font-family: 'Oswald', sans-serif; font-size: 13px; font-weight: 600; color: var(--gold); }
+.result-body { padding: 16px; }
+.result-section { margin-bottom: 16px; }
+.result-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+.result-content { padding: 10px 12px; background: var(--surface2); border-radius: 8px; font-size: 13px; color: var(--text); line-height: 1.6; }
+.result-content.title { font-size: 14px; font-weight: 600; }
+.result-content.subtitle { font-size: 13px; color: var(--muted); }
+.result-content.desc { max-height: 300px; overflow-y: auto; white-space: pre-wrap; }
+.char-count { font-size: 11px; }
+.char-ok { color: var(--green); }
+.char-over { color: var(--red); }
+
+/* Keywords */
+.kw-wrap { display: flex; flex-wrap: wrap; gap: 6px; }
+.kw-tag { padding: 4px 10px; background: var(--gold-dim); border: 1px solid var(--gold-border); border-radius: 20px; font-size: 11px; color: var(--gold); }
+
+/* Seller tip */
+.tip-box { padding: 10px 12px; background: rgba(201,168,76,0.08); border-radius: 8px; border-left: 3px solid var(--gold); }
+.tip-label { font-family: 'Oswald', sans-serif; font-size: 11px; font-weight: 600; color: var(--gold); margin-bottom: 4px; }
+.tip-text { font-size: 13px; color: var(--text); line-height: 1.5; }
+
+/* Error */
+.error { color: var(--red); font-size: 13px; margin-bottom: 10px; }
+
+/* Footer */
+.footer { text-align: center; padding: 40px 16px 24px; border-top: 1px solid var(--border); margin-top: 40px; }
+.footer-logo { font-family: 'Oswald', sans-serif; font-weight: 700; font-size: 16px; color: var(--gold); letter-spacing: 2px; text-transform: uppercase; }
+.footer-sub { font-size: 11px; color: var(--muted); margin-top: 4px; }
+.footer-links { margin-top: 12px; }
+.footer-links a { color: var(--muted); text-decoration: none; font-size: 12px; margin: 0 8px; }
+.footer-copy { font-size: 11px; color: #555; margin-top: 12px; }
+
+.hidden { display: none; }
+</style>
+</head>
+<body>
+
+<!-- Nav -->
+<nav class="nav">
+  <a href="https://cardacumen.com" class="nav-logo">Card Acumen</a>
+  <div class="nav-links">
+    <a href="https://cardacumen.com">Home</a>
+    <a href="https://cardacumen.com/pricing.html">Pricing</a>
+    <a href="https://cardacumen.com/listings.html" style="color:var(--gold)">Listings</a>
+  </div>
+</nav>
+
+<!-- Header -->
+<div class="page-header">
+  <div class="page-title">Card Acumen</div>
+  <div class="page-subtitle">eBay Listing Generator</div>
+</div>
+
+<!-- Auth Gate (shown when not logged in or not Pro/Elite) -->
+<div id="authGate" class="auth-gate hidden">
+  <h2>Pro & Elite Members Only</h2>
+  <p>The eBay Listing Generator is available to Card Acumen Pro and Elite subscribers. Generate keyword-optimized titles, professional descriptions, and seller tips for every card in your inventory.</p>
+  <a href="https://cardacumen.com/pricing.html" class="auth-btn">View Plans</a>
+  <div style="margin-top:16px;">
+    <button class="auth-btn ghost" onclick="showLogin()">Sign In</button>
+  </div>
+</div>
+
+<!-- Login Form (hidden by default) -->
+<div id="loginForm" class="auth-gate hidden">
+  <h2>Sign In</h2>
+  <div style="text-align:left; max-width:360px; margin:0 auto;">
+    <div class="field"><div class="label">Email</div><input type="email" id="loginEmail" placeholder="you@email.com"></div>
+    <div class="field"><div class="label">Password</div><input type="password" id="loginPass" placeholder="Your password"></div>
+    <div id="loginError" class="error hidden"></div>
+    <button class="btn-generate" onclick="doLogin()" style="margin-top:8px">Sign In</button>
+    <p style="color:var(--muted); font-size:12px; margin-top:12px; text-align:center;">Don't have an account? <a href="https://cardacumen.com/pricing.html" style="color:var(--gold)">Subscribe here</a></p>
+  </div>
+</div>
+
+<!-- Main Tool (hidden until auth passes) -->
+<div id="mainTool" class="container hidden">
+
+  <!-- Input Form -->
+  <div class="card-section">
+    <div class="section-title">Card Details</div>
+
+    <div class="field"><div class="label">Player Name *</div><input id="fPlayer" placeholder="Jackson Holliday"></div>
+
+    <div class="row row-13">
+      <div><div class="label">Year</div><input id="fYear" placeholder="2025" value="2025"></div>
+      <div><div class="label">Brand / Set *</div><input id="fBrand" placeholder="Bowman Chrome"></div>
+    </div>
+
+    <div class="field">
+      <div class="label">Card Type</div>
+      <select id="fType"></select>
+    </div>
+
+    <div class="row row-2">
+      <div>
+        <div class="label">Parallel</div>
+        <select id="fParallel" onchange="toggleCustom('parallel')"></select>
+        <input id="fParallelCustom" class="hidden" placeholder="e.g. Atomic" style="margin-top:6px">
+      </div>
+      <div>
+        <div class="label">Numbered</div>
+        <select id="fNumbered" onchange="toggleCustom('numbered')"></select>
+        <input id="fNumberedCustom" class="hidden" placeholder="e.g. /175" style="margin-top:6px">
+      </div>
+    </div>
+
+    <div class="row row-2">
+      <div><div class="label">Grade</div><select id="fGrade" onchange="updateCondLabel()"></select></div>
+      <div><div class="label" id="condLabel">Condition</div><select id="fCondition"></select></div>
+    </div>
+
+    <div class="row row-2">
+      <div><div class="label">Listing Type</div><select id="fListingType" onchange="toggleLot()"></select></div>
+      <div id="lotQtyWrap" class="hidden"><div class="label">Lot Qty</div><input id="fLotQty" type="number" placeholder="4" value="1"></div>
+    </div>
+    <div id="lotDetailsWrap" class="hidden field"><div class="label">Lot Contents</div><textarea id="fLotDetails" placeholder="List each card in the lot..."></textarea></div>
+
+    <div class="row row-13">
+      <div><div class="label">Price ($)</div><input id="fPrice" type="number" placeholder="49.99"></div>
+      <div><div class="label">Notes</div><input id="fNotes" placeholder="clean corners, centering 60/40"></div>
+    </div>
+
+    <div id="formError" class="error hidden"></div>
+    <button class="btn-add" onclick="addToQueue()">+ Add to Queue</button>
+  </div>
+
+  <!-- Queue -->
+  <div id="queueSection" class="card-section hidden">
+    <div class="section-title" id="queueTitle">Queue (0)</div>
+    <div id="queueList"></div>
+    <button class="btn-generate" onclick="generateAll()">Generate Listings</button>
+  </div>
+
+  <!-- Results -->
+  <div id="resultsSection"></div>
+
+  <!-- Reset -->
+  <button id="resetBtn" class="btn-reset hidden" onclick="resetAll()">Clear All &amp; Start Over</button>
+
+</div>
+
+<!-- Footer -->
+<div class="footer">
+  <div class="footer-logo">Card Acumen</div>
+  <div class="footer-sub">Invest Smarter. Collect Better.</div>
+  <div class="footer-links">
+    <a href="https://cardacumen.com/privacy.html">Privacy Policy</a>
+    <a href="https://cardacumen.com/terms.html">Terms of Service</a>
+    <a href="mailto:hello@cardacumen.com">Contact</a>
+  </div>
+  <div class="footer-copy">&copy; 2026 Card Acumen. All rights reserved.</div>
+</div>
+
+<!-- Supabase Auth -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script>
+// ── SUPABASE CONFIG ──
+const SUPABASE_URL = 'https://xczoesywcgyulibcqpjm.supabase.co';
+const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inhjem9lc3l3Y2d5dWxpYmNxcGptIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDI5MzU2ODYsImV4cCI6MjA1ODUxMTY4Nn0.iqkMCOoWMrGU-VB3wM9I3GxJmnas1v3bOTuciGRhPXA';
+// TODO: Replace SUPABASE_ANON with your actual anon key if different
+
+let sb;
+try { sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON); } catch(e) { console.error('Supabase init failed', e); }
+
+async function checkAuth() {
+  // For now, show the tool directly (remove this line and uncomment below when Supabase auth is wired)
+  document.getElementById('mainTool').classList.remove('hidden');
+  return;
+
+  /* ── UNCOMMENT THIS BLOCK WHEN READY TO GATE ──
+  if (!sb) { showGate(); return; }
+  try {
+    const { data: { session } } = await sb.auth.getSession();
+    if (!session) { showGate(); return; }
+    // Check subscription tier
+    const { data: profile } = await sb.from('profiles').select('subscription_tier').eq('id', session.user.id).single();
+    if (profile && (profile.subscription_tier === 'pro' || profile.subscription_tier === 'elite')) {
+      document.getElementById('mainTool').classList.remove('hidden');
+    } else {
+      showGate();
+    }
+  } catch(e) { console.error(e); showGate(); }
+  */
+}
+
+function showGate() {
+  document.getElementById('authGate').classList.remove('hidden');
+}
+
+function showLogin() {
+  document.getElementById('authGate').classList.add('hidden');
+  document.getElementById('loginForm').classList.remove('hidden');
+}
+
+async function doLogin() {
+  const email = document.getElementById('loginEmail').value.trim();
+  const pass = document.getElementById('loginPass').value;
+  const errEl = document.getElementById('loginError');
+  errEl.classList.add('hidden');
+  if (!email || !pass) { errEl.textContent = 'Email and password required.'; errEl.classList.remove('hidden'); return; }
+  try {
+    const { data, error } = await sb.auth.signInWithPassword({ email, password: pass });
+    if (error) throw error;
+    document.getElementById('loginForm').classList.add('hidden');
+    checkAuth();
+  } catch(e) {
+    errEl.textContent = e.message || 'Login failed.';
+    errEl.classList.remove('hidden');
+  }
+}
+
+checkAuth();
+</script>
+
+<script>
+// ── DROPDOWN DATA ──
+const CARD_TYPES = ["Base","RC (Rookie Card)","1st Bowman","1st Bowman Chrome","Insert","Refractor","Auto","1st Bowman Auto","Prospect Auto","Relic / Patch","Lot"];
+const PARALLELS = ["None","Refractor","Gold Refractor","Blue Refractor","Green Refractor","Purple Refractor","Orange Refractor","Red Refractor","Black Refractor","Superfractor 1/1","Aqua","Shimmer","Camo","Lava","Mojo","Speckle","Wave","Sapphire","Pink","Yellow","Custom..."];
+const GRADES = ["Raw","PSA 10","PSA 9","PSA 8","BGS 10 Pristine","BGS 10 Black Label","BGS 9.5","BGS 9","CGC 10 Perfect","CGC 10","CGC 9.5","SGC 10","SGC 9.5"];
+const NUMBERED = ["Not Numbered","/1","/5","/10","/15","/25","/35","/50","/75","/99","/150","/199","/250","/299","/499","/999","Custom..."];
+const LISTING_TYPES = ["Single Card","Lot"];
+const CONDITIONS = ["Pack Fresh / Mint","Near Mint","Excellent","Very Good","Good"];
+
+function populateSelect(id, arr) { const el = document.getElementById(id); arr.forEach(v => { const o = document.createElement('option'); o.value = v; o.textContent = v; el.appendChild(o); }); }
+populateSelect('fType', CARD_TYPES);
+populateSelect('fParallel', PARALLELS);
+populateSelect('fGrade', GRADES);
+populateSelect('fNumbered', NUMBERED);
+populateSelect('fListingType', LISTING_TYPES);
+populateSelect('fCondition', CONDITIONS);
+
+function toggleCustom(type) {
+  if (type === 'parallel') {
+    document.getElementById('fParallelCustom').classList.toggle('hidden', document.getElementById('fParallel').value !== 'Custom...');
+  } else {
+    document.getElementById('fNumberedCustom').classList.toggle('hidden', document.getElementById('fNumbered').value !== 'Custom...');
+  }
+}
+function updateCondLabel() {
+  document.getElementById('condLabel').textContent = document.getElementById('fGrade').value === 'Raw' ? 'Condition' : 'Slab';
+}
+function toggleLot() {
+  const isLot = document.getElementById('fListingType').value === 'Lot';
+  document.getElementById('lotQtyWrap').classList.toggle('hidden', !isLot);
+  document.getElementById('lotDetailsWrap').classList.toggle('hidden', !isLot);
+}
+
+// ── QUEUE ──
+let queue = [];
+
+function getFormData() {
+  const par = document.getElementById('fParallel').value;
+  const num = document.getElementById('fNumbered').value;
+  return {
+    player: document.getElementById('fPlayer').value.trim(),
+    year: document.getElementById('fYear').value.trim() || '2025',
+    brand: document.getElementById('fBrand').value.trim(),
+    cardType: document.getElementById('fType').value,
+    parallel: par === 'Custom...' ? document.getElementById('fParallelCustom').value.trim() || 'None' : par,
+    numbered: num === 'Custom...' ? document.getElementById('fNumberedCustom').value.trim() || 'Not Numbered' : num,
+    grade: document.getElementById('fGrade').value,
+    condition: document.getElementById('fCondition').value,
+    listingType: document.getElementById('fListingType').value,
+    lotQty: document.getElementById('fLotQty').value || '1',
+    lotDetails: document.getElementById('fLotDetails').value.trim(),
+    price: document.getElementById('fPrice').value,
+    notes: document.getElementById('fNotes').value.trim()
+  };
+}
+
+function resetForm() {
+  document.getElementById('fPlayer').value = '';
+  document.getElementById('fYear').value = '2025';
+  document.getElementById('fBrand').value = '';
+  document.getElementById('fType').value = 'Base';
+  document.getElementById('fParallel').value = 'None';
+  document.getElementById('fNumbered').value = 'Not Numbered';
+  document.getElementById('fGrade').value = 'Raw';
+  document.getElementById('fCondition').value = 'Pack Fresh / Mint';
+  document.getElementById('fListingType').value = 'Single Card';
+  document.getElementById('fLotQty').value = '1';
+  document.getElementById('fLotDetails').value = '';
+  document.getElementById('fPrice').value = '';
+  document.getElementById('fNotes').value = '';
+  document.getElementById('fParallelCustom').classList.add('hidden');
+  document.getElementById('fNumberedCustom').classList.add('hidden');
+  document.getElementById('lotQtyWrap').classList.add('hidden');
+  document.getElementById('lotDetailsWrap').classList.add('hidden');
+  updateCondLabel();
+}
+
+function cardLabel(c) {
+  const p = [c.year, c.brand, c.player, c.cardType];
+  if (c.parallel !== 'None') p.push(c.parallel);
+  if (c.numbered !== 'Not Numbered') p.push(c.numbered);
+  if (c.grade !== 'Raw') p.push(c.grade);
+  return p.join(' · ');
+}
+
+function addToQueue() {
+  const d = getFormData();
+  const errEl = document.getElementById('formError');
+  if (!d.player || !d.brand) { errEl.textContent = 'Player name and brand/set required.'; errEl.classList.remove('hidden'); return; }
+  errEl.classList.add('hidden');
+  d.id = Date.now();
+  queue.push(d);
+  resetForm();
+  renderQueue();
+}
+
+function removeFromQueue(id) {
+  queue = queue.filter(c => c.id !== id);
+  renderQueue();
+}
+
+function renderQueue() {
+  const sec = document.getElementById('queueSection');
+  const list = document.getElementById('queueList');
+  const title = document.getElementById('queueTitle');
+  if (queue.length === 0) { sec.classList.add('hidden'); return; }
+  sec.classList.remove('hidden');
+  title.textContent = `Queue (${queue.length})`;
+  list.innerHTML = queue.map(c => `
+    <div class="queue-item">
+      <div class="queue-item-label">${esc(cardLabel(c))}</div>
+      <button class="queue-remove" onclick="removeFromQueue(${c.id})">×</button>
+    </div>
+  `).join('');
+  sec.querySelector('.btn-generate').textContent = `Generate ${queue.length} Listing${queue.length > 1 ? 's' : ''}`;
+}
+
+function esc(s) { return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+// ── LISTING ENGINE ──
+function generateTitle(c) {
+  const typeMap = {"Base":"Base","RC (Rookie Card)":"RC Rookie","1st Bowman":"1st Bowman","1st Bowman Chrome":"1st Bowman Chrome","Insert":"Insert","Refractor":"Refractor","Auto":"Auto Autograph","1st Bowman Auto":"1st Bowman Auto","Prospect Auto":"Prospect Auto","Relic / Patch":"Relic Patch","Lot":"Lot"};
+  const parts = [c.year, c.brand, c.player, typeMap[c.cardType] || c.cardType];
+  if (c.parallel !== 'None') parts.push(c.parallel);
+  if (c.numbered !== 'Not Numbered') parts.push(c.numbered);
+  if (c.grade !== 'Raw') parts.push(c.grade);
+  if (c.listingType === 'Lot' && c.lotQty) parts.push(c.lotQty + '-Card Lot');
+  let t = parts.join(' ');
+  if (t.length > 80) t = t.replace(' Autograph', '');
+  if (t.length > 80) t = t.substring(0, 77) + '...';
+  return t;
+}
+
+function generateSubtitle(c) {
+  const s = [];
+  if (c.cardType.includes('1st Bowman')) s.push('First Bowman!');
+  if (c.numbered === '/1') s.push('TRUE 1/1!');
+  else if (c.numbered !== 'Not Numbered' && parseInt(c.numbered.replace('/','')) <= 25) s.push('Short Print ' + c.numbered + '!');
+  if (['PSA 10','BGS 10 Pristine','BGS 10 Black Label','CGC 10 Perfect'].includes(c.grade)) s.push('GEM MINT!');
+  if (c.cardType.includes('Auto')) s.push('On-Card Auto!');
+  if (c.cardType === 'RC (Rookie Card)') s.push('Rookie Card!');
+  if (c.parallel === 'Superfractor 1/1') s.push('SUPERFRACTOR!');
+  return s.join(' ').substring(0, 55);
+}
+
+function generateDescription(c) {
+  const L = [];
+  const lot = c.listingType === 'Lot';
+  L.push('━━━ ' + c.player + ' | ' + c.year + ' ' + c.brand + ' ━━━', '');
+  if (lot) { L.push('You are bidding on / buying a ' + c.lotQty + '-card lot of ' + c.player + ' cards from ' + c.year + ' ' + c.brand + '.'); if (c.lotDetails) { L.push('', 'Cards included:', c.lotDetails); } }
+  else L.push('You are bidding on / buying a ' + c.year + ' ' + c.brand + ' ' + c.player + ' ' + c.cardType + '.');
+  L.push('', 'CARD DETAILS:', '• Player: ' + c.player, '• Set: ' + c.year + ' ' + c.brand, '• Type: ' + c.cardType);
+  if (c.parallel !== 'None') L.push('• Parallel: ' + c.parallel);
+  if (c.numbered !== 'Not Numbered') L.push('• Numbered: ' + c.numbered);
+  L.push('• Grade/Condition: ' + (c.grade === 'Raw' ? 'Raw — ' + c.condition : c.grade), '');
+  if (c.grade === 'Raw') {
+    const cm = {"Pack Fresh / Mint":"Card is pack fresh with sharp corners, clean edges, and excellent centering. No visible flaws.","Near Mint":"Card is in near mint condition with minimal wear. Corners are sharp with only slight imperfections upon close inspection.","Excellent":"Card is in excellent condition with minor edge wear. Great eye appeal.","Very Good":"Card shows light wear including minor corner and edge softness. Good overall presentation.","Good":"Card shows visible wear including corner and edge wear. Priced accordingly."};
+    L.push('CONDITION:', cm[c.condition] || 'Please see photos for condition.');
+    if (c.notes) L.push('Seller notes: ' + c.notes);
+  } else {
+    L.push('GRADE:', 'Card has been professionally graded ' + c.grade + '. Slab is in excellent condition with no cracks or damage.');
+    if (c.notes) L.push('Seller notes: ' + c.notes);
+  }
+  L.push('', 'SHIPPING:', '• Ships within 1 business day of confirmed payment');
+  L.push(c.grade === 'Raw' ? '• Card ships in a penny sleeve + toploader inside a team bag, secured in a bubble mailer via USPS First Class' : '• Graded slab ships securely wrapped in bubble wrap inside a padded bubble mailer via USPS First Class');
+  L.push('• Tracking number provided', '• Combined shipping available — message before purchasing for a combined invoice', '', 'RETURNS:', 'No returns accepted. Please review all photos carefully before purchasing. What you see is what you get. Feel free to message with any questions before bidding/buying.', '', 'Thank you for looking and happy collecting!');
+  return L.join('\n');
+}
+
+function generateKeywords(c) {
+  const kw = new Set();
+  kw.add(c.player); c.player.split(' ').forEach(w => kw.add(w));
+  kw.add(c.year); kw.add(c.brand); c.brand.split(' ').forEach(w => kw.add(w));
+  kw.add(c.cardType.replace(' (Rookie Card)', ''));
+  if (c.cardType.includes('Rookie') || c.cardType.includes('RC')) { kw.add('RC'); kw.add('Rookie'); kw.add('Rookie Card'); }
+  if (c.cardType.includes('Auto')) { kw.add('Auto'); kw.add('Autograph'); }
+  if (c.cardType.includes('1st Bowman')) { kw.add('1st Bowman'); kw.add('First Bowman'); }
+  if (c.parallel !== 'None') kw.add(c.parallel);
+  if (c.numbered !== 'Not Numbered') { kw.add(c.numbered); kw.add('Numbered'); kw.add('Short Print'); }
+  if (c.grade !== 'Raw') { kw.add(c.grade); kw.add(c.grade.split(' ')[0]); }
+  kw.add('Baseball'); kw.add('MLB'); kw.add('Sports Card');
+  if (c.brand.toLowerCase().includes('chrome')) kw.add('Chrome');
+  if (c.brand.toLowerCase().includes('bowman')) kw.add('Prospect');
+  return [...kw].filter(w => w.length > 1).slice(0, 15).join(', ');
+}
+
+function generateSellerTip(c) {
+  if (c.numbered === '/1' || c.parallel === 'Superfractor 1/1') return "List as 7-day auction starting at $0.99 — 1/1 cards generate bidding wars and often exceed BIN expectations. End the auction on Sunday evening for max visibility.";
+  if (c.numbered !== 'Not Numbered') { const n = parseInt(c.numbered.replace('/','')); if (n <= 10) return "Low-numbered parallels do well as 7-day auctions ending Sunday 7-9 PM EST. Consider a reserve price if you have a floor in mind."; if (n <= 50) return "Consider BIN with Best Offer for numbered parallels in this range. Check recent eBay sold comps for the exact parallel to price competitively."; return "BIN with Best Offer is ideal for higher-numbered parallels. Price 10-15% above recent sold comps to leave room for offers."; }
+  if (c.grade === 'PSA 10' || c.grade === 'BGS 10 Black Label') return "Gem mint slabs command a premium — BIN with Best Offer and price at the higher end of recent comps. PSA 10 population reports on PSAcard.com can help you gauge scarcity.";
+  if (c.cardType.includes('1st Bowman')) return "1st Bowman cards are the gold standard for prospect collectors. List during the MLB season when prospect call-ups drive demand. Include prospect ranking in your title if space allows.";
+  if (c.cardType.includes('Auto')) return "Autos move well as BIN with Best Offer. Photograph the auto clearly — a good photo of the signature area drives higher bids. List Sunday-Thursday for best visibility.";
+  if (c.cardType === 'RC (Rookie Card)') return "Rookie cards are most valuable during the player's first two seasons. If the player is performing well, list during a hot streak. BIN with Best Offer gives you control over pricing.";
+  if (c.listingType === 'Lot') return "Lots sell best priced below the sum of individual card values — buyers want a deal. Photograph every card clearly and list all cards in the description. Free shipping on lots increases sell-through rate significantly.";
+  return "Check eBay sold comps before pricing — sort by 'Sold Items' and filter by condition to find the right range. BIN with Best Offer is the safest format for most cards. List Sunday through Wednesday for peak buyer traffic.";
+}
+
+// ── GENERATE & RENDER ──
+function generateAll() {
+  const results = queue.map(c => ({
+    card: c,
+    title: generateTitle(c),
+    subtitle: generateSubtitle(c),
+    description: generateDescription(c),
+    keywords: generateKeywords(c),
+    sellerTip: generateSellerTip(c)
+  }));
+  renderResults(results);
+}
+
+function renderResults(results) {
+  const sec = document.getElementById('resultsSection');
+  sec.innerHTML = results.map((r, i) => {
+    const tc = r.title.length;
+    return `
+    <div class="result-card">
+      <div class="result-header"><div class="result-header-text">${esc(cardLabel(r.card))}</div></div>
+      <div class="result-body">
+        <div class="result-section">
+          <div class="result-row"><div class="label">eBay Title</div><div style="display:flex;align-items:center;gap:8px"><span class="char-count ${tc<=80?'char-ok':'char-over'}">${tc}/80</span><button class="btn-copy" onclick="copyText(this,'${escAttr(r.title)}')">Copy</button></div></div>
+          <div class="result-content title">${esc(r.title)}</div>
+        </div>
+        ${r.subtitle ? `<div class="result-section"><div class="result-row"><div class="label">Subtitle</div><button class="btn-copy" onclick="copyText(this,'${escAttr(r.subtitle)}')">Copy</button></div><div class="result-content subtitle">${esc(r.subtitle)}</div></div>` : ''}
+        <div class="result-section">
+          <div class="result-row"><div class="label">Description</div><button class="btn-copy" onclick="copyDesc(this,${i})">Copy</button></div>
+          <div class="result-content desc">${esc(r.description)}</div>
+        </div>
+        <div class="result-section">
+          <div class="result-row"><div class="label">Keywords</div><button class="btn-copy" onclick="copyText(this,'${escAttr(r.keywords)}')">Copy</button></div>
+          <div class="kw-wrap">${r.keywords.split(',').map(k => `<span class="kw-tag">${esc(k.trim())}</span>`).join('')}</div>
+        </div>
+        ${r.sellerTip ? `<div class="tip-box"><div class="tip-label">SELLER TIP</div><div class="tip-text">${esc(r.sellerTip)}</div></div>` : ''}
+        <button class="btn-full-copy" onclick="copyFull(this,${i})">Copy Full Listing</button>
+      </div>
+    </div>`;
+  }).join('');
+  document.getElementById('resetBtn').classList.remove('hidden');
+  // Store results for copy
+  window._results = results;
+  sec.scrollIntoView({ behavior: 'smooth' });
+}
+
+function escAttr(s) { return s.replace(/\\/g,'\\\\').replace(/'/g,"\\'").replace(/\n/g,'\\n'); }
+
+function copyText(btn, text) {
+  navigator.clipboard.writeText(text.replace(/\\n/g, '\n'));
+  btn.classList.add('copied'); btn.textContent = 'Copied';
+  setTimeout(() => { btn.classList.remove('copied'); btn.textContent = 'Copy'; }, 2000);
+}
+function copyDesc(btn, i) {
+  navigator.clipboard.writeText(window._results[i].description);
+  btn.classList.add('copied'); btn.textContent = 'Copied';
+  setTimeout(() => { btn.classList.remove('copied'); btn.textContent = 'Copy'; }, 2000);
+}
+function copyFull(btn, i) {
+  const r = window._results[i];
+  const full = `TITLE:\n${r.title}\n\nSUBTITLE:\n${r.subtitle || 'N/A'}\n\nDESCRIPTION:\n${r.description}\n\nKEYWORDS:\n${r.keywords}\n\nSELLER TIP:\n${r.sellerTip}`;
+  navigator.clipboard.writeText(full);
+  btn.classList.add('copied'); btn.textContent = 'Copied Everything'; btn.style.borderColor = 'var(--green)'; btn.style.color = 'var(--green)';
+  setTimeout(() => { btn.textContent = 'Copy Full Listing'; btn.style.borderColor = ''; btn.style.color = ''; btn.classList.remove('copied'); }, 2000);
+}
+
+function resetAll() {
+  queue = [];
+  document.getElementById('queueSection').classList.add('hidden');
+  document.getElementById('resultsSection').innerHTML = '';
+  document.getElementById('resetBtn').classList.add('hidden');
+  renderQueue();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+</script>
+</body>
+</html>
